@@ -1,0 +1,1 @@
+export { ResponseViewPage } from './ResponseViewPage';

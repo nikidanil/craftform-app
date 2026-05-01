@@ -1,0 +1,1 @@
+export { NewFormPage } from './NewFormPage';
