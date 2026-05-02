@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormCraft — Отклики</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:          oklch(0.9818 0.0054 95.0986);
+      --fg:          oklch(0.3438 0.0269 95.7226);
+      --fg-dark:     oklch(0.1908 0.002  106.5859);
+      --primary:     oklch(0.6171 0.1375 39.0427);
+      --primary-hov: oklch(0.56   0.14   39);
+      --secondary:   oklch(0.9245 0.0138 92.9892);
+      --muted-fg:    oklch(0.6059 0.0075 97.4233);
+      --border:      oklch(0.8847 0.0069 97.3627);
+      --radius:      0.65rem;
+      --shadow:      0 2px 8px oklch(0 0 0 / 0.07), 0 1px 3px oklch(0 0 0 / 0.05);
+      --shadow-md:   0 4px 16px oklch(0 0 0 / 0.09);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .bg-blobs {
+      position: fixed; inset: 0;
+      overflow: hidden; pointer-events: none; z-index: 0;
+    }
+    .blob { position: absolute; border-radius: 50%; filter: blur(100px); }
+    .blob-1 {
+      width: 700px; height: 700px;
+      background: oklch(0.86 0.06 39 / 0.24);
+      top: -220px; right: -170px;
+      animation: bf1 28s ease-in-out infinite;
+    }
+    .blob-2 {
+      width: 580px; height: 580px;
+      background: oklch(0.92 0.03 72 / 0.2);
+      bottom: -190px; left: -130px;
+      animation: bf2 34s ease-in-out infinite;
+    }
+    @keyframes bf1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-55px,48px); } }
+    @keyframes bf2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(68px,-36px); } }
+
+    /* ── Header ── */
+    .header {
+      position: relative; z-index: 10;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 4px oklch(0 0 0 / 0.05);
+    }
+    .header-inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 2rem; height: 60px;
+      display: flex; align-items: center; gap: 2rem;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .logo-icon {
+      width: 30px; height: 30px; background: var(--primary);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 0.95rem;
+      box-shadow: 0 2px 6px oklch(0.6171 0.1375 39 / 0.3);
+    }
+    .logo-name { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; color: var(--fg-dark); }
+
+    .header-nav { display: flex; gap: 0.25rem; }
+    .nav-link {
+      padding: 0.4rem 0.875rem; border-radius: var(--radius);
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--fg); text-decoration: none;
+      transition: background 0.15s;
+    }
+    .nav-link:hover { background: var(--secondary); }
+    .nav-link.new-form {
+      background: var(--primary); color: white;
+      box-shadow: 0 2px 6px oklch(0.6171 0.1375 39 / 0.28);
+    }
+
+    .header-right { margin-left: auto; }
+    .avatar-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--primary); color: white;
+      font-size: 0.85rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    /* ── Main ── */
+    .main {
+      position: relative; z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      font-size: 0.875rem;
+      color: var(--muted-fg);
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 500; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb-sep { color: var(--border); }
+
+    /* Page heading */
+    .page-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      gap: 1rem;
+    }
+    .heading-left h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg-dark);
+    }
+    .heading-left p {
+      font-size: 0.875rem;
+      color: var(--muted-fg);
+      margin-top: 0.25rem;
+    }
+    .heading-form-name {
+      font-size: 0.9rem;
+      color: var(--muted-fg);
+      margin-bottom: 0.3rem;
+    }
+    .heading-form-name span {
+      color: var(--fg-dark);
+      font-weight: 600;
+    }
+
+    /* Total badge */
+    .total-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--secondary);
+      color: var(--fg-dark);
+      padding: 0.4rem 0.875rem;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* ── Filters bar ── */
+    .filters-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .sort-select {
+      padding: 0.55rem 1.75rem 0.55rem 0.75rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.875rem;
+      color: var(--fg);
+      background: white;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23918F8B' stroke-width='2.5'%3E%3Cpolyline points='6,9 12,15 18,9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.55rem center;
+      box-shadow: var(--shadow);
+    }
+
+    .date-filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .date-label { font-size: 0.8rem; color: var(--muted-fg); font-weight: 500; }
+
+    .date-input {
+      padding: 0.55rem 0.75rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.875rem;
+      color: var(--fg-dark);
+      background: white;
+      outline: none;
+      box-shadow: var(--shadow);
+      width: 140px;
+    }
+    .date-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px oklch(0.6171 0.1375 39 / 0.12);
+    }
+
+    .filter-divider { width: 1px; height: 24px; background: var(--border); }
+
+    /* ── Responses list ── */
+    .responses-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .response-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+      animation: itemIn 0.3s ease both;
+    }
+    .response-item:nth-child(1) { animation-delay: 0.00s; }
+    .response-item:nth-child(2) { animation-delay: 0.04s; }
+    .response-item:nth-child(3) { animation-delay: 0.08s; }
+    .response-item:nth-child(4) { animation-delay: 0.12s; }
+    .response-item:nth-child(5) { animation-delay: 0.16s; }
+    .response-item:nth-child(6) { animation-delay: 0.20s; }
+    @keyframes itemIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .response-item:hover {
+      border-color: oklch(0.78 0.05 39);
+      box-shadow: var(--shadow-md);
+      transform: translateX(2px);
+    }
+
+    .response-num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--secondary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--fg-dark);
+      flex-shrink: 0;
+    }
+
+    .response-info { flex: 1; }
+    .response-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--fg-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .response-meta {
+      font-size: 0.8rem;
+      color: var(--muted-fg);
+      margin-top: 0.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .meta-dot { width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
+
+    .response-date {
+      font-size: 0.825rem;
+      color: var(--muted-fg);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .response-arrow {
+      color: var(--muted-fg);
+      flex-shrink: 0;
+      transition: color 0.15s, transform 0.15s;
+    }
+    .response-item:hover .response-arrow {
+      color: var(--primary);
+      transform: translateX(2px);
+    }
+
+    /* Loading indicator */
+    .load-more {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1.5rem;
+      color: var(--muted-fg);
+      font-size: 0.875rem;
+    }
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">✦</div>
+        <span class="logo-name">FormCraft</span>
+      </a>
+      <nav class="header-nav">
+        <a href="#" class="nav-link">Главная</a>
+        <a href="#" class="nav-link new-form">+ Новая форма</a>
+      </nav>
+      <div class="header-right">
+        <div class="avatar-btn">АИ</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Навигация">
+      <a href="#">Главная</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Отклики</span>
+    </nav>
+
+    <!-- Page heading -->
+    <div class="page-heading">
+      <div class="heading-left">
+        <p class="heading-form-name">Форма: <span>Опрос об удовлетворённости клиентов</span></p>
+        <h1>Отклики</h1>
+        <p>Все ответы респондентов на вашу форму</p>
+      </div>
+      <div class="total-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        42 отклика
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+      <select class="sort-select">
+        <option>Сначала новые</option>
+        <option>Сначала старые</option>
+      </select>
+
+      <div class="filter-divider"></div>
+
+      <div class="date-filter-group">
+        <span class="date-label">От</span>
+        <input class="date-input" type="date" value="2025-01-01">
+      </div>
+      <div class="date-filter-group">
+        <span class="date-label">До</span>
+        <input class="date-input" type="date" value="2025-05-02">
+      </div>
+    </div>
+
+    <!-- Responses list -->
+    <div class="responses-list">
+
+      <a href="../response-view/" class="response-item">
+        <div class="response-num">1</div>
+        <div class="response-info">
+          <div class="response-title">Отклик №1</div>
+          <div class="response-meta">
+            <span>3 ответа</span>
+            <span class="meta-dot"></span>
+            <span>завершён</span>
+          </div>
+        </div>
+        <span class="response-date">02.05.2025, 14:32</span>
+        <svg class="response-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+
+      <a href="../response-view/" class="response-item">
+        <div class="response-num">2</div>
+        <div class="response-info">
+          <div class="response-title">Отклик №2</div>
+          <div class="response-meta">
+            <span>4 ответа</span>
+            <span class="meta-dot"></span>
+            <span>завершён</span>
+          </div>
+        </div>
+        <span class="response-date">01.05.2025, 09:17</span>
+        <svg class="response-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+
+      <a href="../response-view/" class="response-item">
+        <div class="response-num">3</div>
+        <div class="response-info">
+          <div class="response-title">Отклик №3</div>
+          <div class="response-meta">
+            <span>3 ответа</span>
+            <span class="meta-dot"></span>
+            <span>завершён</span>
+          </div>
+        </div>
+        <span class="response-date">30.04.2025, 16:45</span>
+        <svg class="response-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+
+      <a href="../response-view/" class="response-item">
+        <div class="response-num">4</div>
+        <div class="response-info">
+          <div class="response-title">Отклик №4</div>
+          <div class="response-meta">
+            <span>2 ответа</span>
+            <span class="meta-dot"></span>
+            <span>завершён</span>
+          </div>
+        </div>
+        <span class="response-date">29.04.2025, 11:02</span>
+        <svg class="response-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+
+      <a href="../response-view/" class="response-item">
+        <div class="response-num">5</div>
+        <div class="response-info">
+          <div class="response-title">Отклик №5</div>
+          <div class="response-meta">
+            <span>4 ответа</span>
+            <span class="meta-dot"></span>
+            <span>завершён</span>
+          </div>
+        </div>
+        <span class="response-date">28.04.2025, 18:22</span>
+        <svg class="response-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+
+      <a href="../response-view/" class="response-item">
+        <div class="response-num">6</div>
+        <div class="response-info">
+          <div class="response-title">Отклик №6</div>
+          <div class="response-meta">
+            <span>3 ответа</span>
+            <span class="meta-dot"></span>
+            <span>завершён</span>
+          </div>
+        </div>
+        <span class="response-date">27.04.2025, 08:55</span>
+        <svg class="response-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+
+    </div>
+
+    <!-- Load more indicator -->
+    <div class="load-more">
+      <div class="spinner"></div>
+      Загрузка следующих откликов...
+    </div>
+  </main>
+</body>
+</html>

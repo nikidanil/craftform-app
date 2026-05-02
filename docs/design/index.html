@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormCraft — Дизайн-макеты</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       oklch(0.9818 0.0054 95.0986);
+      --fg:       oklch(0.3438 0.0269 95.7226);
+      --fg-dark:  oklch(0.1908 0.002  106.5859);
+      --primary:  oklch(0.6171 0.1375 39.0427);
+      --secondary:oklch(0.9245 0.0138 92.9892);
+      --muted-fg: oklch(0.6059 0.0075 97.4233);
+      --border:   oklch(0.8847 0.0069 97.3627);
+      --radius:   0.65rem;
+      --shadow:   0 2px 8px oklch(0 0 0 / 0.07), 0 1px 3px oklch(0 0 0 / 0.05);
+      --shadow-md:0 4px 16px oklch(0 0 0 / 0.09);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .bg-blobs { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(100px); }
+    .blob-1 { width: 700px; height: 700px; background: oklch(0.86 0.06 39 / 0.26); top: -250px; right: -180px; animation: bf1 28s ease-in-out infinite; }
+    .blob-2 { width: 580px; height: 580px; background: oklch(0.92 0.03 72 / 0.2); bottom: -190px; left: -150px; animation: bf2 34s ease-in-out infinite; }
+    @keyframes bf1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-55px,48px); } }
+    @keyframes bf2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(68px,-36px); } }
+
+    .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+
+    .hero { text-align: center; margin-bottom: 3.5rem; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: white; border: 1px solid var(--border);
+      border-radius: 100px; padding: 0.3rem 0.875rem;
+      font-size: 0.8rem; color: var(--muted-fg); font-weight: 500;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+    .hero-icon {
+      width: 20px; height: 20px;
+      background: var(--primary); border-radius: 4px;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: white; font-size: 0.7rem;
+    }
+    .hero h1 {
+      font-size: 2.5rem; font-weight: 700;
+      letter-spacing: -0.03em; color: var(--fg-dark);
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 span { color: var(--primary); }
+    .hero p { font-size: 1.05rem; color: var(--muted-fg); max-width: 480px; margin: 0 auto; }
+
+    .section-title {
+      font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted-fg); margin-bottom: 1rem;
+    }
+
+    .pages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .page-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+      animation: cardIn 0.4s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, oklch(0.6171 0.1375 39 / 0.04), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .page-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: oklch(0.78 0.05 39); }
+    .page-card:hover::after { opacity: 1; }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .page-card:nth-child(2) { animation-delay: 0.04s; }
+    .page-card:nth-child(3) { animation-delay: 0.08s; }
+    .page-card:nth-child(4) { animation-delay: 0.12s; }
+    .page-card:nth-child(5) { animation-delay: 0.16s; }
+    .page-card:nth-child(6) { animation-delay: 0.20s; }
+    .page-card:nth-child(7) { animation-delay: 0.24s; }
+    .page-card:nth-child(8) { animation-delay: 0.28s; }
+
+    .page-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .page-icon.amber { background: oklch(0.93 0.05 39 / 0.5); }
+    .page-icon.blue  { background: oklch(0.92 0.04 220 / 0.3); }
+    .page-icon.green { background: oklch(0.92 0.05 145 / 0.3); }
+    .page-icon.purple{ background: oklch(0.92 0.04 280 / 0.3); }
+
+    .page-card-head { display: flex; align-items: flex-start; gap: 0.875rem; }
+
+    .page-card-info { flex: 1; }
+    .page-name { font-size: 1rem; font-weight: 700; color: var(--fg-dark); margin-bottom: 0.2rem; }
+    .page-route {
+      font-size: 0.78rem; color: var(--muted-fg);
+      font-family: 'Courier New', monospace;
+      background: var(--secondary);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    .page-desc { font-size: 0.85rem; color: var(--muted-fg); line-height: 1.55; }
+
+    .access-badge {
+      display: inline-flex; align-items: center;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em;
+      padding: 0.15rem 0.5rem; border-radius: 100px;
+    }
+    .badge-protected { background: oklch(0.93 0.05 39 / 0.3); color: oklch(0.45 0.12 39); }
+    .badge-public    { background: oklch(0.93 0.05 145 / 0.3); color: oklch(0.40 0.13 145); }
+    .badge-auth      { background: oklch(0.92 0.04 220 / 0.3); color: oklch(0.40 0.12 220); }
+
+    .page-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .arrow-link {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.8rem; font-weight: 600; color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="wrapper">
+    <div class="hero">
+      <div class="hero-badge">
+        <div class="hero-icon">✦</div>
+        Дизайн-система
+      </div>
+      <h1>FormCraft<br><span>Макеты страниц</span></h1>
+      <p>Статичные HTML/CSS макеты всех страниц приложения</p>
+    </div>
+
+    <p class="section-title">Все страницы · 8 макетов</p>
+
+    <div class="pages-grid">
+
+      <a href="login/index.html" class="page-card">
+        <div class="page-card-head">
+          <div class="page-icon amber">🔑</div>
+          <div class="page-card-info">
+            <div class="page-name">Вход</div>
+            <code class="page-route">/login</code>
+          </div>
+        </div>
+        <p class="page-desc">Страница входа с полями email и пароль, обработкой ошибок валидации.</p>
+        <div class="page-card-footer">
+          <span class="access-badge badge-auth">unauthorized only</span>
+          <span class="arrow-link">Открыть →</span>
+        </div>
+      </a>
+
+      <a href="signup/index.html" class="page-card">
+        <div class="page-card-head">
+          <div class="page-icon blue">✏️</div>
+          <div class="page-card-info">
+            <div class="page-name">Регистрация</div>
+            <code class="page-route">/signup</code>
+          </div>
+        </div>
+        <p class="page-desc">Форма регистрации с пятью полями и отображением ошибок.</p>
+        <div class="page-card-footer">
+          <span class="access-badge badge-auth">unauthorized only</span>
+          <span class="arrow-link">Открыть →</span>
+        </div>
+      </a>
+
+      <a href="forms-list/index.html" class="page-card">
+        <div class="page-card-head">
+          <div class="page-icon amber">📋</div>
+          <div class="page-card-info">
+            <div class="page-name">Список форм</div>
+            <code class="page-route">/</code>
+          </div>
+        </div>
+        <p class="page-desc">Главная страница: сетка карточек форм, поиск и сортировка.</p>
+        <div class="page-card-footer">
+          <span class="access-badge badge-protected">protected</span>
+          <span class="arrow-link">Открыть →</span>
+        </div>
+      </a>
+
+      <a href="form-builder/index.html" class="page-card">
+        <div class="page-card-head">
+          <div class="page-icon green">🔧</div>
+          <div class="page-card-info">
+            <div class="page-name">Конструктор формы</div>
+            <code class="page-route">/forms/:id/edit</code>
+          </div>
+        </div>
+        <p class="page-desc">Редактор формы: панель типов вопросов, рабочая область, карточки вопросов.</p>
+        <div class="page-card-footer">
+          <span class="access-badge badge-protected">protected</span>
+          <span class="arrow-link">Открыть →</span>
+        </div>
+      </a>
+
+      <a href="form-fill/index.html" class="page-card">
+        <div class="page-card-head">
+          <div class="page-icon purple">📝</div>
+          <div class="page-card-info">
+            <div class="page-name">Заполнение формы</div>
+            <code class="page-route">/forms/:id</code>
+          </div>
+        </div>
+        <p class="page-desc">Публичная страница для респондентов: вопросы, поля ввода, кнопка отправки.</p>
+        <div class="page-card-footer">
+          <span class="access-badge badge-public">public</span>
+          <span class="arrow-link">Открыть →</span>
+        </div>
+      </a>
+
+      <a href="responses-list/index.html" class="page-card">
+        <div class="page-card-head">
+          <div class="page-icon amber">💬</div>
+          <div class="page-card-info">
+            <div class="page-name">Список откликов</div>
+            <code class="page-route">/forms/:id/responses</code>
+          </div>
+        </div>
+        <p class="page-desc">Список всех откликов на форму с сортировкой и фильтром по датам.</p>
+        <div class="page-card-footer">
+          <span class="access-badge badge-protected">protected</span>
+          <span class="arrow-link">Открыть →</span>
+        </div>
+      </a>
+
+      <a href="response-view/index.html" class="page-card">
+        <div class="page-card-head">
+          <div class="page-icon green">🔍</div>
+          <div class="page-card-info">
+            <div class="page-name">Просмотр отклика</div>
+            <code class="page-route">/forms/:id/responses/:rid</code>
+          </div>
+        </div>
+        <p class="page-desc">Детальный просмотр одного отклика: вопросы и ответы респондента.</p>
+        <div class="page-card-footer">
+          <span class="access-badge badge-protected">protected</span>
+          <span class="arrow-link">Открыть →</span>
+        </div>
+      </a>
+
+      <a href="profile/index.html" class="page-card">
+        <div class="page-card-head">
+          <div class="page-icon blue">👤</div>
+          <div class="page-card-info">
+            <div class="page-name">Профиль</div>
+            <code class="page-route">/me</code>
+          </div>
+        </div>
+        <p class="page-desc">Профиль пользователя: просмотр и редактирование имени, фамилии и email.</p>
+        <div class="page-card-footer">
+          <span class="access-badge badge-protected">protected</span>
+          <span class="arrow-link">Открыть →</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</body>
+</html>

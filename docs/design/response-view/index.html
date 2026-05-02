@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormCraft — Отклик №1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:          oklch(0.9818 0.0054 95.0986);
+      --fg:          oklch(0.3438 0.0269 95.7226);
+      --fg-dark:     oklch(0.1908 0.002  106.5859);
+      --primary:     oklch(0.6171 0.1375 39.0427);
+      --primary-hov: oklch(0.56   0.14   39);
+      --secondary:   oklch(0.9245 0.0138 92.9892);
+      --muted-fg:    oklch(0.6059 0.0075 97.4233);
+      --border:      oklch(0.8847 0.0069 97.3627);
+      --radius:      0.65rem;
+      --shadow:      0 2px 8px oklch(0 0 0 / 0.07), 0 1px 3px oklch(0 0 0 / 0.05);
+      --shadow-md:   0 4px 16px oklch(0 0 0 / 0.09);
+      --shadow-lg:   0 8px 32px oklch(0 0 0 / 0.1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .bg-blobs {
+      position: fixed; inset: 0;
+      overflow: hidden; pointer-events: none; z-index: 0;
+    }
+    .blob { position: absolute; border-radius: 50%; filter: blur(100px); }
+    .blob-1 {
+      width: 660px; height: 660px;
+      background: oklch(0.86 0.06 39 / 0.24);
+      top: -200px; right: -160px;
+      animation: bf1 26s ease-in-out infinite;
+    }
+    .blob-2 {
+      width: 560px; height: 560px;
+      background: oklch(0.91 0.04 72 / 0.2);
+      bottom: -180px; left: -120px;
+      animation: bf2 32s ease-in-out infinite;
+    }
+    @keyframes bf1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-52px,44px); } }
+    @keyframes bf2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(64px,-34px); } }
+
+    /* ── Header ── */
+    .header {
+      position: relative; z-index: 10;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 4px oklch(0 0 0 / 0.05);
+    }
+    .header-inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 2rem; height: 60px;
+      display: flex; align-items: center; gap: 2rem;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .logo-icon {
+      width: 30px; height: 30px; background: var(--primary);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 0.95rem;
+      box-shadow: 0 2px 6px oklch(0.6171 0.1375 39 / 0.3);
+    }
+    .logo-name { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; color: var(--fg-dark); }
+
+    .header-nav { display: flex; gap: 0.25rem; }
+    .nav-link {
+      padding: 0.4rem 0.875rem; border-radius: var(--radius);
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--fg); text-decoration: none;
+      transition: background 0.15s;
+    }
+    .nav-link:hover { background: var(--secondary); }
+    .nav-link.new-form {
+      background: var(--primary); color: white;
+      box-shadow: 0 2px 6px oklch(0.6171 0.1375 39 / 0.28);
+    }
+
+    .header-right { margin-left: auto; }
+    .avatar-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--primary); color: white;
+      font-size: 0.85rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    /* ── Main ── */
+    .main {
+      position: relative; z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      font-size: 0.875rem;
+      color: var(--muted-fg);
+      margin-bottom: 1.75rem;
+      display: flex; align-items: center; gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 500; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb-sep { color: var(--border); }
+
+    /* Page header */
+    .response-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .response-header-left h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg-dark);
+      margin-bottom: 0.35rem;
+    }
+    .response-header-meta {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.85rem; color: var(--muted-fg);
+    }
+    .meta-tag {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--secondary);
+      color: var(--fg);
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .response-header-actions {
+      display: flex; gap: 0.5rem; flex-shrink: 0;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 1rem;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-primary {
+      background: var(--primary); color: white;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px oklch(0.6171 0.1375 39 / 0.28);
+    }
+    .btn-primary:hover { background: var(--primary-hov); }
+    .btn-secondary {
+      background: white; color: var(--fg);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover { background: var(--secondary); }
+
+    /* ── Answers ── */
+    .answers-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .answer-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      animation: cardIn 0.35s ease both;
+    }
+    .answer-card:nth-child(2) { animation-delay: 0.05s; }
+    .answer-card:nth-child(3) { animation-delay: 0.1s; }
+    .answer-card:nth-child(4) { animation-delay: 0.15s; }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .answer-question {
+      padding: 0.875rem 1.25rem;
+      background: var(--secondary);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .q-number {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .q-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--fg-dark);
+      flex: 1;
+    }
+
+    .q-type-badge {
+      font-size: 0.72rem;
+      color: var(--muted-fg);
+      background: oklch(0.94 0.005 97);
+      padding: 0.15rem 0.5rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .answer-value {
+      padding: 1rem 1.25rem;
+    }
+
+    .answer-text {
+      font-size: 0.9375rem;
+      color: var(--fg-dark);
+      line-height: 1.65;
+    }
+
+    .answer-empty {
+      font-size: 0.875rem;
+      color: var(--muted-fg);
+      font-style: italic;
+    }
+
+    /* Choice answer display */
+    .answer-choices {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .choice-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--fg-dark);
+    }
+    .choice-item-check {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .choice-item-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    /* ── Navigation ── */
+    .response-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-nav {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 1rem;
+      border-radius: var(--radius);
+      font-family: inherit; font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; border: 1.5px solid var(--border);
+      background: white; color: var(--fg);
+      text-decoration: none; transition: all 0.15s;
+    }
+    .btn-nav:hover { background: var(--secondary); }
+    .btn-nav:disabled { opacity: 0.4; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">✦</div>
+        <span class="logo-name">FormCraft</span>
+      </a>
+      <nav class="header-nav">
+        <a href="#" class="nav-link">Главная</a>
+        <a href="#" class="nav-link new-form">+ Новая форма</a>
+      </nav>
+      <div class="header-right">
+        <div class="avatar-btn">АИ</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a href="#">Главная</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../responses-list/">Отклики</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Отклик №1</span>
+    </nav>
+
+    <!-- Response header -->
+    <div class="response-header">
+      <div class="response-header-left">
+        <h1>Отклик №1</h1>
+        <div class="response-header-meta">
+          <span class="meta-tag">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            02.05.2025, 14:32
+          </span>
+          <span>Форма: Опрос об удовлетворённости клиентов</span>
+        </div>
+      </div>
+      <div class="response-header-actions">
+        <a href="../form-fill/" class="btn btn-secondary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Перейти к форме
+        </a>
+        <a href="../form-builder/" class="btn btn-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+          Редактировать форму
+        </a>
+      </div>
+    </div>
+
+    <!-- Answers -->
+    <div class="answers-container">
+
+      <!-- Answer 1 -->
+      <div class="answer-card">
+        <div class="answer-question">
+          <div class="q-number">1</div>
+          <span class="q-text">Как вас зовут?</span>
+          <span class="q-type-badge">Короткий текст</span>
+        </div>
+        <div class="answer-value">
+          <p class="answer-text">Мария Петрова</p>
+        </div>
+      </div>
+
+      <!-- Answer 2 -->
+      <div class="answer-card">
+        <div class="answer-question">
+          <div class="q-number">2</div>
+          <span class="q-text">Расскажите о вашем опыте использования</span>
+          <span class="q-type-badge">Длинный текст</span>
+        </div>
+        <div class="answer-value">
+          <p class="answer-text">
+            Пользуюсь продуктом около трёх месяцев. В целом очень доволен — интерфейс интуитивно понятный,
+            создавать формы быстро и легко. Хотелось бы больше вариантов кастомизации дизайна форм
+            и возможность экспортировать данные в Excel.
+          </p>
+        </div>
+      </div>
+
+      <!-- Answer 3 (radio) -->
+      <div class="answer-card">
+        <div class="answer-question">
+          <div class="q-number">3</div>
+          <span class="q-text">Как вы узнали о нас?</span>
+          <span class="q-type-badge">Переключатели</span>
+        </div>
+        <div class="answer-value">
+          <div class="answer-choices">
+            <div class="choice-item">
+              <div class="choice-item-check">
+                <div class="choice-item-dot"></div>
+              </div>
+              Рекомендация друга или коллеги
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Answer 4 (checkbox) -->
+      <div class="answer-card">
+        <div class="answer-question">
+          <div class="q-number">4</div>
+          <span class="q-text">Какими функциями вы пользуетесь?</span>
+          <span class="q-type-badge">Флажки</span>
+        </div>
+        <div class="answer-value">
+          <div class="answer-choices">
+            <div class="choice-item">
+              <div class="choice-item-check">
+                <div class="choice-item-dot" style="border-radius: 2px;"></div>
+              </div>
+              Создание форм
+            </div>
+            <div class="choice-item">
+              <div class="choice-item-check">
+                <div class="choice-item-dot" style="border-radius: 2px;"></div>
+              </div>
+              Сбор откликов
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Navigation between responses -->
+    <div class="response-nav">
+      <button class="btn-nav" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Предыдущий
+      </button>
+      <span style="font-size: 0.875rem; color: var(--muted-fg);">1 из 42</span>
+      <a href="#" class="btn-nav">
+        Следующий
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+  </main>
+</body>
+</html>
