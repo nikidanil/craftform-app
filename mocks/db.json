@@ -1,0 +1,76 @@
+{
+  "forms": [
+    {
+      "id": "form-1",
+      "title": "Обратная связь по курсу",
+      "description": "Помогите нам стать лучше",
+      "questions": [
+        {
+          "id": "q-1",
+          "type": "short-text",
+          "body": "Как вас зовут?",
+          "required": true,
+          "order": 0
+        },
+        {
+          "id": "q-2",
+          "type": "long-text",
+          "body": "Что понравилось больше всего?",
+          "required": false,
+          "order": 1
+        },
+        {
+          "id": "q-3",
+          "type": "choice",
+          "body": "Какой формат вам ближе?",
+          "required": true,
+          "order": 2,
+          "options": [
+            { "id": "o-1", "label": "Видео" },
+            { "id": "o-2", "label": "Текст" },
+            { "id": "o-3", "label": "Воркшопы" }
+          ]
+        }
+      ],
+      "createdAt": "2026-04-15T10:00:00.000Z"
+    },
+    {
+      "id": "form-2",
+      "title": "Регистрация на митап",
+      "description": "",
+      "questions": [
+        {
+          "id": "q-4",
+          "type": "short-text",
+          "body": "Email",
+          "required": true,
+          "order": 0
+        }
+      ],
+      "createdAt": "2026-05-01T10:00:00.000Z"
+    }
+  ],
+  "responses": [
+    {
+      "id": "r-1",
+      "formId": "form-1",
+      "number": 1,
+      "createdAt": "2026-04-20T12:00:00.000Z",
+      "answers": [
+        { "questionId": "q-1", "value": "Иван" },
+        { "questionId": "q-3", "value": ["o-1"] }
+      ]
+    },
+    {
+      "id": "r-2",
+      "formId": "form-1",
+      "number": 2,
+      "createdAt": "2026-04-22T15:00:00.000Z",
+      "answers": [
+        { "questionId": "q-1", "value": "Анна" },
+        { "questionId": "q-2", "value": "Понравились примеры из реальных проектов" },
+        { "questionId": "q-3", "value": ["o-2", "o-3"] }
+      ]
+    }
+  ]
+}
