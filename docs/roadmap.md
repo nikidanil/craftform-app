@@ -181,6 +181,18 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** M.
 
+**Подзадачи (коммиты).**
+1. `shared/api`: расширить `HttpError` полем `body` (текст ответа
+   при `!response.ok`) — нужен для извлечения сообщений API.
+2. `widgets/form-fill`: model — defaults и zod-схема ответов
+   (динамически по списку вопросов формы).
+3. `features/submit-response`: hook `useSubmitResponseAction`
+   (обёртка над `useSubmitResponse` с status/errorMessage) + тест.
+4. `widgets/form-fill`: ui `FormFillForm` + подкомпонент рендера
+   вопроса + экран успеха + barrel + тест.
+5. `pages`: подключить `FormFillForm` на `/forms/:formId`,
+   обработать загрузку, 404 и сетевую ошибку + тест страницы.
+
 ---
 
 ## Этап 5. Главная — список форм (happy path)
