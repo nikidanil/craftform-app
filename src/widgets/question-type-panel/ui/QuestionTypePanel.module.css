@@ -1,0 +1,88 @@
+.panel {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.title {
+	font-size: 0.72rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--muted-foreground);
+	margin-bottom: 0.25rem;
+}
+
+.hint {
+	font-size: 0.78rem;
+	color: var(--muted-foreground);
+	margin-bottom: 0.5rem;
+}
+
+.list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.tile {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.75rem;
+	background: var(--background);
+	border: 1.5px solid var(--border);
+	border-radius: var(--radius);
+	cursor: pointer;
+	text-align: left;
+	font-family: inherit;
+	transition:
+		border-color 0.15s,
+		box-shadow 0.15s,
+		transform 0.15s;
+}
+
+.tile:hover {
+	border-color: oklch(0.75 0.06 39);
+	box-shadow: 0 2px 8px oklch(0.6171 0.1375 39 / 0.12);
+	transform: translateX(2px);
+}
+
+.tile:focus-visible {
+	outline: 2px solid var(--ring);
+	outline-offset: 2px;
+}
+
+.icon {
+	width: 32px;
+	height: 32px;
+	border-radius: 6px;
+	flex-shrink: 0;
+}
+
+.icon[data-tone='short'] {
+	background: oklch(0.93 0.04 39 / 0.5);
+}
+.icon[data-tone='long'] {
+	background: oklch(0.9 0.03 220 / 0.3);
+}
+.icon[data-tone='choice'] {
+	background: oklch(0.9 0.04 145 / 0.3);
+}
+
+.body {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.label {
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: var(--foreground);
+}
+
+.desc {
+	font-size: 0.75rem;
+	color: var(--muted-foreground);
+}
