@@ -32,7 +32,7 @@ describe('FormBuilderForm — create mode', () => {
 	it('«Сохранить» disabled, пока title пуст или нет вопросов', async () => {
 		const user = userEvent.setup();
 		renderCreate();
-		const saveBtn = screen.getByRole('button', { name: /^сохранить$/i });
+		const saveBtn = screen.getByRole('button', { name: /сохранить форму/i });
 
 		expect(saveBtn).toBeDisabled();
 

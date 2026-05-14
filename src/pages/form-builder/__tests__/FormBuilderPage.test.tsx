@@ -127,7 +127,7 @@ describe('FormBuilderPage', () => {
 		const titleInput = screen.getByLabelText('Название формы');
 		await user.clear(titleInput);
 		await user.type(titleInput, 'Изменено');
-		await user.click(screen.getByRole('button', { name: /^сохранить$/i }));
+		await user.click(screen.getByRole('button', { name: /сохранить форму/i }));
 
 		await waitFor(() => {
 			expect(screen.getByRole('status')).toHaveTextContent(
