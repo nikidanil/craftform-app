@@ -9,6 +9,9 @@ export const questionOptionSchema = z.object({
 });
 export type QuestionOption = z.infer<typeof questionOptionSchema>;
 
+export const choiceVariantSchema = z.enum(['single', 'multiple']);
+export type ChoiceVariant = z.infer<typeof choiceVariantSchema>;
+
 export const questionSchema = z.object({
 	id: z.string(),
 	type: questionTypeSchema,
@@ -16,8 +19,13 @@ export const questionSchema = z.object({
 	required: z.boolean(),
 	order: z.number().int().nonnegative(),
 	options: z.array(questionOptionSchema).optional(),
+	choiceVariant: choiceVariantSchema.optional(),
 });
 export type Question = z.infer<typeof questionSchema>;
+
+export const isChoiceQuestion = (
+	question: Pick<Question, 'type'>,
+): boolean => question.type === 'choice';
 
 export const formSchema = z.object({
 	id: z.string(),
