@@ -13,17 +13,39 @@ export const makeTestQueryClient = () =>
 
 type PathRef = { current: string };
 
-type Options = Omit<RenderOptions, 'wrapper'> & {
-	initialEntries?: string[];
-	routePath?: string;
-	queryClient?: QueryClient;
-};
-
 const LocationSpy = ({ pathRef }: { pathRef: PathRef }) => {
 	const location = useLocation();
 	pathRef.current = location.pathname + location.search;
 	return null;
 };
+
+type WrapperOptions = {
+	initialEntries?: string[];
+	queryClient?: QueryClient;
+};
+
+export const createWrapper = ({
+	initialEntries = ['/'],
+	queryClient = makeTestQueryClient(),
+}: WrapperOptions = {}) => {
+	const pathRef: PathRef = { current: initialEntries[0] ?? '/' };
+
+	const Wrapper = ({ children }: { children: ReactNode }) => (
+		<QueryClientProvider client={queryClient}>
+			<MemoryRouter initialEntries={initialEntries}>
+				{children}
+				<LocationSpy pathRef={pathRef} />
+			</MemoryRouter>
+		</QueryClientProvider>
+	);
+
+	return { Wrapper, pathRef, queryClient };
+};
+
+type Options = Omit<RenderOptions, 'wrapper'> &
+	WrapperOptions & {
+		routePath?: string;
+	};
 
 export const renderWithProviders = (
 	ui: ReactElement,
@@ -34,7 +56,7 @@ export const renderWithProviders = (
 		...rest
 	}: Options = {},
 ) => {
-	const pathRef: PathRef = { current: initialEntries[0] ?? '/' };
+	const { Wrapper, pathRef } = createWrapper({ initialEntries, queryClient });
 
 	const tree = routePath ? (
 		<Routes>
@@ -45,16 +67,7 @@ export const renderWithProviders = (
 		ui
 	);
 
-	const wrapper = ({ children }: { children: ReactNode }) => (
-		<QueryClientProvider client={queryClient}>
-			<MemoryRouter initialEntries={initialEntries}>
-				{children}
-				<LocationSpy pathRef={pathRef} />
-			</MemoryRouter>
-		</QueryClientProvider>
-	);
-
-	const result = render(tree, { wrapper, ...rest });
+	const result = render(tree, { wrapper: Wrapper, ...rest });
 
 	return {
 		...result,
