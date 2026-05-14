@@ -27,5 +27,11 @@ export default defineConfig([
 				...globals.vitest,
 			},
 		},
+		rules: {
+			'react-hooks/globals': 'off',
+			'react-hooks/immutability': 'off',
+			'react-hooks/refs': 'off',
+			'react-refresh/only-export-components': 'off',
+		},
 	},
 ]);
