@@ -1,5 +1,3 @@
-import styles from './NewFormPage.module.css';
+import { FormBuilderForm } from '@/widgets/form-builder';
 
-export const NewFormPage = () => (
-	<h1 className={styles.title}>Новая форма</h1>
-);
+export const NewFormPage = () => <FormBuilderForm mode='create' />;
