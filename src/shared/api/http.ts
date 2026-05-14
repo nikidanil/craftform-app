@@ -1,9 +1,11 @@
 export class HttpError extends Error {
 	readonly status: number;
+	readonly body: string;
 
-	constructor(status: number, statusText: string) {
+	constructor(status: number, statusText: string, body = '') {
 		super(`HTTP ${status} ${statusText}`);
 		this.status = status;
+		this.body = body;
 		this.name = 'HttpError';
 	}
 }
@@ -22,7 +24,8 @@ export async function http<T>(url: string, init?: HttpInit): Promise<T> {
 	});
 
 	if (!response.ok) {
-		throw new HttpError(response.status, response.statusText);
+		const errorBody = await response.text().catch(() => '');
+		throw new HttpError(response.status, response.statusText, errorBody);
 	}
 
 	if (response.status === 204) {
