@@ -31,6 +31,11 @@ export default defineConfig([
 			'react-hooks/globals': 'off',
 			'react-hooks/immutability': 'off',
 			'react-hooks/refs': 'off',
+		},
+	},
+	{
+		files: ['src/shared/ui/**/*.{ts,tsx}', 'src/test/**/*.{ts,tsx}'],
+		rules: {
 			'react-refresh/only-export-components': 'off',
 		},
 	},
