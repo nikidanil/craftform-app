@@ -1,0 +1,144 @@
+.card {
+	background: var(--background);
+	border: 1.5px solid var(--border);
+	border-radius: var(--radius);
+	padding: 1.25rem;
+	display: flex;
+	align-items: flex-start;
+	gap: 0.875rem;
+	box-shadow: 0 1px 3px oklch(0 0 0 / 0.05);
+	position: relative;
+}
+
+.handle {
+	color: var(--muted-foreground);
+	padding: 0.25rem;
+	flex-shrink: 0;
+	margin-top: 0.1rem;
+	cursor: grab;
+}
+
+.content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	min-width: 0;
+}
+
+.row {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.previewTextarea {
+	background: oklch(0.9818 0.0054 95 / 0.4);
+}
+
+.footer {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.requiredRow {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.8125rem;
+	color: var(--muted-foreground);
+}
+
+.typeBadge {
+	margin-left: auto;
+	font-size: 0.78rem;
+	color: var(--muted-foreground);
+}
+
+.removeBtn {
+	flex-shrink: 0;
+	color: var(--muted-foreground);
+}
+
+.removeBtn:hover {
+	color: var(--destructive);
+}
+
+.choice {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.toggleGroup {
+	display: inline-flex;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	overflow: hidden;
+	width: fit-content;
+}
+
+.toggleBtn {
+	padding: 0.4rem 0.75rem;
+	font-size: 0.82rem;
+	border: none;
+	background: var(--background);
+	color: var(--muted-foreground);
+	font-family: inherit;
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s;
+}
+
+.toggleBtn[data-active='true'] {
+	background: var(--primary);
+	color: var(--primary-foreground);
+}
+
+.toggleBtn:focus-visible {
+	outline: 2px solid var(--ring);
+	outline-offset: -2px;
+}
+
+.options {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding-left: 0.25rem;
+}
+
+.option {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.bullet {
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	border: 2px solid var(--border);
+	flex-shrink: 0;
+}
+
+.addOptionBtn {
+	align-self: flex-start;
+	padding-inline: 0 !important;
+}
+
+.fieldError {
+	font-size: 0.75rem;
+	color: var(--destructive);
+}
+
+.srOnly {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
