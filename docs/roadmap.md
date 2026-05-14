@@ -26,6 +26,13 @@
   состав компонентов, визуальный стиль, состояния. Позиционирование
   на отдельных макетах слегка неточное — повторять пиксель-в-пиксель
   не нужно, главное — сами компоненты.
+- **Подзадачи внутри этапа.** Каждый этап до старта реализации
+  разбивается на список подзадач — каждая = один атомарный коммит.
+  Список фиксируется в самом этапе (раздел «Подзадачи (коммиты)»).
+  Этап с пометкой L обязательно разбивается; M — почти всегда; S —
+  обычно одним коммитом. Подзадачи следующих этапов размечаем по
+  мере приближения, а не сразу для всего roadmap, чтобы план не
+  устаревал.
 
 ## Сложность
 
@@ -131,6 +138,24 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
   `useForm` + `zodResolver`.
 
 **Сложность.** L.
+
+**Подзадачи (коммиты).**
+1. `shared/ui`: shadcn-примитивы (button, input, label, select,
+   separator, switch, textarea).
+2. test infra: общий `renderWithProviders` (`src/test/test-utils.tsx`)
+   + правки lint для тестов.
+3. `entities/form`: расширение схемы (`choiceVariant`,
+   `isChoiceQuestion`).
+4. mocks: seed-данные под конструктор форм.
+5. `widgets/form-builder`: model — defaults и валидационная схема.
+6. `widgets/question-type-panel`: панель типов вопросов.
+7. `widgets/question-card`: карточка вопроса с редактором choice.
+8. `features/save-form`: сохранение формы (create + edit) + тест.
+9. `features/delete-form`: удаление формы и редирект на главную + тест.
+10. `features/copy-form-link`: копирование публичной ссылки + тест.
+11. `widgets/form-builder`: ui `FormBuilderForm` + barrel + тест.
+12. `pages`: подключить `FormBuilderForm` в `/forms/new` и
+    `/forms/:id/edit` + тест страницы.
 
 ---
 
