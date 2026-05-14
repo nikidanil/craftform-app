@@ -1,10 +1,8 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import type { ReactNode } from 'react';
-import { MemoryRouter, Routes, Route, useLocation } from 'react-router';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { http } from '@/shared/api';
+import { createWrapper } from '@/test/test-utils';
 import { useSaveForm } from '../model/useSaveForm';
 import type { FormInput } from '@/entities/form';
 
@@ -13,37 +11,6 @@ vi.mock('@/shared/api', () => ({
 }));
 
 const mockedHttp = vi.mocked(http);
-
-const pathRef = { current: '/' };
-const LocationSpy = () => {
-	const loc = useLocation();
-	pathRef.current = loc.pathname;
-	return null;
-};
-
-const wrapperFactory = () => {
-	const queryClient = new QueryClient({
-		defaultOptions: {
-			queries: { retry: false, gcTime: 0, staleTime: 0 },
-			mutations: { retry: false },
-		},
-	});
-	const wrapper = ({ children }: { children: ReactNode }) => (
-		<QueryClientProvider client={queryClient}>
-			<MemoryRouter initialEntries={['/forms/new']}>
-				<Routes>
-					<Route path='/forms/new' element={<>{children}</>} />
-					<Route
-						path='/forms/:formId/edit'
-						element={<div data-testid='edit-page'>edit</div>}
-					/>
-				</Routes>
-				<LocationSpy />
-			</MemoryRouter>
-		</QueryClientProvider>
-	);
-	return { wrapper };
-};
 
 const baseInput: FormInput = {
 	title: 'Новая форма',
@@ -62,7 +29,6 @@ const baseInput: FormInput = {
 describe('useSaveForm', () => {
 	beforeEach(() => {
 		mockedHttp.mockReset();
-		pathRef.current = '/forms/new';
 	});
 
 	it('создаёт форму POST → /api/forms и редиректит на /forms/:formId/edit', async () => {
@@ -73,9 +39,11 @@ describe('useSaveForm', () => {
 			return { ...(init?.body as object), id: payload.id };
 		});
 
-		const { wrapper } = wrapperFactory();
+		const { Wrapper, pathRef } = createWrapper({
+			initialEntries: ['/forms/new'],
+		});
 		const { result } = renderHook(() => useSaveForm({ mode: 'create' }), {
-			wrapper,
+			wrapper: Wrapper,
 		});
 
 		await act(async () => {
@@ -101,10 +69,12 @@ describe('useSaveForm', () => {
 			};
 		});
 
-		const { wrapper } = wrapperFactory();
+		const { Wrapper, pathRef } = createWrapper({
+			initialEntries: ['/forms/new'],
+		});
 		const { result } = renderHook(
 			() => useSaveForm({ mode: 'edit', formId: 'form-1' }),
-			{ wrapper },
+			{ wrapper: Wrapper },
 		);
 
 		await act(async () => {
@@ -117,9 +87,11 @@ describe('useSaveForm', () => {
 	it('выставляет error при сетевой ошибке и не редиректит', async () => {
 		mockedHttp.mockRejectedValue(new Error('boom'));
 
-		const { wrapper } = wrapperFactory();
+		const { Wrapper, pathRef } = createWrapper({
+			initialEntries: ['/forms/new'],
+		});
 		const { result } = renderHook(() => useSaveForm({ mode: 'create' }), {
-			wrapper,
+			wrapper: Wrapper,
 		});
 
 		await act(async () => {
