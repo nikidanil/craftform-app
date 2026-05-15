@@ -1,0 +1,242 @@
+.formContainer {
+	width: 100%;
+	max-width: 660px;
+	margin: 0 auto;
+}
+
+/* ── Header card ── */
+.headerCard {
+	background: white;
+	border: 1px solid var(--border);
+	border-top: 4px solid var(--primary);
+	border-radius: 1rem 1rem 0 0;
+	padding: 2.5rem 2.5rem 2rem;
+	box-shadow: 0 2px 8px oklch(0 0 0 / 0.07), 0 1px 3px oklch(0 0 0 / 0.05);
+}
+
+.formTitle {
+	font-size: 2rem;
+	font-weight: 600;
+	color: var(--card-foreground);
+	letter-spacing: -0.02em;
+	margin-bottom: 0.75rem;
+	line-height: 1.25;
+}
+
+.formDescription {
+	font-size: 0.9375rem;
+	color: var(--muted-foreground);
+	line-height: 1.65;
+}
+
+/* ── Form body ── */
+.formBody {
+	background: white;
+	border: 1px solid var(--border);
+	border-top: none;
+	padding: 1.5rem 2.5rem 2.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.75rem;
+}
+
+.divider {
+	border: none;
+	border-top: 1px solid var(--border);
+	margin: 0;
+}
+
+/* ── Footer ── */
+.formFooter {
+	background: white;
+	border: 1px solid var(--border);
+	border-top: none;
+	border-radius: 0 0 1rem 1rem;
+	padding: 1.5rem 2.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	box-shadow: 0 2px 8px oklch(0 0 0 / 0.07), 0 1px 3px oklch(0 0 0 / 0.05);
+}
+
+.requiredNote {
+	font-size: 0.8rem;
+	color: var(--muted-foreground);
+}
+
+.footerRight {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.5rem;
+}
+
+.errorAlert {
+	font-size: 0.875rem;
+	color: oklch(0.58 0.22 25);
+	text-align: right;
+}
+
+.btnSubmit {
+	padding: 0.75rem 2rem;
+	background: var(--primary);
+	color: white;
+	border: none;
+	border-radius: var(--radius);
+	font-family: inherit;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+	box-shadow: 0 2px 8px oklch(0.6171 0.1375 39 / 0.3);
+}
+
+.btnSubmit:hover:not(:disabled) {
+	background: oklch(0.56 0.14 39);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 14px oklch(0.6171 0.1375 39 / 0.38);
+}
+
+.btnSubmit:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* ── Question shared ── */
+.questionBlock {
+	display: flex;
+	flex-direction: column;
+	gap: 0.625rem;
+}
+
+.questionLabel {
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--card-foreground);
+	display: flex;
+	align-items: baseline;
+	gap: 0.25rem;
+}
+
+.requiredStar {
+	color: oklch(0.58 0.22 25);
+	font-size: 0.85rem;
+}
+
+.fieldInput {
+	width: 100%;
+	padding: 0.65rem 0.875rem;
+	border: 1.5px solid var(--border);
+	border-radius: var(--radius);
+	font-family: inherit;
+	font-size: 0.9375rem;
+	color: var(--card-foreground);
+	background: oklch(0.9818 0.0054 95 / 0.5);
+	outline: none;
+	transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.fieldInput:focus {
+	border-color: var(--primary);
+	background: white;
+	box-shadow: 0 0 0 3px oklch(0.6171 0.1375 39 / 0.12);
+}
+
+.fieldTextarea {
+	resize: vertical;
+	min-height: 120px;
+	line-height: 1.6;
+}
+
+/* ── Choice options ── */
+.optionsList {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.optionItem {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.625rem 0.875rem;
+	border: 1.5px solid var(--border);
+	border-radius: var(--radius);
+	cursor: pointer;
+	transition: border-color 0.15s, background 0.15s;
+	background: oklch(0.9818 0.0054 95 / 0.4);
+}
+
+.optionItem:hover {
+	border-color: oklch(0.78 0.05 39);
+	background: oklch(0.95 0.02 39 / 0.15);
+}
+
+.optionItem:has(input:checked) {
+	border-color: var(--primary);
+	background: oklch(0.95 0.03 39 / 0.2);
+}
+
+.srOnly {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
+
+.optionRadio {
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	border: 2px solid var(--border);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	transition: border-color 0.15s;
+}
+
+.optionItem:has(input:checked) .optionRadio {
+	border-color: var(--primary);
+}
+
+.optionRadioDot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--primary);
+	opacity: 0;
+	transition: opacity 0.15s;
+}
+
+.optionItem:has(input:checked) .optionRadioDot {
+	opacity: 1;
+}
+
+.optionCheck {
+	width: 18px;
+	height: 18px;
+	border-radius: 4px;
+	border: 2px solid var(--border);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	transition: all 0.15s;
+}
+
+.optionItem:has(input:checked) .optionCheck {
+	background: var(--primary);
+	border-color: var(--primary);
+}
+
+.optionText {
+	font-size: 0.9rem;
+	color: var(--foreground);
+}
+
