@@ -5,6 +5,7 @@ import {
 	type SubmitHandler,
 } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { Resolver } from 'react-hook-form';
 
 import type { Form } from '@/entities/form';
 import { useSubmitResponseAction } from '@/features/submit-response';
@@ -24,7 +25,7 @@ export const FormFillForm = ({ form }: Props) => {
 	const { submit, status, errorMessage } = useSubmitResponseAction();
 
 	const methods = useForm<FormFillValues>({
-		resolver: zodResolver(buildFormFillSchema(form)),
+		resolver: zodResolver(buildFormFillSchema(form)) as unknown as Resolver<FormFillValues>,
 		defaultValues: buildDefaults(form),
 		mode: 'onChange',
 	});
