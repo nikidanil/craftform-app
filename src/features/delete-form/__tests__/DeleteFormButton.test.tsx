@@ -36,9 +36,24 @@ describe('DeleteFormButton', () => {
 		});
 	});
 
-	it('по умолчанию показывает текст «Удалить форму» рядом с иконкой', () => {
-		renderWithProviders(<DeleteFormButton formId='form-1' />);
+	it('по умолчанию кнопка с текстом «Удалить форму» вызывает удаление по клику', async () => {
+		mockedHttp.mockImplementation(async (url, init) => {
+			if (url.startsWith('/api/responses?formId=')) return [];
+			if (init?.method === 'DELETE') return undefined;
+			return undefined;
+		});
 
-		expect(screen.getByText('Удалить форму')).toBeInTheDocument();
+		renderWithProviders(<DeleteFormButton formId='form-2' />);
+
+		await userEvent.click(
+			screen.getByRole('button', { name: /Удалить форму/ }),
+		);
+
+		await waitFor(() => {
+			expect(mockedHttp).toHaveBeenCalledWith(
+				'/api/forms/form-2',
+				expect.objectContaining({ method: 'DELETE' }),
+			);
+		});
 	});
 });
