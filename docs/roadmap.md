@@ -216,6 +216,22 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** M.
 
+**Подзадачи (коммиты).**
+1. `entities/submission`: hook `useResponsesCountByForm` — один
+   `GET /api/responses` с агрегатором `aggregateResponsesByForm` в
+   `Record<string, number>` + тест агрегатора.
+2. `widgets/forms-list`: model — утилиты `formatCreatedAt` и
+   `responsesCountLabel` (русское склонение откликов) + тесты.
+3. `features/delete-form`: prop `iconOnly` в `DeleteFormButton`
+   (только иконка, `aria-label="Удалить форму"`) + тест.
+4. `widgets/forms-list`: ui `FormCard` (карточка одной формы) + тест.
+5. `widgets/forms-list`: ui `EmptyState` + `NewFormCard` («+ Создать
+   новую форму» в конце сетки) + тест на `EmptyState`.
+6. `widgets/forms-list`: ui `FormsList` (корневой грид/пусто) +
+   barrel + тест.
+7. `pages/forms-list`: подключить `FormsList`, обработать
+   loading/error + тест страницы.
+
 ---
 
 ## Этап 6. Просмотр откликов (happy path)
