@@ -3,4 +3,5 @@ export const submissionKeys = {
 	list: (formId: string) => [...submissionKeys.all, 'list', formId] as const,
 	detail: (responseId: string) =>
 		[...submissionKeys.all, 'detail', responseId] as const,
+	countByForm: () => [...submissionKeys.all, 'count-by-form'] as const,
 };

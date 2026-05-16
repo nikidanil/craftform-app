@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { http } from '@/shared/api';
 import {
+	aggregateResponsesByForm,
 	submissionListSchema,
 	submissionSchema,
 	type Submission,
@@ -27,4 +28,14 @@ export const useResponse = (responseId: string) =>
 			return submissionSchema.parse(data);
 		},
 		enabled: Boolean(responseId),
+	});
+
+export const useResponsesCountByForm = () =>
+	useQuery({
+		queryKey: submissionKeys.countByForm(),
+		queryFn: async (): Promise<Submission[]> => {
+			const data = await http<unknown>('/api/responses');
+			return submissionListSchema.parse(data);
+		},
+		select: aggregateResponsesByForm,
 	});

@@ -1,3 +1,7 @@
 export { submissionKeys } from './keys';
-export { useResponsesList, useResponse } from './queries';
+export {
+	useResponsesList,
+	useResponse,
+	useResponsesCountByForm,
+} from './queries';
 export { useSubmitResponse } from './mutations';
