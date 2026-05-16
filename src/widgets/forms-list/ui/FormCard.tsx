@@ -13,31 +13,38 @@ type Props = {
 	responsesCount: number;
 };
 
-export const FormCard = ({ form, responsesCount }: Props) => (
-	<article className={styles.card}>
-		<div className={styles.body}>
-			<h2 className={styles.title}>{form.title}</h2>
-			<span className={styles.badge}>
-				<span className={styles.badgeDot} aria-hidden />
-				{responsesCountLabel(responsesCount)}
-			</span>
-			<p className={styles.date}>{formatCreatedAt(form.createdAt)}</p>
-		</div>
-		<div className={styles.actions}>
-			<Link to={`/forms/${form.id}/edit`} className={styles.actionPrimary}>
-				<Pencil aria-hidden />
-				Редактировать
-			</Link>
-			<Link
-				to={`/forms/${form.id}/responses`}
-				className={styles.action}
-			>
-				<MessageSquare aria-hidden />
-				Отклики
-			</Link>
-			<div className={styles.deleteSlot}>
-				<DeleteFormButton formId={form.id} iconOnly />
+export const FormCard = ({ form, responsesCount }: Props) => {
+	const formIdSegment = encodeURIComponent(form.id);
+
+	return (
+		<article className={styles.card}>
+			<div className={styles.body}>
+				<h2 className={styles.title}>{form.title}</h2>
+				<span className={styles.badge}>
+					<span className={styles.badgeDot} aria-hidden />
+					{responsesCountLabel(responsesCount)}
+				</span>
+				<p className={styles.date}>{formatCreatedAt(form.createdAt)}</p>
 			</div>
-		</div>
-	</article>
-);
+			<div className={styles.actions}>
+				<Link
+					to={`/forms/${formIdSegment}/edit`}
+					className={styles.actionPrimary}
+				>
+					<Pencil aria-hidden />
+					Редактировать
+				</Link>
+				<Link
+					to={`/forms/${formIdSegment}/responses`}
+					className={styles.action}
+				>
+					<MessageSquare aria-hidden />
+					Отклики
+				</Link>
+				<div className={styles.deleteSlot}>
+					<DeleteFormButton formId={form.id} iconOnly />
+				</div>
+			</div>
+		</article>
+	);
+};
