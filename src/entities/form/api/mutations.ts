@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { http } from '@/shared/api';
+import { submissionKeys } from '@/entities/submission';
 import {
 	formSchema,
 	type Form,
@@ -69,7 +70,7 @@ export const useDeleteForm = () => {
 		onSuccess: (_data, formId) => {
 			queryClient.invalidateQueries({ queryKey: formKeys.list() });
 			queryClient.removeQueries({ queryKey: formKeys.detail(formId) });
-			queryClient.invalidateQueries({ queryKey: ['submissions'] });
+			queryClient.invalidateQueries({ queryKey: submissionKeys.all });
 		},
 	});
 };
