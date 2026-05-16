@@ -5,9 +5,10 @@ import styles from './DeleteFormButton.module.css';
 
 type Props = {
 	formId: string | undefined;
+	iconOnly?: boolean;
 };
 
-export const DeleteFormButton = ({ formId }: Props) => {
+export const DeleteFormButton = ({ formId, iconOnly = false }: Props) => {
 	const { deleteForm, pending } = useDeleteFormAction();
 	const disabled = !formId || pending;
 
@@ -15,13 +16,14 @@ export const DeleteFormButton = ({ formId }: Props) => {
 		<Button
 			type='button'
 			variant='destructive'
-			size='lg'
+			size={iconOnly ? 'icon' : 'lg'}
 			disabled={disabled}
 			onClick={() => formId && deleteForm(formId)}
-			className={styles.btn}
+			aria-label={iconOnly ? 'Удалить форму' : undefined}
+			className={iconOnly ? styles.iconBtn : styles.btn}
 		>
 			<Trash2 strokeWidth={2.5} aria-hidden />
-			Удалить форму
+			{!iconOnly && 'Удалить форму'}
 		</Button>
 	);
 };
