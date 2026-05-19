@@ -1,4 +1,6 @@
-.title {
-	font-size: 28px;
-	font-weight: 600;
+.state {
+	padding: 2.5rem 2rem;
+	text-align: center;
+	color: var(--muted-foreground);
+	font-size: 0.95rem;
 }

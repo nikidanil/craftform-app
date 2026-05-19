@@ -26,6 +26,13 @@
   состав компонентов, визуальный стиль, состояния. Позиционирование
   на отдельных макетах слегка неточное — повторять пиксель-в-пиксель
   не нужно, главное — сами компоненты.
+- **Подзадачи внутри этапа.** Каждый этап до старта реализации
+  разбивается на список подзадач — каждая = один атомарный коммит.
+  Список фиксируется в самом этапе (раздел «Подзадачи (коммиты)»).
+  Этап с пометкой L обязательно разбивается; M — почти всегда; S —
+  обычно одним коммитом. Подзадачи следующих этапов размечаем по
+  мере приближения, а не сразу для всего roadmap, чтобы план не
+  устаревал.
 
 ## Сложность
 
@@ -81,7 +88,8 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Что делается.** Описываем типы `Form`, `Question`,
 `QuestionOption`, `Submission`, `Answer` в `src/entities/*`.
-Поднимаем мок-сервер (MSW) с in-memory хранилищем и seed-данными,
+Поднимаем мок-сервер на `json-server` поверх `mocks/db.json`
+(in-memory хранилище и seed-данные), проксируем через Vite,
 закрываем CRUD по формам и откликам. Делаем базовый React Query
 клиент в `src/shared/api`.
 
@@ -93,10 +101,13 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 **Критерии завершения.**
 - Типы сущностей — единый источник правды, импортируются через
   `@/entities/...`.
-- MSW-handlers покрывают: список форм, чтение/создание/обновление/
-  удаление формы, чтение публичной формы, отправка отклика, список
-  откликов формы, чтение одного отклика.
-- В тестах поднимается мок-сервер, smoke-тест на запрос «список форм».
+- Эндпоинты `json-server` (`mocks/db.json`) покрывают: список форм,
+  чтение/создание/обновление/удаление формы, чтение публичной формы,
+  отправка отклика, список откликов формы, чтение одного отклика.
+- В сценарных тестах API мокается точечно по месту (например, `vi.mock`
+  на http-клиенте из `src/shared/api/`) — отдельный мок-сервер для
+  тестов не поднимаем. Инфраструктура моков подключается с первого
+  сценарного теста на этапе 3.
 
 **Сложность.** M.
 
@@ -128,6 +139,24 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** L.
 
+**Подзадачи (коммиты).**
+1. `shared/ui`: shadcn-примитивы (button, input, label, select,
+   separator, switch, textarea).
+2. test infra: общий `renderWithProviders` (`src/test/test-utils.tsx`)
+   + правки lint для тестов.
+3. `entities/form`: расширение схемы (`choiceVariant`,
+   `isChoiceQuestion`).
+4. mocks: seed-данные под конструктор форм.
+5. `widgets/form-builder`: model — defaults и валидационная схема.
+6. `widgets/question-type-panel`: панель типов вопросов.
+7. `widgets/question-card`: карточка вопроса с редактором choice.
+8. `features/save-form`: сохранение формы (create + edit) + тест.
+9. `features/delete-form`: удаление формы и редирект на главную + тест.
+10. `features/copy-form-link`: копирование публичной ссылки + тест.
+11. `widgets/form-builder`: ui `FormBuilderForm` + barrel + тест.
+12. `pages`: подключить `FormBuilderForm` в `/forms/new` и
+    `/forms/:id/edit` + тест страницы.
+
 ---
 
 ## Этап 4. Прохождение формы
@@ -152,6 +181,18 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** M.
 
+**Подзадачи (коммиты).**
+1. `shared/api`: расширить `HttpError` полем `body` (текст ответа
+   при `!response.ok`) — нужен для извлечения сообщений API.
+2. `widgets/form-fill`: model — defaults и zod-схема ответов
+   (динамически по списку вопросов формы).
+3. `features/submit-response`: hook `useSubmitResponseAction`
+   (обёртка над `useSubmitResponse` с status/errorMessage) + тест.
+4. `widgets/form-fill`: ui `FormFillForm` + подкомпонент рендера
+   вопроса + экран успеха + barrel + тест.
+5. `pages`: подключить `FormFillForm` на `/forms/:formId`,
+   обработать загрузку, 404 и сетевую ошибку + тест страницы.
+
 ---
 
 ## Этап 5. Главная — список форм (happy path)
@@ -174,6 +215,22 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 - Пустое состояние видно на чистом моке.
 
 **Сложность.** M.
+
+**Подзадачи (коммиты).**
+1. `entities/submission`: hook `useResponsesCountByForm` — один
+   `GET /api/responses` с агрегатором `aggregateResponsesByForm` в
+   `Record<string, number>` + тест агрегатора.
+2. `widgets/forms-list`: model — утилиты `formatCreatedAt` и
+   `responsesCountLabel` (русское склонение откликов) + тесты.
+3. `features/delete-form`: prop `iconOnly` в `DeleteFormButton`
+   (только иконка, `aria-label="Удалить форму"`) + тест.
+4. `widgets/forms-list`: ui `FormCard` (карточка одной формы) + тест.
+5. `widgets/forms-list`: ui `EmptyState` + `NewFormCard` («+ Создать
+   новую форму» в конце сетки) + тест на `EmptyState`.
+6. `widgets/forms-list`: ui `FormsList` (корневой грид/пусто) +
+   barrel + тест.
+7. `pages/forms-list`: подключить `FormsList`, обработать
+   loading/error + тест страницы.
 
 ---
 
@@ -198,6 +255,27 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 - Навигационные кнопки ведут в нужные места.
 
 **Сложность.** M.
+
+**Подзадачи (коммиты).**
+1. `docs`: roadmap — подзадачи этапа 6.
+2. `shared/lib`: вынести `responsesCountLabel` из `widgets/forms-list`
+   + тесты, обновить импорты.
+3. `widgets/responses-list`: model — `formatSubmittedAt` (формат
+   `DD.MM.YYYY, HH:MM`) + тест.
+4. `widgets/responses-list`: ui `ResponseListItem` (карточка одного
+   отклика) + тест.
+5. `widgets/responses-list`: ui `ResponsesList` корневой + `EmptyState`
+   («Для данной формы нет откликов») + barrel + сценарные тесты.
+6. `pages/responses-list`: подключить `ResponsesList` + loading/error/404
+   + тест страницы.
+7. `widgets/response-view`: model — `findAnswerForQuestion` +
+   `getSelectedOptionLabels` + тесты.
+8. `widgets/response-view`: ui `AnswerCard` (пара «вопрос → ответ»
+   по типам) + тест.
+9. `widgets/response-view`: ui `ResponseView` корневой + barrel +
+   сценарный тест.
+10. `pages/response-view`: подключить `ResponseView` + loading/error/404
+    + тест страницы.
 
 ---
 
@@ -348,6 +426,37 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 - А11y-аудит DnD и форм проведён, найденные проблемы закрыты.
 
 **Сложность.** M.
+
+---
+
+## Релизные рубежи
+
+`dev → main` мержим не после каждого этапа, а на смысловых границах:
+там, где сборка `main` представляет собой осмысленную «версию», которую
+не стыдно открыть и показать. На каждом рубеже ставим тег по semver
+(`v<MAJOR>.<MINOR>.<PATCH>`) — без тега мерж теряет смысл.
+
+| Версия | После этапа | Что в этой версии |
+|--------|-------------|-------------------|
+| `v0.1.0` | 6 | Полный happy path: создать форму → пройти → увидеть отклик. Без auth, без DnD, без поиска. |
+| `v0.2.0` | 9 | Конструктор: DnD. Главная: поиск/сортировка/URL-state/инфинити-скролл. Отклики: фильтры/сортировка/инфинити-скролл. |
+| `v0.3.0` | 10 | Аутентификация и защита маршрутов. |
+| `v0.3.1` | 11 | Профиль. |
+| `v1.0.0` | 12 | Полировка, тесты, a11y. Публичный релиз. |
+
+Между рубежами `main` может временно опережать последний тег
+(например, если успел смержить `dev` для бэкапа) — это нормально,
+теги ставим только на смысловых границах.
+
+Команды на рубеже:
+```
+git checkout main
+git pull --ff-only
+git merge --ff-only dev
+git tag -a v0.1.0 -m "v0.1.0 — happy path"
+git push
+git push origin v0.1.0
+```
 
 ---
 

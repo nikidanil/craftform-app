@@ -1,0 +1,128 @@
+.page {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 2.5rem 2rem 4rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.breadcrumb {
+	font-size: 0.875rem;
+	color: var(--muted-foreground);
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+
+.breadcrumb a {
+	color: var(--primary);
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.breadcrumb a:hover {
+	text-decoration: underline;
+}
+
+.breadcrumbSep {
+	color: var(--border);
+}
+
+.header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.headerLeft {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.title {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	color: var(--foreground);
+}
+
+.meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75rem;
+	font-size: 0.875rem;
+	color: var(--muted-foreground);
+}
+
+.metaDate {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	background: var(--secondary);
+	border-radius: 100px;
+	padding: 0.2rem 0.65rem;
+	font-size: 0.78rem;
+	color: var(--foreground);
+}
+
+.metaForm span {
+	color: var(--foreground);
+	font-weight: 600;
+}
+
+.actions {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.action,
+.actionPrimary {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.5rem 0.875rem;
+	border-radius: var(--radius);
+	font-size: 0.875rem;
+	font-weight: 600;
+	border: 1.5px solid var(--border);
+	background: var(--card, white);
+	color: var(--foreground);
+	text-decoration: none;
+	transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.action:hover {
+	background: var(--secondary);
+}
+
+.actionPrimary {
+	background: var(--primary);
+	color: var(--primary-foreground);
+	border-color: var(--primary);
+}
+
+.actionPrimary:hover {
+	background: color-mix(in oklch, var(--primary) 92%, black);
+	border-color: color-mix(in oklch, var(--primary) 92%, black);
+}
+
+.answers {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.answers > li {
+	display: block;
+}

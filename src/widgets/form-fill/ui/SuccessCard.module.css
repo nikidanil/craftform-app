@@ -1,0 +1,32 @@
+.successCard {
+	background: white;
+	border: 1px solid var(--border);
+	border-radius: 1.25rem;
+	padding: 4rem 2.5rem;
+	text-align: center;
+	box-shadow: 0 8px 32px oklch(0 0 0 / 0.1), 0 4px 12px oklch(0 0 0 / 0.06);
+}
+
+.successIcon {
+	width: 72px;
+	height: 72px;
+	border-radius: 50%;
+	background: oklch(0.93 0.06 145 / 0.3);
+	color: oklch(0.55 0.15 145);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 1.5rem;
+}
+
+.successTitle {
+	font-size: 1.75rem;
+	font-weight: 600;
+	color: var(--card-foreground);
+	margin-bottom: 0.75rem;
+}
+
+.successText {
+	color: var(--muted-foreground);
+	font-size: 0.95rem;
+}

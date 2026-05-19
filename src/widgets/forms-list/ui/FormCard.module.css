@@ -1,0 +1,107 @@
+.card {
+	background: var(--card, white);
+	border: 1px solid var(--border);
+	border-radius: 1rem;
+	padding: 1.5rem;
+	box-shadow: 0 2px 8px oklch(0 0 0 / 0.07), 0 1px 3px oklch(0 0 0 / 0.05);
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+	box-shadow: 0 4px 16px oklch(0 0 0 / 0.08), 0 2px 6px oklch(0 0 0 / 0.05);
+	transform: translateY(-2px);
+}
+
+.body {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.title {
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--foreground);
+	letter-spacing: -0.015em;
+	margin: 0;
+}
+
+.badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	background: var(--secondary);
+	color: var(--secondary-foreground, var(--foreground));
+	padding: 0.2rem 0.6rem;
+	border-radius: 100px;
+	font-size: 0.8rem;
+	font-weight: 600;
+	align-self: flex-start;
+}
+
+.badgeDot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--primary);
+}
+
+.date {
+	font-size: 0.8rem;
+	color: var(--muted-foreground);
+	margin: 0;
+}
+
+.actions {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--border);
+}
+
+.action,
+.actionPrimary {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.4rem 0.75rem;
+	border-radius: calc(var(--radius) - 1px);
+	font-size: 0.8125rem;
+	font-weight: 500;
+	border: 1.5px solid var(--border);
+	background: var(--background, white);
+	color: var(--foreground);
+	text-decoration: none;
+	transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.action:hover {
+	background: var(--secondary);
+}
+
+.actionPrimary {
+	background: var(--primary);
+	color: var(--primary-foreground);
+	border-color: var(--primary);
+}
+
+.actionPrimary:hover {
+	background: color-mix(in oklch, var(--primary) 92%, black);
+	border-color: color-mix(in oklch, var(--primary) 92%, black);
+}
+
+.action svg,
+.actionPrimary svg {
+	width: 13px;
+	height: 13px;
+}
+
+.deleteSlot {
+	margin-left: auto;
+	display: inline-flex;
+}
