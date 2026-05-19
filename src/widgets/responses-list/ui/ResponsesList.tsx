@@ -20,7 +20,7 @@ export const ResponsesList = ({ formTitle, responses }: Props) => (
 			<span className={styles.breadcrumbSep} aria-hidden>
 				›
 			</span>
-			<span>Отклики</span>
+			<span aria-current='page'>Отклики</span>
 		</nav>
 
 		<header className={styles.heading}>
