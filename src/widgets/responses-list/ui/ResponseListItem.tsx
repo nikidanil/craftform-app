@@ -2,8 +2,8 @@ import { Link } from 'react-router';
 import { ChevronRight } from 'lucide-react';
 
 import type { Submission } from '@/entities/submission';
+import { formatSubmittedAt } from '@/shared/lib';
 
-import { formatSubmittedAt } from '../model/formatSubmittedAt';
 import styles from './ResponseListItem.module.css';
 
 type Props = {
