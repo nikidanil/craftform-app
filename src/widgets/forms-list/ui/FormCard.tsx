@@ -3,9 +3,9 @@ import { MessageSquare, Pencil } from 'lucide-react';
 
 import type { Form } from '@/entities/form';
 import { DeleteFormButton } from '@/features/delete-form';
+import { responsesCountLabel } from '@/shared/lib';
 
 import { formatCreatedAt } from '../model/formatCreatedAt';
-import { responsesCountLabel } from '../model/responsesCountLabel';
 import styles from './FormCard.module.css';
 
 type Props = {
