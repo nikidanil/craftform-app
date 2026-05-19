@@ -256,6 +256,27 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** M.
 
+**Подзадачи (коммиты).**
+1. `docs`: roadmap — подзадачи этапа 6.
+2. `shared/lib`: вынести `responsesCountLabel` из `widgets/forms-list`
+   + тесты, обновить импорты.
+3. `widgets/responses-list`: model — `formatSubmittedAt` (формат
+   `DD.MM.YYYY, HH:MM`) + тест.
+4. `widgets/responses-list`: ui `ResponseListItem` (карточка одного
+   отклика) + тест.
+5. `widgets/responses-list`: ui `ResponsesList` корневой + `EmptyState`
+   («Для данной формы нет откликов») + barrel + сценарные тесты.
+6. `pages/responses-list`: подключить `ResponsesList` + loading/error/404
+   + тест страницы.
+7. `widgets/response-view`: model — `findAnswerForQuestion` +
+   `getSelectedOptionLabels` + тесты.
+8. `widgets/response-view`: ui `AnswerCard` (пара «вопрос → ответ»
+   по типам) + тест.
+9. `widgets/response-view`: ui `ResponseView` корневой + barrel +
+   сценарный тест.
+10. `pages/response-view`: подключить `ResponseView` + loading/error/404
+    + тест страницы.
+
 ---
 
 ## Этап 7. Конструктор: drag-and-drop
