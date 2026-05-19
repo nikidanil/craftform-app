@@ -1,0 +1,89 @@
+.page {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 2.5rem 2rem 4rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.breadcrumb {
+	font-size: 0.875rem;
+	color: var(--muted-foreground);
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+
+.breadcrumb a {
+	color: var(--primary);
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.breadcrumb a:hover {
+	text-decoration: underline;
+}
+
+.breadcrumbSep {
+	color: var(--border);
+}
+
+.heading {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.headingLeft {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.formCaption {
+	margin: 0;
+	font-size: 0.9rem;
+	color: var(--muted-foreground);
+}
+
+.formCaption span {
+	color: var(--foreground);
+	font-weight: 600;
+}
+
+.title {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	color: var(--foreground);
+}
+
+.badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	background: var(--secondary);
+	color: var(--foreground);
+	padding: 0.4rem 0.875rem;
+	border-radius: 100px;
+	font-size: 0.85rem;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.list li {
+	display: block;
+}
