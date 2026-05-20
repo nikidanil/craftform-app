@@ -55,6 +55,9 @@ const buildWrapper = () => {
 	);
 };
 
+// DndContext в FormBuilderForm монтирует live region с role="status".
+// Для проверки SaveFormStatus используем getByText, а не getByRole('status'),
+// иначе будут найдены два элемента и тест упадёт.
 describe('FormBuilderPage', () => {
 	beforeEach(() => {
 		mockedHttp.mockReset();
@@ -130,9 +133,7 @@ describe('FormBuilderPage', () => {
 		await user.click(screen.getByRole('button', { name: /сохранить форму/i }));
 
 		await waitFor(() => {
-			expect(screen.getByRole('status')).toHaveTextContent(
-				/успешно сохранена/i,
-			);
+			expect(screen.getByText(/успешно сохранена/i)).toBeInTheDocument();
 		});
 	});
 

@@ -9,6 +9,13 @@ export type NewQuestionDragData = {
 	questionType: QuestionType;
 };
 
+export const isNewQuestionDragData = (
+	data: unknown,
+): data is NewQuestionDragData =>
+	typeof data === 'object' &&
+	data !== null &&
+	(data as { kind?: unknown }).kind === 'new-question';
+
 export type DragInterpretation =
 	| {
 		kind: 'add';

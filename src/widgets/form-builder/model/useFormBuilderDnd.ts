@@ -7,19 +7,23 @@ import {
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 
+import type { Question } from '@/entities/form';
+
+import { makeEmptyQuestion } from './defaults';
 import {
 	SIDEBAR_DROPPABLE_ID,
 	WORKSPACE_DROPPABLE_ID,
+	isNewQuestionDragData,
 	type DragInterpretation,
-	type NewQuestionDragData,
 } from './dndProtocol';
 
-const isNewQuestionData = (
-	data: unknown,
-): data is NewQuestionDragData =>
-	typeof data === 'object' &&
-	data !== null &&
-	(data as { kind?: unknown }).kind === 'new-question';
+export type DragApplyHelpers = {
+	append: (question: Question) => void;
+	insert: (index: number, question: Question) => void;
+	move: (from: number, to: number) => void;
+	remove: (index: number) => void;
+	size: number;
+};
 
 export const interpretDragEnd = (
 	event: DragEndEvent,
@@ -28,7 +32,7 @@ export const interpretDragEnd = (
 	const { active, over } = event;
 	const data = active.data.current;
 
-	if (isNewQuestionData(data)) {
+	if (isNewQuestionDragData(data)) {
 		if (over === null) return { kind: 'noop' };
 		const overId = over.id;
 		if (overId === WORKSPACE_DROPPABLE_ID) {
@@ -62,6 +66,34 @@ export const interpretDragEnd = (
 	const targetIndex = fieldIds.indexOf(String(overId));
 	if (targetIndex === -1) return { kind: 'noop' };
 	return { kind: 'reorder', from: activeIndex, to: targetIndex };
+};
+
+export const applyDragInterpretation = (
+	interpretation: DragInterpretation,
+	helpers: DragApplyHelpers,
+): void => {
+	switch (interpretation.kind) {
+		case 'add': {
+			const newQuestion = makeEmptyQuestion(
+				interpretation.questionType,
+				helpers.size,
+			);
+			if (interpretation.insertIndex === null) {
+				helpers.append(newQuestion);
+			} else {
+				helpers.insert(interpretation.insertIndex, newQuestion);
+			}
+			return;
+		}
+		case 'reorder':
+			helpers.move(interpretation.from, interpretation.to);
+			return;
+		case 'remove':
+			helpers.remove(interpretation.index);
+			return;
+		case 'noop':
+			return;
+	}
 };
 
 export const useFormBuilderDnd = () => {
