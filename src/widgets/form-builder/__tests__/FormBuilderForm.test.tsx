@@ -158,6 +158,19 @@ describe('FormBuilderForm — create mode', () => {
 		expect(body).toHaveFocus();
 	});
 
+	it('handle перетаскивания — focusable кнопка с описательной aria-label', async () => {
+		const user = userEvent.setup();
+		renderCreate();
+
+		await user.click(screen.getByRole('button', { name: 'Короткий текст' }));
+
+		const handle = screen.getByRole('button', {
+			name: 'Перетащить вопрос 1',
+		});
+		handle.focus();
+		expect(handle).toHaveFocus();
+	});
+
 	it('после удаления единственной карточки фокус возвращается на поле «Название формы»', async () => {
 		const user = userEvent.setup();
 		renderCreate();

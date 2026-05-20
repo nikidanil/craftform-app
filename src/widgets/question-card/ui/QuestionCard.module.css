@@ -16,6 +16,26 @@
 	flex-shrink: 0;
 	margin-top: 0.1rem;
 	cursor: grab;
+	background: none;
+	border: none;
+	border-radius: 4px;
+	font: inherit;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.handle:focus-visible {
+	outline: 2px solid var(--ring);
+	outline-offset: 2px;
+}
+
+.handle:active {
+	cursor: grabbing;
+}
+
+.card[data-dragging='true'] {
+	box-shadow: 0 8px 24px oklch(0 0 0 / 0.12);
 }
 
 .content {

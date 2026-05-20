@@ -197,6 +197,7 @@ export const FormBuilderForm = (props: Props) => {
 							<QuestionCard
 								key={field.id}
 								index={index}
+								sortableId={field.id}
 								canMoveUp={index > 0}
 								canMoveDown={index < questionsArray.fields.length - 1}
 								onMoveUp={() => handleMoveUp(index)}
