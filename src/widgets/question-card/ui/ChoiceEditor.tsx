@@ -6,7 +6,7 @@ import {
 
 import { Input, Button } from '@/shared/ui';
 import type { ChoiceVariant, FormInput } from '@/entities/form';
-import { makeEmptyOption } from '@/widgets/form-builder/model/defaults';
+import { makeEmptyOption } from '@/widgets/form-builder';
 
 import styles from './QuestionCard.module.css';
 
