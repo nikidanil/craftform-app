@@ -67,14 +67,6 @@ export const QuestionCard = ({
 		| { body?: { message?: string }; options?: { message?: string } }
 		| undefined;
 
-	const handleMoveUpClick = () => {
-		if (canMoveUp) onMoveUp();
-	};
-
-	const handleMoveDownClick = () => {
-		if (canMoveDown) onMoveDown();
-	};
-
 	return (
 		<div
 			ref={setNodeRef}
@@ -156,7 +148,7 @@ export const QuestionCard = ({
 					size='icon-sm'
 					aria-label={`Переместить вопрос ${index + 1} вверх`}
 					aria-disabled={!canMoveUp}
-					onClick={handleMoveUpClick}
+					onClick={onMoveUp}
 				>
 					<ArrowUp size={15} aria-hidden />
 				</Button>
@@ -166,7 +158,7 @@ export const QuestionCard = ({
 					size='icon-sm'
 					aria-label={`Переместить вопрос ${index + 1} вниз`}
 					aria-disabled={!canMoveDown}
-					onClick={handleMoveDownClick}
+					onClick={onMoveDown}
 				>
 					<ArrowDown size={15} aria-hidden />
 				</Button>

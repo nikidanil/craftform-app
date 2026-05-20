@@ -13,9 +13,9 @@ const refinedQuestion = questionSchema
 	.extend({
 		body: z.string().min(1, 'Введите текст вопроса'),
 	})
-	.superRefine((q, ctx) => {
-		if (q.type !== 'choice') return;
-		if (!q.options || q.options.length === 0) {
+	.superRefine((question, ctx) => {
+		if (question.type !== 'choice') return;
+		if (!question.options || question.options.length === 0) {
 			ctx.addIssue({
 				code: 'custom',
 				path: ['options'],
@@ -23,12 +23,12 @@ const refinedQuestion = questionSchema
 			});
 			return;
 		}
-		q.options.forEach((opt, idx) => {
-			const parsed = trimmedOption.safeParse(opt);
+		question.options.forEach((option, optionIndex) => {
+			const parsed = trimmedOption.safeParse(option);
 			if (!parsed.success) {
 				ctx.addIssue({
 					code: 'custom',
-					path: ['options', idx, 'label'],
+					path: ['options', optionIndex, 'label'],
 					message: 'Заполните вариант ответа',
 				});
 			}
