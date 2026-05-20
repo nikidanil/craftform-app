@@ -300,6 +300,24 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** M.
 
+**Подзадачи (коммиты).**
+1. `docs`: roadmap — подзадачи этапа 7.
+2. `chore`: deps — `@dnd-kit/core`, `@dnd-kit/sortable`,
+   `@dnd-kit/utilities`.
+3. `widgets/form-builder`: model — `useFormBuilderDnd` (sensors +
+   `handleDragEnd` поверх pure `interpretDragEnd`) + unit-тест.
+4. `widgets/question-card` + `widgets/form-builder`: контекстные
+   кнопки «Переместить вверх/вниз» (a11y-fallback), перевод фокуса
+   после удаления вопроса + тест.
+5. `widgets/question-card`: handle → `<button>`, `useSortable` на
+   карточке, transform/opacity при `isDragging`.
+6. `widgets/question-type-panel`: `useDraggable` на плитках, клик
+   как fallback-добавление сохраняется + тест.
+7. `widgets/form-builder`: `DndContext` + `SortableContext` +
+   `useDroppable('workspace')` + русские announcements + `DragOverlay` +
+   сценарные тесты (add via drag, reorder, drop-outside-delete,
+   drop-on-sidebar-NOT-delete, keyboard reorder).
+
 ---
 
 ## Этап 8. Главная: поиск, сортировка, URL-state, инфинити-скролл
