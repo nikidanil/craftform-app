@@ -5,6 +5,8 @@ import {
 	useWatch,
 } from 'react-hook-form';
 import { ArrowDown, ArrowUp, Trash2 } from 'lucide-react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import { Input, Textarea, Switch, Label, Button } from '@/shared/ui';
 import type { QuestionType, FormInput } from '@/entities/form';
@@ -14,6 +16,7 @@ import styles from './QuestionCard.module.css';
 
 type Props = {
 	index: number;
+	sortableId: string;
 	onRemove: () => void;
 	canMoveUp: boolean;
 	canMoveDown: boolean;
@@ -29,6 +32,7 @@ const TYPE_LABEL: Record<QuestionType, string> = {
 
 export const QuestionCard = ({
 	index,
+	sortableId,
 	onRemove,
 	canMoveUp,
 	canMoveDown,
@@ -38,6 +42,21 @@ export const QuestionCard = ({
 	const { control, register, formState } = useFormContext<FormInput>();
 	const bodyId = useId();
 	const reqId = useId();
+	const {
+		attributes,
+		listeners,
+		setNodeRef,
+		setActivatorNodeRef,
+		transform,
+		transition,
+		isDragging,
+	} = useSortable({ id: sortableId });
+
+	const cardStyle = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+		opacity: isDragging ? 0.4 : undefined,
+	};
 
 	const type = useWatch({
 		control,
@@ -57,9 +76,23 @@ export const QuestionCard = ({
 	};
 
 	return (
-		<div className={styles.card} data-testid='question-card' data-type={type}>
-			<div className={styles.handle} aria-hidden>
-				<svg width='10' height='16' viewBox='0 0 10 16'>
+		<div
+			ref={setNodeRef}
+			style={cardStyle}
+			className={styles.card}
+			data-testid='question-card'
+			data-type={type}
+			data-dragging={isDragging || undefined}
+		>
+			<button
+				ref={setActivatorNodeRef}
+				type='button'
+				className={styles.handle}
+				aria-label={`Перетащить вопрос ${index + 1}`}
+				{...attributes}
+				{...listeners}
+			>
+				<svg width='10' height='16' viewBox='0 0 10 16' aria-hidden>
 					<circle cx='3' cy='3' r='1.5' fill='currentColor' />
 					<circle cx='7' cy='3' r='1.5' fill='currentColor' />
 					<circle cx='3' cy='8' r='1.5' fill='currentColor' />
@@ -67,7 +100,7 @@ export const QuestionCard = ({
 					<circle cx='3' cy='13' r='1.5' fill='currentColor' />
 					<circle cx='7' cy='13' r='1.5' fill='currentColor' />
 				</svg>
-			</div>
+			</button>
 
 			<div className={styles.content}>
 				<div className={styles.row}>
