@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { DragEndEvent } from '@dnd-kit/core';
 
 import {
@@ -6,7 +6,10 @@ import {
 	SIDEBAR_DROPPABLE_ID,
 	WORKSPACE_DROPPABLE_ID,
 } from '../dndProtocol';
-import { interpretDragEnd } from '../useFormBuilderDnd';
+import {
+	applyDragInterpretation,
+	interpretDragEnd,
+} from '../useFormBuilderDnd';
 
 type EventInput = {
 	active: { id: string; data?: unknown };
@@ -179,5 +182,73 @@ describe('interpretDragEnd', () => {
 
 			expect(result).toEqual({ kind: 'reorder', from: 0, to: 2 });
 		});
+	});
+});
+
+describe('applyDragInterpretation', () => {
+	const makeHelpers = (size = 0) => ({
+		append: vi.fn(),
+		insert: vi.fn(),
+		move: vi.fn(),
+		remove: vi.fn(),
+		size,
+	});
+
+	it('add без insertIndex добавляет новый вопрос в конец', () => {
+		const helpers = makeHelpers(2);
+
+		applyDragInterpretation(
+			{ kind: 'add', questionType: 'short-text', insertIndex: null },
+			helpers,
+		);
+
+		expect(helpers.append).toHaveBeenCalledTimes(1);
+		expect(helpers.append).toHaveBeenCalledWith(
+			expect.objectContaining({ type: 'short-text', order: 2 }),
+		);
+		expect(helpers.insert).not.toHaveBeenCalled();
+	});
+
+	it('add с insertIndex вставляет на заданную позицию', () => {
+		const helpers = makeHelpers(3);
+
+		applyDragInterpretation(
+			{ kind: 'add', questionType: 'choice', insertIndex: 1 },
+			helpers,
+		);
+
+		expect(helpers.insert).toHaveBeenCalledTimes(1);
+		expect(helpers.insert).toHaveBeenCalledWith(
+			1,
+			expect.objectContaining({ type: 'choice' }),
+		);
+		expect(helpers.append).not.toHaveBeenCalled();
+	});
+
+	it('reorder перемещает вопрос с позиции from на позицию to', () => {
+		const helpers = makeHelpers(3);
+
+		applyDragInterpretation({ kind: 'reorder', from: 0, to: 2 }, helpers);
+
+		expect(helpers.move).toHaveBeenCalledWith(0, 2);
+	});
+
+	it('remove удаляет вопрос на заданной позиции', () => {
+		const helpers = makeHelpers(3);
+
+		applyDragInterpretation({ kind: 'remove', index: 1 }, helpers);
+
+		expect(helpers.remove).toHaveBeenCalledWith(1);
+	});
+
+	it('noop не вызывает ни одного хелпера', () => {
+		const helpers = makeHelpers(3);
+
+		applyDragInterpretation({ kind: 'noop' }, helpers);
+
+		expect(helpers.append).not.toHaveBeenCalled();
+		expect(helpers.insert).not.toHaveBeenCalled();
+		expect(helpers.move).not.toHaveBeenCalled();
+		expect(helpers.remove).not.toHaveBeenCalled();
 	});
 });
