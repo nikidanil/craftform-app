@@ -56,13 +56,24 @@
 	color: var(--muted-foreground);
 }
 
-.removeBtn {
+.actions {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
 	flex-shrink: 0;
+}
+
+.removeBtn {
 	color: var(--muted-foreground);
 }
 
 .removeBtn:hover {
 	color: var(--destructive);
+}
+
+.actions button[aria-disabled='true'] {
+	opacity: 0.4;
+	cursor: not-allowed;
 }
 
 .choice {

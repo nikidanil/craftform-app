@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import {
 	FormProvider,
@@ -37,10 +37,17 @@ const toDefaults = (form: Form): FormInput => ({
 	questions: form.questions,
 });
 
+type PendingFocus =
+	| { kind: 'title' }
+	| { kind: 'question'; index: number }
+	| null;
+
 export const FormBuilderForm = (props: Props) => {
 	const titleId = useId();
 	const descId = useId();
 	const navigate = useNavigate();
+	const workspaceRef = useRef<HTMLElement>(null);
+	const pendingFocusRef = useRef<PendingFocus>(null);
 
 	const methods = useForm<FormBuilderValues>({
 		resolver: zodResolver(formBuilderSchema),
@@ -55,6 +62,46 @@ export const FormBuilderForm = (props: Props) => {
 		control: methods.control,
 		name: 'questions',
 	});
+
+	useEffect(() => {
+		const pending = pendingFocusRef.current;
+		if (!pending) return;
+		const workspace = workspaceRef.current;
+		if (!workspace) return;
+		pendingFocusRef.current = null;
+		if (pending.kind === 'title') {
+			workspace
+				.querySelector<HTMLInputElement>(`#${CSS.escape(titleId)}`)
+				?.focus();
+			return;
+		}
+		const cards = workspace.querySelectorAll<HTMLElement>(
+			'[data-testid="question-card"]',
+		);
+		const card = cards[pending.index];
+		card
+			?.querySelector<HTMLInputElement>('input[aria-label="Текст вопроса"]')
+			?.focus();
+	}, [questionsArray.fields.length, titleId]);
+
+	const handleRemove = (index: number) => {
+		const nextLength = questionsArray.fields.length - 1;
+		pendingFocusRef.current =
+			nextLength === 0
+				? { kind: 'title' }
+				: { kind: 'question', index: Math.min(index, nextLength - 1) };
+		questionsArray.remove(index);
+	};
+
+	const handleMoveUp = (index: number) => {
+		if (index === 0) return;
+		questionsArray.move(index, index - 1);
+	};
+
+	const handleMoveDown = (index: number) => {
+		if (index >= questionsArray.fields.length - 1) return;
+		questionsArray.move(index, index + 1);
+	};
 
 	const saveOptions =
 		props.mode === 'edit'
@@ -115,7 +162,7 @@ export const FormBuilderForm = (props: Props) => {
 					</div>
 				</aside>
 
-				<main className={styles.workspace}>
+				<main ref={workspaceRef} className={styles.workspace}>
 					<SaveFormStatus status={status} error={error} />
 
 					<div className={styles.metaCard}>
@@ -150,7 +197,11 @@ export const FormBuilderForm = (props: Props) => {
 							<QuestionCard
 								key={field.id}
 								index={index}
-								onRemove={() => questionsArray.remove(index)}
+								canMoveUp={index > 0}
+								canMoveDown={index < questionsArray.fields.length - 1}
+								onMoveUp={() => handleMoveUp(index)}
+								onMoveDown={() => handleMoveDown(index)}
+								onRemove={() => handleRemove(index)}
 							/>
 						))}
 					</div>
