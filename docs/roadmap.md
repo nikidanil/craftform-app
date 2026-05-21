@@ -340,6 +340,36 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** M.
 
+**Подзадачи (коммиты).**
+1. `docs`: roadmap — подзадачи этапа 8.
+2. `chore`: mocks — расширить сиды до 32 форм (для проверки
+   инфинити-скролла и сортировок).
+3. `shared/lib`: `useDebouncedValue` + тест.
+4. `shared/lib`: `useSyncedSearchParam` (обёртка над
+   `useSearchParams`, удаляет параметр при равенстве default) +
+   тест.
+5. `widgets/forms-list`: model — `SortOption` (union из 6
+   вариантов), `DEFAULT_SORT`, `isSortOption`, `SORT_OPTIONS` +
+   тесты.
+6. `widgets/forms-list`: model — `applyFormsListFilters`
+   (фильтр по подстроке + сортировка по 6 вариантам со
+   стабильным вторичным ключом) + тесты.
+7. `widgets/forms-list`: model — `useFormsListInfiniteWindow`
+   (клиентское окно по 30 + `IntersectionObserver` на сентинеле,
+   `reset()` при смене search/sort) + тест.
+8. `widgets/forms-list`: ui `NotFoundState` («Формы с данным
+   названием не найдены», без CTA).
+9. `widgets/forms-list`: ui `FormsListToolbar` (Input с иконкой
+   Search + Select с 6 опциями, controlled) + сценарные тесты.
+10. `widgets/forms-list`: ui `FormsList` — интегрировать
+    toolbar/фильтр/окно, три ветки (EmptyState/NotFoundState/grid +
+    sentinel) + сценарные тесты (NotFound, окно 30→32, сортировка
+    title-asc).
+11. `pages/forms-list`: подключить `useSyncedSearchParam` для `q` и
+    `sort` с нормализацией через `isSortOption`, проброс в
+    `FormsList` + сценарные тесты (открытие по URL восстанавливает
+    состояние, очистка поля убирает `q` из URL).
+
 ---
 
 ## Этап 9. Отклики: фильтры, сортировка, URL-state, инфинити-скролл
