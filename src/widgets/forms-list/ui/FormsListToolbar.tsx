@@ -50,7 +50,12 @@ export const FormsListToolbar = ({
 				aria-label='Сортировка списка форм'
 				className={styles.sortTrigger}
 			>
-				<SelectValue />
+				<SelectValue>
+					{(value) =>
+						SORT_OPTIONS.find((option) => option.value === value)?.label ??
+						''
+					}
+				</SelectValue>
 			</SelectTrigger>
 			<SelectContent>
 				{SORT_OPTIONS.map((option) => (
