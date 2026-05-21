@@ -1,3 +1,4 @@
+export { applyFormsListFilters } from './applyFormsListFilters';
 export { formatCreatedAt } from './formatCreatedAt';
 export {
 	DEFAULT_SORT,
