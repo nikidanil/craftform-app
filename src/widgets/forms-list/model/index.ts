@@ -6,4 +6,3 @@ export {
 	SORT_OPTIONS,
 	type SortOption,
 } from './sortOption';
-export { useFormsListInfiniteWindow } from './useFormsListInfiniteWindow';
