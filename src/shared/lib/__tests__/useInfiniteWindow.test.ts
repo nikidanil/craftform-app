@@ -7,9 +7,9 @@ import {
 	unstubIntersectionObserver,
 } from '@/test/mockIntersectionObserver';
 
-import { useFormsListInfiniteWindow } from '../useFormsListInfiniteWindow';
+import { useInfiniteWindow } from '../useInfiniteWindow';
 
-describe('useFormsListInfiniteWindow', () => {
+describe('useInfiniteWindow', () => {
 	beforeEach(() => {
 		stubIntersectionObserver();
 	});
@@ -19,14 +19,14 @@ describe('useFormsListInfiniteWindow', () => {
 	});
 
 	it('начальное состояние: displayCount = pageSize, hasMore = true', () => {
-		const { result } = renderHook(() => useFormsListInfiniteWindow(70, 30));
+		const { result } = renderHook(() => useInfiniteWindow(70, 30));
 
 		expect(result.current.displayCount).toBe(30);
 		expect(result.current.hasMore).toBe(true);
 	});
 
 	it('при пересечении сентинеля подтягивает следующую страницу до totalCount', () => {
-		const { result } = renderHook(() => useFormsListInfiniteWindow(70, 30));
+		const { result } = renderHook(() => useInfiniteWindow(70, 30));
 
 		const sentinel = document.createElement('div');
 		act(() => {
@@ -47,14 +47,14 @@ describe('useFormsListInfiniteWindow', () => {
 	});
 
 	it('возвращает totalCount как displayCount и hasMore=false, если totalCount меньше pageSize', () => {
-		const { result } = renderHook(() => useFormsListInfiniteWindow(5, 30));
+		const { result } = renderHook(() => useInfiniteWindow(5, 30));
 
 		expect(result.current.displayCount).toBe(5);
 		expect(result.current.hasMore).toBe(false);
 	});
 
 	it('reset возвращает displayCount к pageSize', () => {
-		const { result } = renderHook(() => useFormsListInfiniteWindow(90, 30));
+		const { result } = renderHook(() => useInfiniteWindow(90, 30));
 
 		const sentinel = document.createElement('div');
 		act(() => {

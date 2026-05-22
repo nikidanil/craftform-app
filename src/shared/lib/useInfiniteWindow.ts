@@ -7,7 +7,7 @@ type InfiniteWindowResult = {
 	reset: () => void;
 };
 
-export const useFormsListInfiniteWindow = (
+export const useInfiniteWindow = (
 	totalCount: number,
 	pageSize = 30,
 ): InfiniteWindowResult => {

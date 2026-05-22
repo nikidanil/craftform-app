@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 
 import type { Form } from '@/entities/form';
-import { useDebouncedValue } from '@/shared/lib';
+import { useDebouncedValue, useInfiniteWindow } from '@/shared/lib';
 
 import {
 	applyFormsListFilters,
 	DEFAULT_SORT,
 	type SortOption,
-	useFormsListInfiniteWindow,
 } from '../model';
 
 import { EmptyState } from './EmptyState';
@@ -41,8 +40,9 @@ export const FormsList = ({
 		search: debouncedSearch,
 		sort,
 	});
-	const { displayCount, hasMore, sentinelRef, reset } =
-		useFormsListInfiniteWindow(filtered.length);
+	const { displayCount, hasMore, sentinelRef, reset } = useInfiniteWindow(
+		filtered.length,
+	);
 
 	useEffect(() => {
 		reset();
