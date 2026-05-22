@@ -300,6 +300,24 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** M.
 
+**Подзадачи (коммиты).**
+1. `docs`: roadmap — подзадачи этапа 7.
+2. `chore`: deps — `@dnd-kit/core`, `@dnd-kit/sortable`,
+   `@dnd-kit/utilities`.
+3. `widgets/form-builder`: model — `useFormBuilderDnd` (sensors +
+   `handleDragEnd` поверх pure `interpretDragEnd`) + unit-тест.
+4. `widgets/question-card` + `widgets/form-builder`: контекстные
+   кнопки «Переместить вверх/вниз» (a11y-fallback), перевод фокуса
+   после удаления вопроса + тест.
+5. `widgets/question-card`: handle → `<button>`, `useSortable` на
+   карточке, transform/opacity при `isDragging`.
+6. `widgets/question-type-panel`: `useDraggable` на плитках, клик
+   как fallback-добавление сохраняется + тест.
+7. `widgets/form-builder`: `DndContext` + `SortableContext` +
+   `useDroppable('workspace')` + русские announcements + `DragOverlay` +
+   сценарные тесты (add via drag, reorder, drop-outside-delete,
+   drop-on-sidebar-NOT-delete, keyboard reorder).
+
 ---
 
 ## Этап 8. Главная: поиск, сортировка, URL-state, инфинити-скролл
@@ -322,6 +340,36 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** M.
 
+**Подзадачи (коммиты).**
+1. `docs`: roadmap — подзадачи этапа 8.
+2. `chore`: mocks — расширить сиды до 32 форм (для проверки
+   инфинити-скролла и сортировок).
+3. `shared/lib`: `useDebouncedValue` + тест.
+4. `shared/lib`: `useSyncedSearchParam` (обёртка над
+   `useSearchParams`, удаляет параметр при равенстве default) +
+   тест.
+5. `widgets/forms-list`: model — `SortOption` (union из 6
+   вариантов), `DEFAULT_SORT`, `isSortOption`, `SORT_OPTIONS` +
+   тесты.
+6. `widgets/forms-list`: model — `applyFormsListFilters`
+   (фильтр по подстроке + сортировка по 6 вариантам со
+   стабильным вторичным ключом) + тесты.
+7. `widgets/forms-list`: model — `useFormsListInfiniteWindow`
+   (клиентское окно по 30 + `IntersectionObserver` на сентинеле,
+   `reset()` при смене search/sort) + тест.
+8. `widgets/forms-list`: ui `NotFoundState` («Формы с данным
+   названием не найдены», без CTA).
+9. `widgets/forms-list`: ui `FormsListToolbar` (Input с иконкой
+   Search + Select с 6 опциями, controlled) + сценарные тесты.
+10. `widgets/forms-list`: ui `FormsList` — интегрировать
+    toolbar/фильтр/окно, три ветки (EmptyState/NotFoundState/grid +
+    sentinel) + сценарные тесты (NotFound, окно 30→32, сортировка
+    title-asc).
+11. `pages/forms-list`: подключить `useSyncedSearchParam` для `q` и
+    `sort` с нормализацией через `isSortOption`, проброс в
+    `FormsList` + сценарные тесты (открытие по URL восстанавливает
+    состояние, очистка поля убирает `q` из URL).
+
 ---
 
 ## Этап 9. Отклики: фильтры, сортировка, URL-state, инфинити-скролл
@@ -343,6 +391,38 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
   и на «фильтр всё отрезал».
 
 **Сложность.** M.
+
+**Подзадачи (коммиты).**
+1. `docs`: roadmap — подзадачи этапа 9.
+2. `chore`: mocks — расширить сиды одной формы до 31+ откликов с
+   разбросом дат (для инфинити-скролла и фильтра диапазона).
+3. `chore`: deps — `react-day-picker`, `date-fns` (ru-локаль для
+   календаря и форматирование `dd.MM.yyyy`).
+4. `shared/ui`: shadcn `Calendar` (с ru-локализацией) + `Popover`.
+5. `shared/lib`: вынести `useFormsListInfiniteWindow` →
+   `useInfiniteWindow` (generic), обновить импорт в
+   `widgets/forms-list`, перенести тест.
+6. `widgets/responses-list`: model — `SortOption`
+   (`date-desc`/`date-asc`), `DEFAULT_SORT`, `isSortOption`,
+   `SORT_OPTIONS` + тесты.
+7. `widgets/responses-list`: model — `applyResponsesListFilters`
+   (фильтр диапазона дат включительно с двух сторон + сортировка по
+   `createdAt` со стабильным вторичным ключом `number`) + тесты.
+8. `widgets/responses-list`: ui `DateRangeFilter` — два
+   `Popover`+`Calendar` («от»/«до»), controlled, формат
+   `dd.MM.yyyy` в триггере, кнопка очистки + сценарный тест.
+9. `widgets/responses-list`: ui `ResponsesListToolbar` — `Select`
+   сортировки + `DateRangeFilter`, полностью controlled + сценарный
+   тест.
+10. `widgets/responses-list`: ui `ResponsesList` — интегрировать
+    toolbar/фильтр/окно, общий `EmptyState` на оба пустых случая,
+    sr-only `aria-live` анонс + сценарные тесты (сортировка,
+    фильтр→Empty, окно 30→N).
+11. `pages/responses-list`: подключить `useSyncedSearchParam` для
+    `sort`/`dateFrom`/`dateTo`, нормализация `sort` через
+    `isSortOption` + `useEffect`-самочистка + сценарные тесты
+    (восстановление по URL, очистка `dateFrom` сохраняет остальные,
+    `?sort=мусор` → дефолт).
 
 ---
 

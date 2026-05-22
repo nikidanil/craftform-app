@@ -1,0 +1,11 @@
+.toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.sortTrigger {
+	min-width: 10rem;
+	justify-content: space-between;
+}

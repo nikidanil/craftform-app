@@ -113,6 +113,75 @@ describe('FormBuilderForm — create mode', () => {
 		expect(cards).toHaveLength(1);
 		expect(cards[0]).toHaveAttribute('data-type', 'long-text');
 	});
+
+	it('кнопки «Переместить вверх/вниз» меняют порядок карточек и отключаются на крайних', async () => {
+		const user = userEvent.setup();
+		renderCreate();
+
+		await user.click(screen.getByRole('button', { name: 'Короткий текст' }));
+		await user.click(screen.getByRole('button', { name: 'Длинный текст' }));
+		await user.click(screen.getByRole('button', { name: 'Список выбора' }));
+
+		const upFirst = screen.getByRole('button', {
+			name: 'Переместить вопрос 1 вверх',
+		});
+		const downLast = screen.getByRole('button', {
+			name: 'Переместить вопрос 3 вниз',
+		});
+		expect(upFirst).toHaveAttribute('aria-disabled', 'true');
+		expect(downLast).toHaveAttribute('aria-disabled', 'true');
+
+		await user.click(
+			screen.getByRole('button', { name: 'Переместить вопрос 1 вниз' }),
+		);
+
+		const reordered = screen.getAllByTestId('question-card');
+		expect(reordered[0]).toHaveAttribute('data-type', 'long-text');
+		expect(reordered[1]).toHaveAttribute('data-type', 'short-text');
+		expect(reordered[2]).toHaveAttribute('data-type', 'choice');
+	});
+
+	it('после удаления карточки фокус переезжает на соседнюю карточку', async () => {
+		const user = userEvent.setup();
+		renderCreate();
+
+		await user.click(screen.getByRole('button', { name: 'Короткий текст' }));
+		await user.click(screen.getByRole('button', { name: 'Длинный текст' }));
+
+		const firstCard = screen.getAllByTestId('question-card')[0]!;
+		await user.click(
+			within(firstCard).getByRole('button', { name: /удалить вопрос/i }),
+		);
+
+		const remainingCard = screen.getByTestId('question-card');
+		const body = within(remainingCard).getByLabelText('Текст вопроса');
+		expect(body).toHaveFocus();
+	});
+
+	it('handle перетаскивания — focusable кнопка с описательной aria-label', async () => {
+		const user = userEvent.setup();
+		renderCreate();
+
+		await user.click(screen.getByRole('button', { name: 'Короткий текст' }));
+
+		const handle = screen.getByRole('button', {
+			name: 'Перетащить вопрос 1',
+		});
+		handle.focus();
+		expect(handle).toHaveFocus();
+	});
+
+	it('после удаления единственной карточки фокус возвращается на поле «Название формы»', async () => {
+		const user = userEvent.setup();
+		renderCreate();
+
+		await user.click(screen.getByRole('button', { name: 'Короткий текст' }));
+		await user.click(
+			screen.getByRole('button', { name: /удалить вопрос/i }),
+		);
+
+		expect(screen.getByLabelText('Название формы')).toHaveFocus();
+	});
 });
 
 const fullForm: Form = {

@@ -1,12 +1,30 @@
+import { useEffect } from 'react';
+
 import { useFormsList } from '@/entities/form';
 import { useResponsesCountByForm } from '@/entities/submission';
-import { FormsList } from '@/widgets/forms-list';
+import { useSyncedSearchParam } from '@/shared/lib';
+import {
+	DEFAULT_SORT,
+	FormsList,
+	isSortOption,
+	type SortOption,
+} from '@/widgets/forms-list';
 
 import styles from './FormsListPage.module.css';
 
 export const FormsListPage = () => {
 	const formsQuery = useFormsList();
 	const countsQuery = useResponsesCountByForm();
+
+	const [search, setSearch] = useSyncedSearchParam('q', '');
+	const [sortParam, setSortParam] = useSyncedSearchParam('sort', DEFAULT_SORT);
+	const sort: SortOption = isSortOption(sortParam) ? sortParam : DEFAULT_SORT;
+
+	useEffect(() => {
+		if (!isSortOption(sortParam)) {
+			setSortParam(DEFAULT_SORT);
+		}
+	}, [sortParam, setSortParam]);
 
 	const isLoading = formsQuery.isLoading || countsQuery.isLoading;
 	const isError = formsQuery.isError || countsQuery.isError;
@@ -29,6 +47,10 @@ export const FormsListPage = () => {
 				<FormsList
 					forms={formsQuery.data ?? []}
 					responsesCountByForm={countsQuery.data ?? {}}
+					search={search}
+					onSearchChange={setSearch}
+					sort={sort}
+					onSortChange={setSortParam}
 				/>
 			)}
 		</main>

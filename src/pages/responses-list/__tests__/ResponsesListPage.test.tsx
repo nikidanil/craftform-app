@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 
 import type { Form } from '@/entities/form';
 import type { Submission } from '@/entities/submission';
@@ -74,11 +74,28 @@ const buildSubmission = (overrides: Partial<Submission> = {}): Submission => ({
 	...overrides,
 });
 
-const renderPage = () =>
+const renderPage = (initialEntries: string[] = ['/forms/form-1/responses']) =>
 	renderWithProviders(<ResponsesListPage />, {
-		initialEntries: ['/forms/form-1/responses'],
+		initialEntries,
 		routePath: '/forms/:formId/responses',
 	});
+
+const mockSuccessfulLoad = (responses: Submission[]) => {
+	mockedUseForm.mockReturnValue(
+		mockFormResult({
+			data: buildForm({ title: 'Опрос' }),
+			isSuccess: true,
+			status: 'success',
+		}),
+	);
+	mockedUseResponsesList.mockReturnValue(
+		mockResponsesResult({
+			data: responses,
+			isSuccess: true,
+			status: 'success',
+		}),
+	);
+};
 
 describe('ResponsesListPage', () => {
 	beforeEach(() => {
@@ -168,5 +185,91 @@ describe('ResponsesListPage', () => {
 
 		await userEvent.click(screen.getByRole('link', { name: /Отклик №2/ }));
 		expect(getCurrentPath()).toBe('/forms/form-1/responses/r-2');
+	});
+
+	it('открытие по URL с ?sort=date-asc&dateFrom=2026-05-01 восстанавливает селект, поле «От» и порядок', () => {
+		const responses = [
+			buildSubmission({
+				id: 'r-old',
+				formId: 'form-1',
+				number: 1,
+				createdAt: '2026-05-10T12:00:00.000Z',
+			}),
+			buildSubmission({
+				id: 'r-new',
+				formId: 'form-1',
+				number: 2,
+				createdAt: '2026-06-15T12:00:00.000Z',
+			}),
+		];
+		mockSuccessfulLoad(responses);
+
+		renderPage(['/forms/form-1/responses?sort=date-asc&dateFrom=2026-05-01']);
+
+		expect(
+			screen.getByRole('combobox', { name: /сортировка/i }),
+		).toHaveTextContent('Сначала старые');
+		expect(
+			screen.getByRole('button', { name: /дата от/i }),
+		).toHaveTextContent('01.05.2026');
+
+		const firstHeading = screen.getAllByRole('heading', { level: 3 })[0];
+		expect(firstHeading).toHaveTextContent('Отклик №1');
+	});
+
+	it('смена сортировки на «Сначала старые» обновляет URL до ?sort=date-asc', async () => {
+		mockSuccessfulLoad([
+			buildSubmission({ id: 'r-1', formId: 'form-1', number: 1 }),
+		]);
+
+		const { getCurrentPath } = renderPage();
+
+		await userEvent.click(
+			screen.getByRole('combobox', { name: /сортировка/i }),
+		);
+		await userEvent.click(
+			await screen.findByRole('option', { name: 'Сначала старые' }),
+		);
+
+		expect(getCurrentPath()).toBe('/forms/form-1/responses?sort=date-asc');
+	});
+
+	it('очистка поля «От» убирает только dateFrom, sort и dateTo в URL сохраняются', async () => {
+		mockSuccessfulLoad([
+			buildSubmission({
+				id: 'r-1',
+				formId: 'form-1',
+				number: 1,
+				createdAt: '2026-05-10T12:00:00.000Z',
+			}),
+		]);
+
+		const { getCurrentPath } = renderPage([
+			'/forms/form-1/responses?sort=date-asc&dateFrom=2026-05-01&dateTo=2026-06-01',
+		]);
+
+		await userEvent.click(screen.getByRole('button', { name: /дата от/i }));
+		await userEvent.click(
+			await screen.findByRole('button', { name: /очистить/i }),
+		);
+
+		expect(getCurrentPath()).toBe(
+			'/forms/form-1/responses?sort=date-asc&dateTo=2026-06-01',
+		);
+	});
+
+	it('невалидный sort в URL чистится до дефолта', async () => {
+		mockSuccessfulLoad([
+			buildSubmission({ id: 'r-1', formId: 'form-1', number: 1 }),
+		]);
+
+		const { getCurrentPath } = renderPage(['/forms/form-1/responses?sort=бяка']);
+
+		await waitFor(() => {
+			expect(getCurrentPath()).toBe('/forms/form-1/responses');
+		});
+		expect(
+			screen.getByRole('combobox', { name: /сортировка/i }),
+		).toHaveTextContent('Сначала новые');
 	});
 });

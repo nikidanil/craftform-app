@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 
 import type { Form } from '@/entities/form';
 import { useFormsList } from '@/entities/form';
@@ -175,5 +175,112 @@ describe('FormsListPage', () => {
 			'Не удалось загрузить список форм. Попробуйте обновить страницу.',
 		);
 		expect(screen.queryAllByRole('article')).toHaveLength(0);
+	});
+
+	it('открытие по URL с ?q=...&sort=title-asc восстанавливает поле поиска, селект и видимые карточки', () => {
+		const forms = [
+			buildForm('form-1', 'Опрос про офис'),
+			buildForm('form-2', 'Регистрация на митап'),
+		];
+
+		mockedUseFormsList.mockReturnValue(
+			mockQueryResult<Form[]>({
+				data: forms,
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockedUseResponsesCountByForm.mockReturnValue(
+			mockQueryResult<Record<string, number>>({
+				data: {},
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockDeleteAction();
+
+		renderWithProviders(<FormsListPage />, {
+			initialEntries: ['/?q=Опрос&sort=title-asc'],
+		});
+
+		expect(
+			screen.getByRole('searchbox', { name: /поиск форм/i }),
+		).toHaveValue('Опрос');
+		expect(
+			screen.getByRole('combobox', { name: /сортировка/i }),
+		).toHaveTextContent('По названию: А–Я');
+		expect(
+			screen.getByRole('heading', { name: 'Опрос про офис' }),
+		).toBeInTheDocument();
+		expect(
+			screen.queryByRole('heading', { name: 'Регистрация на митап' }),
+		).toBeNull();
+	});
+
+	it('очистка поля поиска убирает q, но сохраняет sort в URL', async () => {
+		const forms = [
+			buildForm('form-1', 'Опрос про офис'),
+			buildForm('form-2', 'Регистрация на митап'),
+		];
+
+		mockedUseFormsList.mockReturnValue(
+			mockQueryResult<Form[]>({
+				data: forms,
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockedUseResponsesCountByForm.mockReturnValue(
+			mockQueryResult<Record<string, number>>({
+				data: {},
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockDeleteAction();
+
+		const { getCurrentPath } = renderWithProviders(<FormsListPage />, {
+			initialEntries: ['/?q=Опрос&sort=title-asc'],
+		});
+
+		await userEvent.clear(
+			screen.getByRole('searchbox', { name: /поиск форм/i }),
+		);
+
+		expect(getCurrentPath()).toBe('/?sort=title-asc');
+	});
+
+	it('невалидный sort в URL чистится до дефолта', async () => {
+		const forms = [
+			buildForm('form-1', 'Опрос про офис'),
+			buildForm('form-2', 'Регистрация на митап'),
+		];
+
+		mockedUseFormsList.mockReturnValue(
+			mockQueryResult<Form[]>({
+				data: forms,
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockedUseResponsesCountByForm.mockReturnValue(
+			mockQueryResult<Record<string, number>>({
+				data: {},
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockDeleteAction();
+
+		const { getCurrentPath } = renderWithProviders(<FormsListPage />, {
+			initialEntries: ['/?sort=мусор'],
+		});
+
+		await waitFor(() => {
+			expect(getCurrentPath()).toBe('/');
+		});
+		expect(
+			screen.getByRole('combobox', { name: /сортировка/i }),
+		).toHaveTextContent('Сначала новые');
 	});
 });
