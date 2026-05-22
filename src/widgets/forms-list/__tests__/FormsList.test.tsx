@@ -1,16 +1,14 @@
 import { useState } from 'react';
-import {
-	afterEach,
-	beforeEach,
-	describe,
-	expect,
-	it,
-	vi,
-} from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { renderWithProviders } from '@/test/test-utils';
+import {
+	stubIntersectionObserver,
+	triggerLastObserver,
+	unstubIntersectionObserver,
+} from '@/test/mockIntersectionObserver';
 import type { Form } from '@/entities/form';
 
 import { FormsList } from '../ui/FormsList';
@@ -57,58 +55,13 @@ const Harness = ({
 	);
 };
 
-type ObserverHandle = {
-	target: Element | null;
-	trigger: () => void;
-};
-
-let createdObservers: ObserverHandle[] = [];
-
-class MockIntersectionObserver {
-	private readonly handle: ObserverHandle;
-
-	constructor(callback: IntersectionObserverCallback) {
-		const observerSelf = this;
-		this.handle = {
-			target: null,
-			trigger: () => {
-				const entry = {
-					isIntersecting: true,
-					target: this.handle.target ?? document.createElement('div'),
-				} as IntersectionObserverEntry;
-				// мок не реализует полный интерфейс IntersectionObserver
-				callback(
-					[entry],
-					observerSelf as unknown as IntersectionObserver,
-				);
-			},
-		};
-		createdObservers.push(this.handle);
-	}
-
-	observe(target: Element) {
-		this.handle.target = target;
-	}
-
-	unobserve() {}
-
-	disconnect() {
-		this.handle.target = null;
-	}
-
-	takeRecords(): IntersectionObserverEntry[] {
-		return [];
-	}
-}
-
 describe('FormsList', () => {
 	beforeEach(() => {
-		createdObservers = [];
-		vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
+		stubIntersectionObserver();
 	});
 
 	afterEach(() => {
-		vi.unstubAllGlobals();
+		unstubIntersectionObserver();
 	});
 
 	it('пустой список форм → видно сообщение и клик по CTA ведёт на /forms/new', async () => {
@@ -172,7 +125,7 @@ describe('FormsList', () => {
 		expect(screen.queryByRole('heading', { name: 'Регистрация на митап' })).toBeNull();
 	});
 
-	it('при 32 формах изначально видно 30 карточек, после срабатывания сентинеля — 32', () => {
+	it('при 32 формах изначально видно 30, после прокрутки до конца — 32 и «Загружаем ещё…» исчезает', () => {
 		const forms = Array.from({ length: 32 }, (_, index) =>
 			buildForm(
 				`form-${index + 1}`,
@@ -186,10 +139,11 @@ describe('FormsList', () => {
 		expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(30);
 
 		act(() => {
-			createdObservers.at(-1)?.trigger();
+			triggerLastObserver();
 		});
 
 		expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(32);
+		expect(screen.queryByText('Загружаем ещё…')).toBeNull();
 	});
 
 	it('смена сортировки на «По названию: А–Я» переставляет карточки в алфавитном порядке', async () => {

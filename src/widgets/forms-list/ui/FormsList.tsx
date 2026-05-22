@@ -5,6 +5,7 @@ import { useDebouncedValue } from '@/shared/lib';
 
 import {
 	applyFormsListFilters,
+	DEFAULT_SORT,
 	type SortOption,
 	useFormsListInfiniteWindow,
 } from '../model';
@@ -51,6 +52,13 @@ export const FormsList = ({
 		return <EmptyState />;
 	}
 
+	const isDefaultView = debouncedSearch === '' && sort === DEFAULT_SORT;
+	const announcement = isDefaultView
+		? ''
+		: filtered.length === 0
+			? 'Формы не найдены'
+			: `Найдено форм: ${filtered.length}`;
+
 	return (
 		<div className={styles.root}>
 			<FormsListToolbar
@@ -59,7 +67,14 @@ export const FormsList = ({
 				sort={sort}
 				onSortChange={onSortChange}
 			/>
-			<div aria-live='polite' className={styles.results}>
+			<span
+				aria-live='polite'
+				aria-atomic='true'
+				className={styles.srOnly}
+			>
+				{announcement}
+			</span>
+			<div className={styles.results}>
 				{filtered.length === 0 ? (
 					<NotFoundState />
 				) : (
