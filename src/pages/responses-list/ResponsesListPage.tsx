@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import { useParams } from 'react-router';
 
 import { useForm } from '@/entities/form';
 import { useResponsesList } from '@/entities/submission';
 import { HttpError } from '@/shared/api';
-import { ResponsesList } from '@/widgets/responses-list';
+import {
+	DEFAULT_SORT,
+	ResponsesList,
+	type SortOption,
+} from '@/widgets/responses-list';
 
 import styles from './ResponsesListPage.module.css';
 
@@ -11,6 +16,9 @@ export const ResponsesListPage = () => {
 	const { formId = '' } = useParams<{ formId: string }>();
 	const formQuery = useForm(formId);
 	const responsesQuery = useResponsesList(formId);
+	const [sort, setSort] = useState<SortOption>(DEFAULT_SORT);
+	const [dateFrom, setDateFrom] = useState('');
+	const [dateTo, setDateTo] = useState('');
 
 	if (formQuery.isLoading || responsesQuery.isLoading) {
 		return <p className={styles.state}>Загружаем отклики…</p>;
@@ -39,6 +47,12 @@ export const ResponsesListPage = () => {
 		<ResponsesList
 			formTitle={formQuery.data.title}
 			responses={responsesQuery.data ?? []}
+			sort={sort}
+			onSortChange={setSort}
+			dateFrom={dateFrom}
+			onDateFromChange={setDateFrom}
+			dateTo={dateTo}
+			onDateToChange={setDateTo}
 		/>
 	);
 };
