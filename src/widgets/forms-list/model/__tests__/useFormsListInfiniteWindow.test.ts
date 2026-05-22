@@ -1,60 +1,21 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
+
+import {
+	stubIntersectionObserver,
+	triggerLastObserver,
+	unstubIntersectionObserver,
+} from '@/test/mockIntersectionObserver';
 
 import { useFormsListInfiniteWindow } from '../useFormsListInfiniteWindow';
 
-type Observer = {
-	target: Element | null;
-	trigger: () => void;
-};
-
-let createdObservers: Observer[] = [];
-
-class MockIntersectionObserver {
-	private readonly observer: Observer;
-
-	constructor(callback: IntersectionObserverCallback) {
-		const observerSelf = this;
-		this.observer = {
-			target: null,
-			trigger: () => {
-				const entry = {
-					isIntersecting: true,
-					target: this.observer.target ?? document.createElement('div'),
-				} as IntersectionObserverEntry;
-				// мок не реализует полный интерфейс IntersectionObserver
-				callback(
-					[entry],
-					observerSelf as unknown as IntersectionObserver,
-				);
-			},
-		};
-		createdObservers.push(this.observer);
-	}
-
-	observe(target: Element) {
-		this.observer.target = target;
-	}
-
-	unobserve() {}
-
-	disconnect() {
-		this.observer.target = null;
-	}
-
-	takeRecords(): IntersectionObserverEntry[] {
-		return [];
-	}
-}
-
 describe('useFormsListInfiniteWindow', () => {
 	beforeEach(() => {
-		createdObservers = [];
-		vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
+		stubIntersectionObserver();
 	});
 
 	afterEach(() => {
-		vi.unstubAllGlobals();
+		unstubIntersectionObserver();
 	});
 
 	it('начальное состояние: displayCount = pageSize, hasMore = true', () => {
@@ -73,13 +34,13 @@ describe('useFormsListInfiniteWindow', () => {
 		});
 
 		act(() => {
-			createdObservers.at(-1)?.trigger();
+			triggerLastObserver();
 		});
 		expect(result.current.displayCount).toBe(60);
 		expect(result.current.hasMore).toBe(true);
 
 		act(() => {
-			createdObservers.at(-1)?.trigger();
+			triggerLastObserver();
 		});
 		expect(result.current.displayCount).toBe(70);
 		expect(result.current.hasMore).toBe(false);
@@ -100,7 +61,7 @@ describe('useFormsListInfiniteWindow', () => {
 			result.current.sentinelRef(sentinel);
 		});
 		act(() => {
-			createdObservers.at(-1)?.trigger();
+			triggerLastObserver();
 		});
 		expect(result.current.displayCount).toBe(60);
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 
 import type { Form } from '@/entities/form';
 import { useFormsList } from '@/entities/form';
@@ -217,7 +217,7 @@ describe('FormsListPage', () => {
 		).toBeNull();
 	});
 
-	it('очистка поля поиска убирает параметр q из URL', async () => {
+	it('очистка поля поиска убирает q, но сохраняет sort в URL', async () => {
 		const forms = [
 			buildForm('form-1', 'Опрос про офис'),
 			buildForm('form-2', 'Регистрация на митап'),
@@ -240,13 +240,47 @@ describe('FormsListPage', () => {
 		mockDeleteAction();
 
 		const { getCurrentPath } = renderWithProviders(<FormsListPage />, {
-			initialEntries: ['/?q=Опрос'],
+			initialEntries: ['/?q=Опрос&sort=title-asc'],
 		});
 
 		await userEvent.clear(
 			screen.getByRole('searchbox', { name: /поиск форм/i }),
 		);
 
-		expect(getCurrentPath()).toBe('/');
+		expect(getCurrentPath()).toBe('/?sort=title-asc');
+	});
+
+	it('невалидный sort в URL чистится до дефолта', async () => {
+		const forms = [
+			buildForm('form-1', 'Опрос про офис'),
+			buildForm('form-2', 'Регистрация на митап'),
+		];
+
+		mockedUseFormsList.mockReturnValue(
+			mockQueryResult<Form[]>({
+				data: forms,
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockedUseResponsesCountByForm.mockReturnValue(
+			mockQueryResult<Record<string, number>>({
+				data: {},
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockDeleteAction();
+
+		const { getCurrentPath } = renderWithProviders(<FormsListPage />, {
+			initialEntries: ['/?sort=мусор'],
+		});
+
+		await waitFor(() => {
+			expect(getCurrentPath()).toBe('/');
+		});
+		expect(
+			screen.getByRole('combobox', { name: /сортировка/i }),
+		).toHaveTextContent('Сначала новые');
 	});
 });

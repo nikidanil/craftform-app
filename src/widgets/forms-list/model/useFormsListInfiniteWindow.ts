@@ -19,6 +19,7 @@ export const useFormsListInfiniteWindow = (
 		totalCountRef.current = totalCount;
 	}, [totalCount]);
 
+	// rawDisplayCount не сжимаем при сужении фильтра — иначе на возврате к большому набору пришлось бы листать заново
 	const displayCount = Math.min(rawDisplayCount, totalCount);
 	const hasMore = displayCount < totalCount;
 

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { useFormsList } from '@/entities/form';
 import { useResponsesCountByForm } from '@/entities/submission';
 import { useSyncedSearchParam } from '@/shared/lib';
@@ -17,6 +19,12 @@ export const FormsListPage = () => {
 	const [search, setSearch] = useSyncedSearchParam('q', '');
 	const [sortParam, setSortParam] = useSyncedSearchParam('sort', DEFAULT_SORT);
 	const sort: SortOption = isSortOption(sortParam) ? sortParam : DEFAULT_SORT;
+
+	useEffect(() => {
+		if (!isSortOption(sortParam)) {
+			setSortParam(DEFAULT_SORT);
+		}
+	}, [sortParam, setSortParam]);
 
 	const isLoading = formsQuery.isLoading || countsQuery.isLoading;
 	const isError = formsQuery.isError || countsQuery.isError;
