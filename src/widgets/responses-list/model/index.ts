@@ -1,3 +1,4 @@
+export { applyResponsesListFilters } from './applyResponsesListFilters';
 export {
 	DEFAULT_SORT,
 	isSortOption,
