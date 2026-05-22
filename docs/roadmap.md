@@ -392,6 +392,38 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** M.
 
+**Подзадачи (коммиты).**
+1. `docs`: roadmap — подзадачи этапа 9.
+2. `chore`: mocks — расширить сиды одной формы до 31+ откликов с
+   разбросом дат (для инфинити-скролла и фильтра диапазона).
+3. `chore`: deps — `react-day-picker`, `date-fns` (ru-локаль для
+   календаря и форматирование `dd.MM.yyyy`).
+4. `shared/ui`: shadcn `Calendar` (с ru-локализацией) + `Popover`.
+5. `shared/lib`: вынести `useFormsListInfiniteWindow` →
+   `useInfiniteWindow` (generic), обновить импорт в
+   `widgets/forms-list`, перенести тест.
+6. `widgets/responses-list`: model — `SortOption`
+   (`date-desc`/`date-asc`), `DEFAULT_SORT`, `isSortOption`,
+   `SORT_OPTIONS` + тесты.
+7. `widgets/responses-list`: model — `applyResponsesListFilters`
+   (фильтр диапазона дат включительно с двух сторон + сортировка по
+   `createdAt` со стабильным вторичным ключом `number`) + тесты.
+8. `widgets/responses-list`: ui `DateRangeFilter` — два
+   `Popover`+`Calendar` («от»/«до»), controlled, формат
+   `dd.MM.yyyy` в триггере, кнопка очистки + сценарный тест.
+9. `widgets/responses-list`: ui `ResponsesListToolbar` — `Select`
+   сортировки + `DateRangeFilter`, полностью controlled + сценарный
+   тест.
+10. `widgets/responses-list`: ui `ResponsesList` — интегрировать
+    toolbar/фильтр/окно, общий `EmptyState` на оба пустых случая,
+    sr-only `aria-live` анонс + сценарные тесты (сортировка,
+    фильтр→Empty, окно 30→N).
+11. `pages/responses-list`: подключить `useSyncedSearchParam` для
+    `sort`/`dateFrom`/`dateTo`, нормализация `sort` через
+    `isSortOption` + `useEffect`-самочистка + сценарные тесты
+    (восстановление по URL, очистка `dateFrom` сохраняет остальные,
+    `?sort=мусор` → дефолт).
+
 ---
 
 ## Этап 10. Аутентификация и защита маршрутов
