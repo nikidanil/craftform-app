@@ -52,13 +52,15 @@ export const ResponsesList = ({
 
 	const isDefaultView =
 		sort === DEFAULT_SORT && dateFrom === '' && dateTo === '';
-	const announcement = isDefaultView
-		? ''
-		: filtered.length === 0
-			? 'Отклики не найдены'
-			: `Найдено откликов: ${filtered.length}`;
-
 	const hasResponses = responses.length > 0;
+	// Анонс только когда тулбар виден — иначе пользователь услышит «Отклики не найдены»
+	// и не сможет сбросить фильтр, потому что тулбар скрыт при responses.length === 0
+	const announcement =
+		isDefaultView || !hasResponses
+			? ''
+			: filtered.length === 0
+				? 'Отклики не найдены'
+				: `Найдено откликов: ${filtered.length}`;
 
 	return (
 		<section className={styles.page}>
@@ -102,7 +104,7 @@ export const ResponsesList = ({
 				{announcement}
 			</span>
 
-			{/* ТЗ: и «у формы нет откликов», и «фильтр всё отрезал» показывают один EmptyState с тем же текстом */}
+			{/* docs/features/responses.md: оба пустых состояния используют один и тот же текст «Для данной формы нет откликов» — потому EmptyState один на обе ветки */}
 			{filtered.length === 0 ? (
 				<EmptyState />
 			) : (

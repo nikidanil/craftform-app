@@ -5,13 +5,13 @@ import type { Submission } from '@/entities/submission';
 import { applyResponsesListFilters } from '../applyResponsesListFilters';
 import type { SortOption } from '../sortOption';
 
-const buildResponse = (override: Partial<Submission>): Submission => ({
+const buildResponse = (overrides: Partial<Submission>): Submission => ({
 	id: 'r-x',
 	formId: 'form-1',
 	number: 1,
 	createdAt: '2026-01-01T12:00:00.000Z',
 	answers: [],
-	...override,
+	...overrides,
 });
 
 const january = buildResponse({
