@@ -16,3 +16,12 @@ export {
 	SelectTrigger,
 	SelectValue,
 } from './select';
+export { Calendar, CalendarDayButton } from './calendar';
+export {
+	Popover,
+	PopoverContent,
+	PopoverDescription,
+	PopoverHeader,
+	PopoverTitle,
+	PopoverTrigger,
+} from './popover';
