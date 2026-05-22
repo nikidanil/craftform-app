@@ -1,0 +1,26 @@
+.root {
+	display: inline-flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.trigger {
+	min-width: 8rem;
+	justify-content: flex-start;
+}
+
+.popup {
+	width: auto;
+	padding: 0;
+}
+
+.clear {
+	margin-top: 0.5rem;
+	width: 100%;
+	justify-content: center;
+}
+
+.icon {
+	width: 1rem;
+	height: 1rem;
+}
