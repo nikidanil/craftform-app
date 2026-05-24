@@ -3,22 +3,18 @@ import { http } from '@/shared/api';
 import { formListSchema, formSchema, type Form } from '../model';
 import { formKeys } from './keys';
 
-export const useFormsList = () =>
-	useQuery({
-		queryKey: formKeys.list(),
+export const useFormsByAuthor = (authorId: string | undefined) => {
+	const query = useQuery({
+		queryKey: formKeys.listByAuthor(authorId ?? ''),
 		queryFn: async (): Promise<Form[]> => {
-			const data = await http<unknown>('/api/forms');
+			const data = await http<unknown>(
+				`/api/forms?authorId=${encodeURIComponent(authorId ?? '')}`,
+			);
 			return formListSchema.parse(data);
 		},
+		enabled: Boolean(authorId),
 	});
-
-export const useFormsByAuthor = (authorId: string | undefined) => {
-	const formsQuery = useFormsList();
-	const data =
-		!authorId || !formsQuery.data
-			? ([] as Form[])
-			: formsQuery.data.filter((form) => form.authorId === authorId);
-	return { ...formsQuery, data };
+	return { ...query, data: query.data ?? [] };
 };
 
 export const useForm = (formId: string) =>

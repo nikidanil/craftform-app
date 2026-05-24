@@ -32,7 +32,7 @@ export const useCreateForm = () => {
 			return formSchema.parse(data);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: formKeys.list() });
+			queryClient.invalidateQueries({ queryKey: formKeys.lists() });
 		},
 	});
 };
@@ -54,7 +54,7 @@ export const useUpdateForm = () => {
 		},
 		onSuccess: (_data, { formId }) => {
 			queryClient.invalidateQueries({ queryKey: formKeys.detail(formId) });
-			queryClient.invalidateQueries({ queryKey: formKeys.list() });
+			queryClient.invalidateQueries({ queryKey: formKeys.lists() });
 		},
 	});
 };
@@ -74,7 +74,7 @@ export const useDeleteForm = () => {
 			await http<unknown>(`/api/forms/${formId}`, { method: 'DELETE' });
 		},
 		onSuccess: (_data, formId) => {
-			queryClient.invalidateQueries({ queryKey: formKeys.list() });
+			queryClient.invalidateQueries({ queryKey: formKeys.lists() });
 			queryClient.removeQueries({ queryKey: formKeys.detail(formId) });
 			queryClient.invalidateQueries({ queryKey: submissionKeys.all });
 		},
