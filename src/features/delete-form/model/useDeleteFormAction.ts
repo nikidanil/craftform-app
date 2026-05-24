@@ -1,6 +1,7 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useDeleteForm } from '@/entities/form';
+import { routes } from '@/shared/lib';
 
 export const useDeleteFormAction = () => {
 	const navigate = useNavigate();
@@ -8,21 +9,22 @@ export const useDeleteFormAction = () => {
 	const [error, setError] = useState<Error | null>(null);
 	const [pending, setPending] = useState(false);
 
-	const deleteForm = useCallback(
-		async (formId: string) => {
-			setPending(true);
-			setError(null);
-			try {
-				await deleteMutation.mutateAsync(formId);
-				navigate('/');
-			} catch (e) {
-				setError(e instanceof Error ? e : new Error(String(e)));
-			} finally {
-				setPending(false);
-			}
-		},
-		[deleteMutation, navigate],
-	);
+	const deleteForm = async (formId: string) => {
+		setPending(true);
+		setError(null);
+		try {
+			await deleteMutation.mutateAsync(formId);
+			navigate(routes.home);
+		} catch (caughtError) {
+			setError(
+				caughtError instanceof Error
+					? caughtError
+					: new Error(String(caughtError)),
+			);
+		} finally {
+			setPending(false);
+		}
+	};
 
 	return { deleteForm, error, pending };
 };

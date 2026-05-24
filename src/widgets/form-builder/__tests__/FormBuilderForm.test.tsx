@@ -186,6 +186,7 @@ describe('FormBuilderForm — create mode', () => {
 
 const fullForm: Form = {
 	id: 'form-1',
+	authorId: 'author-1',
 	title: 'Обратная связь',
 	description: 'Помогите нам стать лучше',
 	createdAt: '2026-04-15T10:00:00.000Z',

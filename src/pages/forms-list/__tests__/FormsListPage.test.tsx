@@ -29,6 +29,8 @@ vi.mock('@/entities/submission', async (importOriginal) => {
 	return { ...actual, useResponsesCountByForm: vi.fn() };
 });
 
+// мокаем хук по внутреннему пути: DeleteFormButton импортирует его именно
+// оттуда (мок barrel не перехватил бы его использование внутри компонента)
 vi.mock('@/features/delete-form/model/useDeleteFormAction', () => ({
 	useDeleteFormAction: vi.fn(),
 }));
@@ -47,6 +49,8 @@ type QueryResultShape<T> = Pick<
 const mockQueryResult = <T,>(
 	overrides: Partial<QueryResultShape<T>>,
 ): UseFormsListResult & UseCountResult =>
+	// as unknown: типы useFormsByAuthor (Form[]) и useResponsesCountByForm
+	// (Record) не пересекаются, общий helper мокает оба — приведение намеренно
 	({
 		data: undefined,
 		error: null,
@@ -57,7 +61,7 @@ const mockQueryResult = <T,>(
 		status: 'pending',
 		fetchStatus: 'idle',
 		...overrides,
-	}) as UseFormsListResult & UseCountResult;
+	}) as unknown as UseFormsListResult & UseCountResult;
 
 const buildForm = (
 	id: string,

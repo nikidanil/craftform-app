@@ -10,6 +10,7 @@ import { ResponseView } from '../ui/ResponseView';
 
 const form: Form = {
 	id: 'form-1',
+	authorId: 'author-1',
 	title: 'Обратная связь по курсу',
 	description: 'Помогите нам стать лучше',
 	createdAt: '2026-04-15T10:00:00.000Z',

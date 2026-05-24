@@ -22,7 +22,7 @@ import {
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
-import { cn } from '@/shared/lib';
+import { cn, routes } from '@/shared/lib';
 import { Input, Textarea, Label } from '@/shared/ui';
 import type { Form, FormInput, QuestionType } from '@/entities/form';
 import { QuestionTypePanel } from '@/widgets/question-type-panel';
@@ -171,7 +171,7 @@ export const FormBuilderForm = (props: Props) => {
 		props.mode === 'edit'
 			? ({ mode: 'edit', formId: props.form.id } as const)
 			: ({ mode: 'create' } as const);
-	const { save, status, error, reset } = useSaveForm(saveOptions);
+	const { save, status, reset } = useSaveForm(saveOptions);
 
 	const formId = props.mode === 'edit' ? props.form.id : undefined;
 
@@ -273,7 +273,7 @@ export const FormBuilderForm = (props: Props) => {
 								<button
 									type='button'
 									className={styles.cancelLink}
-									onClick={() => navigate('/')}
+									onClick={() => navigate(routes.home)}
 								>
 									Назад к списку
 								</button>
@@ -282,7 +282,7 @@ export const FormBuilderForm = (props: Props) => {
 					</aside>
 
 					<main ref={assignWorkspaceRef} className={workspaceClass}>
-						<SaveFormStatus status={status} error={error} />
+						<SaveFormStatus status={status} />
 
 						<div className={styles.metaCard}>
 							<Label htmlFor={titleId} className={styles.metaLabel}>

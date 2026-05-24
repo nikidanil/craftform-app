@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
 	useCreateForm,
@@ -6,6 +6,7 @@ import {
 	type FormInput,
 } from '@/entities/form';
 import { useCurrentUser } from '@/entities/session';
+import { routes } from '@/shared/lib';
 
 type CreateOptions = { mode: 'create' };
 type EditOptions = { mode: 'edit'; formId: string };
@@ -21,45 +22,45 @@ export const useSaveForm = (options: Options) => {
 	const [status, setStatus] = useState<SaveStatus>('idle');
 	const [error, setError] = useState<Error | null>(null);
 
-	const save = useCallback(
-		async (input: FormInput) => {
-			setStatus('pending');
-			setError(null);
-			try {
-				if (options.mode === 'create') {
-					if (!currentUser) {
-						throw new Error(
-							'Создание формы доступно только авторизованному пользователю',
-						);
-					}
-					const created = await createForm.mutateAsync({
-						input,
-						authorId: currentUser.id,
-					});
-					setStatus('success');
-					navigate(`/forms/${created.id}/edit`);
-					return created;
+	const save = async (input: FormInput) => {
+		setStatus('pending');
+		setError(null);
+		try {
+			if (options.mode === 'create') {
+				if (!currentUser) {
+					throw new Error(
+						'Создание формы доступно только авторизованному пользователю',
+					);
 				}
-				const updated = await updateForm.mutateAsync({
-					formId: options.formId,
-					patch: input,
+				const created = await createForm.mutateAsync({
+					input,
+					authorId: currentUser.id,
 				});
 				setStatus('success');
-				return updated;
-			} catch (e) {
-				const err = e instanceof Error ? e : new Error(String(e));
-				setError(err);
-				setStatus('error');
-				return null;
+				navigate(routes.formEdit(created.id));
+				return created;
 			}
-		},
-		[createForm, updateForm, navigate, options, currentUser],
-	);
+			const updated = await updateForm.mutateAsync({
+				formId: options.formId,
+				patch: input,
+			});
+			setStatus('success');
+			return updated;
+		} catch (caughtError) {
+			setError(
+				caughtError instanceof Error
+					? caughtError
+					: new Error(String(caughtError)),
+			);
+			setStatus('error');
+			return null;
+		}
+	};
 
-	const reset = useCallback(() => {
+	const reset = () => {
 		setStatus('idle');
 		setError(null);
-	}, []);
+	};
 
 	return { save, status, error, reset };
 };

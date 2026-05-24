@@ -13,12 +13,7 @@ export const userRecordSchema = userSchema.extend({
 });
 export type UserRecord = z.infer<typeof userRecordSchema>;
 
-export const userListSchema = z.array(userSchema);
 export const userRecordListSchema = z.array(userRecordSchema);
 
-export const toPublicUser = (record: UserRecord): User => ({
-	id: record.id,
-	firstName: record.firstName,
-	lastName: record.lastName,
-	email: record.email,
-});
+// userSchema по умолчанию срезает лишние поля (password) — отдельное перечисление не нужно
+export const toPublicUser = (record: UserRecord): User => userSchema.parse(record);

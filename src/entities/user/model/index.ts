@@ -1,7 +1,6 @@
 export {
 	userSchema,
 	userRecordSchema,
-	userListSchema,
 	userRecordListSchema,
 	toPublicUser,
 	type User,
