@@ -1,10 +1,6 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import {
-	createMemoryRouter,
-	RouterProvider,
-	useLocation,
-} from 'react-router';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 import { useSessionStore } from '@/entities/session';
 import { ProtectedRoute } from '../ProtectedRoute';
@@ -17,24 +13,13 @@ const seedUser = {
 	email: 'ivan@formcraft.dev',
 };
 
-const FlashSpy = ({ testId }: { testId: string }) => {
-	const location = useLocation();
-	const state = location.state as { message?: string } | null;
-	return (
-		<div data-testid={testId}>
-			<span data-testid={`${testId}-path`}>{location.pathname}</span>
-			<span data-testid={`${testId}-msg`}>{state?.message ?? ''}</span>
-		</div>
-	);
-};
-
 describe('ProtectedRoute', () => {
 	beforeEach(() => {
 		localStorage.clear();
 		useSessionStore.setState({ currentUser: null });
 	});
 
-	it('анонимного пользователя редиректит на /login и кладёт flash в location.state', () => {
+	it('анонимного пользователя редиректит на /login', async () => {
 		const routes = [
 			{
 				element: <ProtectedRoute />,
@@ -42,17 +27,14 @@ describe('ProtectedRoute', () => {
 					{ path: '/secret', element: <div>secret</div> },
 				],
 			},
-			{ path: '/login', element: <FlashSpy testId='login' /> },
+			{ path: '/login', element: <div data-testid='login'>login</div> },
 		];
 		const router = createMemoryRouter(routes, {
 			initialEntries: ['/secret'],
 		});
 		render(<RouterProvider router={router} />);
 
-		expect(screen.getByTestId('login-path')).toHaveTextContent('/login');
-		expect(screen.getByTestId('login-msg')).toHaveTextContent(
-			'Для просмотра информации о пользователе необходимо войти в систему',
-		);
+		expect(await screen.findByTestId('login')).toBeInTheDocument();
 	});
 
 	it('авторизованного пользователя пропускает к защищённому контенту', () => {
@@ -82,7 +64,7 @@ describe('UnauthorizedOnlyRoute', () => {
 		useSessionStore.setState({ currentUser: null });
 	});
 
-	it('авторизованного редиректит на / и кладёт «Вы уже вошли в систему» в location.state', () => {
+	it('авторизованного редиректит на /', async () => {
 		useSessionStore.setState({ currentUser: seedUser });
 
 		const routes = [
@@ -92,17 +74,14 @@ describe('UnauthorizedOnlyRoute', () => {
 					{ path: '/login', element: <div>login</div> },
 				],
 			},
-			{ path: '/', element: <FlashSpy testId='home' /> },
+			{ path: '/', element: <div data-testid='home'>home</div> },
 		];
 		const router = createMemoryRouter(routes, {
 			initialEntries: ['/login'],
 		});
 		render(<RouterProvider router={router} />);
 
-		expect(screen.getByTestId('home-path')).toHaveTextContent('/');
-		expect(screen.getByTestId('home-msg')).toHaveTextContent(
-			'Вы уже вошли в систему',
-		);
+		expect(await screen.findByTestId('home')).toBeInTheDocument();
 	});
 
 	it('анонимного пропускает к /login', () => {

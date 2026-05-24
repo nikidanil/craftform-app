@@ -27,7 +27,7 @@ export const useLoginAction = () => {
 				}
 				setCurrentUser(toPublicUser(record));
 				setStatus('success');
-				navigate('/');
+				navigate('/', { replace: true });
 			} catch {
 				setStatus('error');
 				setErrorMessage(GENERIC_LOGIN_ERROR);

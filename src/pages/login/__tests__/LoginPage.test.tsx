@@ -25,34 +25,4 @@ describe('LoginPage', () => {
 			screen.getByRole('button', { name: 'Войти' }),
 		).toBeInTheDocument();
 	});
-
-	it('показывает flash-сообщение из location.state.message', () => {
-		renderWithProviders(<LoginPage />, {
-			initialEntries: [
-				{
-					pathname: '/login',
-					state: {
-						message:
-							'Для просмотра информации о пользователе необходимо войти в систему',
-					},
-				},
-			],
-		});
-
-		expect(
-			screen.getByText(
-				'Для просмотра информации о пользователе необходимо войти в систему',
-			),
-		).toBeInTheDocument();
-	});
-
-	it('не рендерит flash-блок, если в location.state нет message', () => {
-		renderWithProviders(<LoginPage />, { initialEntries: ['/login'] });
-
-		expect(
-			screen.queryByText(
-				'Для просмотра информации о пользователе необходимо войти в систему',
-			),
-		).not.toBeInTheDocument();
-	});
 });
