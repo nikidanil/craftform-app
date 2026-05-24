@@ -9,23 +9,38 @@ import { FormBuilderPage } from '@/pages/form-builder';
 import { FormFillPage } from '@/pages/form-fill';
 import { ResponsesListPage } from '@/pages/responses-list';
 import { ResponseViewPage } from '@/pages/response-view';
+import { ProtectedRoute } from './ProtectedRoute';
+import { UnauthorizedOnlyRoute } from './UnauthorizedOnlyRoute';
 
 export const router = createBrowserRouter([
 	{
-		element: <AppShell />,
+		element: <ProtectedRoute />,
 		children: [
-			{ path: '/', element: <FormsListPage /> },
-			{ path: '/me', element: <ProfilePage /> },
-			{ path: '/forms/new', element: <NewFormPage /> },
-			{ path: '/forms/:formId/edit', element: <FormBuilderPage /> },
-			{ path: '/forms/:formId/responses', element: <ResponsesListPage /> },
 			{
-				path: '/forms/:formId/responses/:responseId',
-				element: <ResponseViewPage />,
+				element: <AppShell />,
+				children: [
+					{ path: '/', element: <FormsListPage /> },
+					{ path: '/me', element: <ProfilePage /> },
+					{ path: '/forms/new', element: <NewFormPage /> },
+					{ path: '/forms/:formId/edit', element: <FormBuilderPage /> },
+					{
+						path: '/forms/:formId/responses',
+						element: <ResponsesListPage />,
+					},
+					{
+						path: '/forms/:formId/responses/:responseId',
+						element: <ResponseViewPage />,
+					},
+				],
 			},
 		],
 	},
-	{ path: '/login', element: <LoginPage /> },
-	{ path: '/signup', element: <SignupPage /> },
+	{
+		element: <UnauthorizedOnlyRoute />,
+		children: [
+			{ path: '/login', element: <LoginPage /> },
+			{ path: '/signup', element: <SignupPage /> },
+		],
+	},
 	{ path: '/forms/:formId', element: <FormFillPage /> },
 ]);
