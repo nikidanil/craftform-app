@@ -22,10 +22,9 @@ describe('useFormsByAuthor', () => {
 		mockedHttp.mockReset();
 	});
 
-	it('возвращает только формы переданного authorId', async () => {
+	it('запрашивает формы автора через API-параметр authorId', async () => {
 		mockedHttp.mockResolvedValueOnce([
 			buildForm('form-1', 'user-1'),
-			buildForm('form-2', 'user-2'),
 			buildForm('form-3', 'user-1'),
 		]);
 
@@ -37,25 +36,20 @@ describe('useFormsByAuthor', () => {
 		await waitFor(() => {
 			expect(result.current.isSuccess).toBe(true);
 		});
+		expect(mockedHttp).toHaveBeenCalledWith('/api/forms?authorId=user-1');
 		expect(result.current.data.map((form) => form.id)).toEqual([
 			'form-1',
 			'form-3',
 		]);
 	});
 
-	it('возвращает пустой массив, если authorId не задан', async () => {
-		mockedHttp.mockResolvedValueOnce([
-			buildForm('form-1', 'user-1'),
-		]);
-
+	it('не обращается к API и возвращает пустой массив, если authorId не задан', async () => {
 		const { Wrapper } = createWrapper();
 		const { result } = renderHook(() => useFormsByAuthor(undefined), {
 			wrapper: Wrapper,
 		});
 
-		await waitFor(() => {
-			expect(result.current.isSuccess).toBe(true);
-		});
 		expect(result.current.data).toEqual([]);
+		expect(mockedHttp).not.toHaveBeenCalled();
 	});
 });

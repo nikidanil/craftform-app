@@ -1,5 +1,5 @@
 export { formKeys } from './keys';
-export { useFormsList, useFormsByAuthor, useForm } from './queries';
+export { useFormsByAuthor, useForm } from './queries';
 export {
 	useCreateForm,
 	useUpdateForm,
