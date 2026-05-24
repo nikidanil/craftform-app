@@ -49,8 +49,8 @@ type QueryResultShape<T> = Pick<
 const mockQueryResult = <T,>(
 	overrides: Partial<QueryResultShape<T>>,
 ): UseFormsListResult & UseCountResult =>
-	// один helper мокает два разных query-хука (data: Form[] | Record),
-	// их типы не пересекаются — приведение через unknown намеренно
+	// as unknown: типы useFormsByAuthor (Form[]) и useResponsesCountByForm
+	// (Record) не пересекаются, общий helper мокает оба — приведение намеренно
 	({
 		data: undefined,
 		error: null,
