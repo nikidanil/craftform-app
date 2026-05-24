@@ -5,10 +5,18 @@ import { screen, waitFor } from '@testing-library/react';
 import type { Form } from '@/entities/form';
 import { useFormsList } from '@/entities/form';
 import { useResponsesCountByForm } from '@/entities/submission';
+import { useSessionStore } from '@/entities/session';
 import { useDeleteFormAction } from '@/features/delete-form/model/useDeleteFormAction';
 import { renderWithProviders } from '@/test/test-utils';
 
 import { FormsListPage } from '../FormsListPage';
+
+const seedUser = {
+	id: 'user-1',
+	firstName: 'Иван',
+	lastName: 'Иванов',
+	email: 'ivan@formcraft.dev',
+};
 
 vi.mock('@/entities/form', async (importOriginal) => {
 	const actual = await importOriginal<typeof import('@/entities/form')>();
@@ -51,12 +59,17 @@ const mockQueryResult = <T,>(
 		...overrides,
 	}) as UseFormsListResult & UseCountResult;
 
-const buildForm = (id: string, title: string): Form => ({
+const buildForm = (
+	id: string,
+	title: string,
+	authorId = 'user-1',
+): Form => ({
 	id,
 	title,
 	description: '',
 	questions: [],
 	createdAt: '2026-04-15T10:00:00.000Z',
+	authorId,
 });
 
 const mockDeleteAction = (deleteForm = vi.fn().mockResolvedValue(undefined)) => {
@@ -73,6 +86,8 @@ describe('FormsListPage', () => {
 		mockedUseFormsList.mockReset();
 		mockedUseResponsesCountByForm.mockReset();
 		mockedUseDeleteFormAction.mockReset();
+		localStorage.clear();
+		useSessionStore.setState({ currentUser: seedUser });
 	});
 
 	it('пока список грузится — пользователь видит индикатор', () => {
@@ -248,6 +263,69 @@ describe('FormsListPage', () => {
 		);
 
 		expect(getCurrentPath()).toBe('/?sort=title-asc');
+	});
+
+	it('форма чужого автора не появляется в списке', () => {
+		const forms = [
+			buildForm('form-1', 'Моя форма', 'user-1'),
+			buildForm('form-2', 'Чужая форма', 'user-2'),
+		];
+
+		mockedUseFormsList.mockReturnValue(
+			mockQueryResult<Form[]>({
+				data: forms,
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockedUseResponsesCountByForm.mockReturnValue(
+			mockQueryResult<Record<string, number>>({
+				data: {},
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockDeleteAction();
+
+		renderWithProviders(<FormsListPage />);
+
+		expect(
+			screen.getByRole('heading', { name: 'Моя форма' }),
+		).toBeInTheDocument();
+		expect(
+			screen.queryByRole('heading', { name: 'Чужая форма' }),
+		).toBeNull();
+	});
+
+	it('показывает flash «Вы уже вошли в систему» из location.state', () => {
+		mockedUseFormsList.mockReturnValue(
+			mockQueryResult<Form[]>({
+				data: [],
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockedUseResponsesCountByForm.mockReturnValue(
+			mockQueryResult<Record<string, number>>({
+				data: {},
+				isSuccess: true,
+				status: 'success',
+			}),
+		);
+		mockDeleteAction();
+
+		renderWithProviders(<FormsListPage />, {
+			initialEntries: [
+				{
+					pathname: '/',
+					state: { message: 'Вы уже вошли в систему' },
+				},
+			],
+		});
+
+		expect(
+			screen.getByText('Вы уже вошли в систему'),
+		).toBeInTheDocument();
 	});
 
 	it('невалидный sort в URL чистится до дефолта', async () => {
