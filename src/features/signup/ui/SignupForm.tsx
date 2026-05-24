@@ -10,6 +10,7 @@ import {
 	Input,
 	Label,
 } from '@/shared/ui';
+import { routes } from '@/shared/lib';
 import {
 	signupSchema,
 	type SignupValues,
@@ -162,7 +163,7 @@ export const SignupForm = () => {
 				Зарегистрироваться
 			</Button>
 			<p className={styles.altLink}>
-				Уже есть аккаунт? <Link to='/login'>Войти</Link>
+				Уже есть аккаунт? <Link to={routes.login}>Войти</Link>
 			</p>
 		</form>
 	);

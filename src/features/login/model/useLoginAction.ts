@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { findUserByEmail, toPublicUser } from '@/entities/user';
 import { useSetCurrentUser } from '@/entities/session';
+import { routes } from '@/shared/lib';
 import type { LoginValues } from './schema';
 
 export type LoginStatus = 'idle' | 'pending' | 'success' | 'error';
@@ -27,7 +28,7 @@ export const useLoginAction = () => {
 				}
 				setCurrentUser(toPublicUser(record));
 				setStatus('success');
-				navigate('/', { replace: true });
+				navigate(routes.home, { replace: true });
 			} catch {
 				setStatus('error');
 				setErrorMessage(GENERIC_LOGIN_ERROR);

@@ -3,7 +3,7 @@ import { MessageSquare, Pencil } from 'lucide-react';
 
 import type { Form } from '@/entities/form';
 import { DeleteFormButton } from '@/features/delete-form';
-import { responsesCountLabel } from '@/shared/lib';
+import { responsesCountLabel, routes } from '@/shared/lib';
 
 import { formatCreatedAt } from '../model/formatCreatedAt';
 import styles from './FormCard.module.css';
@@ -14,8 +14,6 @@ type Props = {
 };
 
 export const FormCard = ({ form, responsesCount }: Props) => {
-	const formIdSegment = encodeURIComponent(form.id);
-
 	return (
 		<article className={styles.card}>
 			<div className={styles.body}>
@@ -28,14 +26,14 @@ export const FormCard = ({ form, responsesCount }: Props) => {
 			</div>
 			<div className={styles.actions}>
 				<Link
-					to={`/forms/${formIdSegment}/edit`}
+					to={routes.formEdit(form.id)}
 					className={styles.actionPrimary}
 				>
 					<Pencil aria-hidden />
 					Редактировать
 				</Link>
 				<Link
-					to={`/forms/${formIdSegment}/responses`}
+					to={routes.formResponses(form.id)}
 					className={styles.action}
 				>
 					<MessageSquare aria-hidden />

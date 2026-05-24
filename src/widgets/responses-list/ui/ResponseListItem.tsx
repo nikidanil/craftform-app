@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { ChevronRight } from 'lucide-react';
 
 import type { Submission } from '@/entities/submission';
-import { formatSubmittedAt } from '@/shared/lib';
+import { formatSubmittedAt, routes } from '@/shared/lib';
 
 import styles from './ResponseListItem.module.css';
 
@@ -11,13 +11,11 @@ type Props = {
 };
 
 export const ResponseListItem = ({ submission }: Props) => {
-	const formIdSegment = encodeURIComponent(submission.formId);
-	const responseIdSegment = encodeURIComponent(submission.id);
 	const heading = `Отклик №${submission.number}`;
 
 	return (
 		<Link
-			to={`/forms/${formIdSegment}/responses/${responseIdSegment}`}
+			to={routes.responseView(submission.formId, submission.id)}
 			className={styles.item}
 		>
 			<span className={styles.number} aria-hidden>

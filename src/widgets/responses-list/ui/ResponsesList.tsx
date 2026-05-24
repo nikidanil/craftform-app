@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { MessageSquare } from 'lucide-react';
 
 import type { Submission } from '@/entities/submission';
-import { responsesCountLabel, useInfiniteWindow } from '@/shared/lib';
+import { responsesCountLabel, routes, useInfiniteWindow } from '@/shared/lib';
 
 import {
 	applyResponsesListFilters,
@@ -65,7 +65,7 @@ export const ResponsesList = ({
 	return (
 		<section className={styles.page}>
 			<nav className={styles.breadcrumb} aria-label='Хлебные крошки'>
-				<Link to='/'>Главная</Link>
+				<Link to={routes.home}>Главная</Link>
 				<span className={styles.breadcrumbSep} aria-hidden>
 					›
 				</span>
