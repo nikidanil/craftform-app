@@ -16,11 +16,8 @@ describe('useSessionStore', () => {
 		useSessionStore.setState({ currentUser: null });
 	});
 
-	it('начальное состояние — currentUser null', () => {
+	it('setCurrentUser переключает currentUser из null в переданного user', () => {
 		expect(useSessionStore.getState().currentUser).toBeNull();
-	});
-
-	it('setCurrentUser сохраняет пользователя в стор', () => {
 		useSessionStore.getState().setCurrentUser(sampleUser);
 		expect(useSessionStore.getState().currentUser).toEqual(sampleUser);
 	});

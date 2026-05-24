@@ -37,7 +37,7 @@ describe('ProtectedRoute', () => {
 		expect(await screen.findByTestId('login')).toBeInTheDocument();
 	});
 
-	it('авторизованного пользователя пропускает к защищённому контенту', () => {
+	it('авторизованного пользователя пропускает к защищённому контенту', async () => {
 		useSessionStore.setState({ currentUser: seedUser });
 
 		const routes = [
@@ -54,7 +54,7 @@ describe('ProtectedRoute', () => {
 		});
 		render(<RouterProvider router={router} />);
 
-		expect(screen.getByTestId('secret')).toBeInTheDocument();
+		expect(await screen.findByTestId('secret')).toBeInTheDocument();
 	});
 });
 
@@ -84,7 +84,7 @@ describe('UnauthorizedOnlyRoute', () => {
 		expect(await screen.findByTestId('home')).toBeInTheDocument();
 	});
 
-	it('анонимного пропускает к /login', () => {
+	it('анонимного пропускает к /login', async () => {
 		const routes = [
 			{
 				element: <UnauthorizedOnlyRoute />,
@@ -99,6 +99,6 @@ describe('UnauthorizedOnlyRoute', () => {
 		});
 		render(<RouterProvider router={router} />);
 
-		expect(screen.getByTestId('login')).toBeInTheDocument();
+		expect(await screen.findByTestId('login')).toBeInTheDocument();
 	});
 });
