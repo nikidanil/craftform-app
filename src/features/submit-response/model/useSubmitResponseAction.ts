@@ -1,18 +1,26 @@
 import { useState } from 'react';
+import { z } from 'zod';
 import { useSubmitResponse } from '@/entities/submission';
 import { HttpError } from '@/shared/api';
 import type { SubmissionInput } from '@/entities/submission';
 
 export type SubmitStatus = 'idle' | 'pending' | 'success' | 'error';
 
-const extractErrorMessage = (err: unknown): string => {
-	if (err instanceof HttpError && err.body) {
+const errorBodySchema = z.object({
+	message: z.string().optional(),
+	error: z.string().optional(),
+});
+
+const extractErrorMessage = (error: unknown): string => {
+	if (error instanceof HttpError && error.body) {
 		try {
-			const parsed = JSON.parse(err.body) as Record<string, unknown>;
-			const msg = parsed['message'] ?? parsed['error'];
-			if (typeof msg === 'string' && msg.trim()) return msg;
+			const parsed = errorBodySchema.safeParse(JSON.parse(error.body));
+			const message = parsed.success
+				? (parsed.data.message ?? parsed.data.error)
+				: undefined;
+			if (message && message.trim()) return message;
 		} catch {
-			if (err.body.trim()) return err.body.trim();
+			if (error.body.trim()) return error.body.trim();
 		}
 	}
 	return 'Не удалось отправить отклик. Попробуйте ещё раз.';

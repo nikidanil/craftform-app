@@ -171,7 +171,7 @@ export const FormBuilderForm = (props: Props) => {
 		props.mode === 'edit'
 			? ({ mode: 'edit', formId: props.form.id } as const)
 			: ({ mode: 'create' } as const);
-	const { save, status, error, reset } = useSaveForm(saveOptions);
+	const { save, status, reset } = useSaveForm(saveOptions);
 
 	const formId = props.mode === 'edit' ? props.form.id : undefined;
 
@@ -282,7 +282,7 @@ export const FormBuilderForm = (props: Props) => {
 					</aside>
 
 					<main ref={assignWorkspaceRef} className={workspaceClass}>
-						<SaveFormStatus status={status} error={error} />
+						<SaveFormStatus status={status} />
 
 						<div className={styles.metaCard}>
 							<Label htmlFor={titleId} className={styles.metaLabel}>
