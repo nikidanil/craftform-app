@@ -12,6 +12,7 @@ const buildForm = (overrides: Partial<Form> = {}): Form => ({
 	description: '',
 	questions: [],
 	createdAt: '2026-04-15T10:00:00.000Z',
+	authorId: 'author-1',
 	...overrides,
 });
 

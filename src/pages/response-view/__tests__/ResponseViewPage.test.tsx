@@ -58,6 +58,7 @@ const mockResponseResult = (
 
 const form: Form = {
 	id: 'form-1',
+	authorId: 'author-1',
 	title: 'Обратная связь',
 	description: '',
 	createdAt: '2026-04-15T10:00:00.000Z',
