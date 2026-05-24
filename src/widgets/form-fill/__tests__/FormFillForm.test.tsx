@@ -38,6 +38,7 @@ const makeReactiveAction = (onSubmitEffect: (state: { status: SubmitStatus; erro
 
 const shortTextForm: Form = {
 	id: 'form-1',
+	authorId: 'author-1',
 	title: 'Тестовая форма',
 	description: 'Описание формы',
 	createdAt: '2026-01-01T00:00:00.000Z',
@@ -48,6 +49,7 @@ const shortTextForm: Form = {
 
 const longTextForm: Form = {
 	id: 'form-2',
+	authorId: 'author-1',
 	title: 'Форма с текстом',
 	description: '',
 	createdAt: '2026-01-01T00:00:00.000Z',
@@ -58,6 +60,7 @@ const longTextForm: Form = {
 
 const radioForm: Form = {
 	id: 'form-3',
+	authorId: 'author-1',
 	title: 'Форма с радио',
 	description: '',
 	createdAt: '2026-01-01T00:00:00.000Z',
@@ -79,6 +82,7 @@ const radioForm: Form = {
 
 const checkboxForm: Form = {
 	id: 'form-4',
+	authorId: 'author-1',
 	title: 'Форма с чекбоксами',
 	description: '',
 	createdAt: '2026-01-01T00:00:00.000Z',

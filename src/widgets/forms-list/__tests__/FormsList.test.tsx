@@ -24,6 +24,7 @@ const buildForm = (
 	description: '',
 	questions: [],
 	createdAt,
+	authorId: 'author-1',
 });
 
 type HarnessProps = {
