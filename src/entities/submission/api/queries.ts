@@ -32,7 +32,7 @@ export const useResponse = (responseId: string) =>
 
 export const useResponsesCountByForm = () =>
 	useQuery({
-		queryKey: submissionKeys.countByForm(),
+		queryKey: submissionKeys.countByForm,
 		queryFn: async (): Promise<Submission[]> => {
 			const data = await http<unknown>('/api/responses');
 			return submissionListSchema.parse(data);
