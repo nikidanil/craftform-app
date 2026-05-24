@@ -25,3 +25,13 @@ export {
 	PopoverTitle,
 	PopoverTrigger,
 } from './popover';
+export {
+	Card,
+	CardHeader,
+	CardFooter,
+	CardTitle,
+	CardAction,
+	CardDescription,
+	CardContent,
+} from './card';
+export { Alert, AlertTitle, AlertDescription, AlertAction } from './alert';
