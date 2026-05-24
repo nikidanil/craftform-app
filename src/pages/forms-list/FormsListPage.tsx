@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
-import { useFormsList } from '@/entities/form';
+import { useFormsByAuthor } from '@/entities/form';
 import { useResponsesCountByForm } from '@/entities/submission';
 import { useCurrentUser } from '@/entities/session';
 import { useSyncedSearchParam } from '@/shared/lib';
@@ -14,9 +14,9 @@ import {
 import styles from './FormsListPage.module.css';
 
 export const FormsListPage = () => {
-	const formsQuery = useFormsList();
-	const countsQuery = useResponsesCountByForm();
 	const currentUser = useCurrentUser();
+	const formsQuery = useFormsByAuthor(currentUser?.id);
+	const countsQuery = useResponsesCountByForm();
 
 	const [search, setSearch] = useSyncedSearchParam('q', '');
 	const [sortParam, setSortParam] = useSyncedSearchParam('sort', DEFAULT_SORT);
@@ -27,12 +27,6 @@ export const FormsListPage = () => {
 			setSortParam(DEFAULT_SORT);
 		}
 	}, [sortParam, setSortParam]);
-
-	const myForms = useMemo(() => {
-		const allForms = formsQuery.data ?? [];
-		if (!currentUser) return [];
-		return allForms.filter((form) => form.authorId === currentUser.id);
-	}, [formsQuery.data, currentUser]);
 
 	const isLoading = formsQuery.isLoading || countsQuery.isLoading;
 	const isError = formsQuery.isError || countsQuery.isError;
@@ -53,7 +47,7 @@ export const FormsListPage = () => {
 
 			{!isLoading && !isError && (
 				<FormsList
-					forms={myForms}
+					forms={formsQuery.data}
 					responsesCountByForm={countsQuery.data ?? {}}
 					search={search}
 					onSearchChange={setSearch}

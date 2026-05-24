@@ -5,6 +5,7 @@ import {
 	useUpdateForm,
 	type FormInput,
 } from '@/entities/form';
+import { useCurrentUser } from '@/entities/session';
 
 type CreateOptions = { mode: 'create' };
 type EditOptions = { mode: 'edit'; formId: string };
@@ -16,6 +17,7 @@ export const useSaveForm = (options: Options) => {
 	const navigate = useNavigate();
 	const createForm = useCreateForm();
 	const updateForm = useUpdateForm();
+	const currentUser = useCurrentUser();
 	const [status, setStatus] = useState<SaveStatus>('idle');
 	const [error, setError] = useState<Error | null>(null);
 
@@ -25,7 +27,15 @@ export const useSaveForm = (options: Options) => {
 			setError(null);
 			try {
 				if (options.mode === 'create') {
-					const created = await createForm.mutateAsync(input);
+					if (!currentUser) {
+						throw new Error(
+							'Создание формы доступно только авторизованному пользователю',
+						);
+					}
+					const created = await createForm.mutateAsync({
+						input,
+						authorId: currentUser.id,
+					});
 					setStatus('success');
 					navigate(`/forms/${created.id}/edit`);
 					return created;
@@ -43,7 +53,7 @@ export const useSaveForm = (options: Options) => {
 				return null;
 			}
 		},
-		[createForm, updateForm, navigate, options],
+		[createForm, updateForm, navigate, options, currentUser],
 	);
 
 	const reset = useCallback(() => {

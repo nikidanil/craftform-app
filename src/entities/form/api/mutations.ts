@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { http } from '@/shared/api';
 import { submissionKeys } from '@/entities/submission';
-import { useCurrentUser } from '@/entities/session';
 import {
 	formSchema,
 	type Form,
@@ -11,16 +10,20 @@ import { formKeys } from './keys';
 
 type ResponseRef = { id: string };
 
+export type CreateFormVars = {
+	input: FormInput;
+	authorId: string;
+};
+
 export const useCreateForm = () => {
 	const queryClient = useQueryClient();
-	const currentUser = useCurrentUser();
 	return useMutation({
-		mutationFn: async (input: FormInput): Promise<Form> => {
+		mutationFn: async ({ input, authorId }: CreateFormVars): Promise<Form> => {
 			const payload: Form = {
 				...input,
 				id: crypto.randomUUID(),
 				createdAt: new Date().toISOString(),
-				authorId: currentUser?.id ?? '',
+				authorId,
 			};
 			const data = await http<unknown>('/api/forms', {
 				method: 'POST',

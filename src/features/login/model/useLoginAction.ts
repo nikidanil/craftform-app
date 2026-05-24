@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { findUserByEmail, toPublicUser } from '@/entities/user';
-import { useSessionStore } from '@/entities/session';
+import { useSetCurrentUser } from '@/entities/session';
 import type { LoginValues } from './schema';
 
 export type LoginStatus = 'idle' | 'pending' | 'success' | 'error';
@@ -10,7 +10,7 @@ const GENERIC_LOGIN_ERROR = 'Неверный Email или пароль';
 
 export const useLoginAction = () => {
 	const navigate = useNavigate();
-	const setCurrentUser = useSessionStore((state) => state.setCurrentUser);
+	const setCurrentUser = useSetCurrentUser();
 	const [status, setStatus] = useState<LoginStatus>('idle');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 

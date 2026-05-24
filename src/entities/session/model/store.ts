@@ -29,3 +29,9 @@ export const useCurrentUser = () =>
 
 export const useIsAuthenticated = () =>
 	useSessionStore((state) => state.currentUser !== null);
+
+export const useSetCurrentUser = () =>
+	useSessionStore((state) => state.setCurrentUser);
+
+export const useClearSession = () =>
+	useSessionStore((state) => state.clearSession);

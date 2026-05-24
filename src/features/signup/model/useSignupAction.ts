@@ -5,7 +5,7 @@ import {
 	findUserByEmail,
 	type User,
 } from '@/entities/user';
-import { useSessionStore } from '@/entities/session';
+import { useSetCurrentUser } from '@/entities/session';
 import type { SignupValues } from './schema';
 
 export type SignupStatus = 'idle' | 'pending' | 'success' | 'error';
@@ -15,7 +15,7 @@ const GENERIC_ERROR = 'Не удалось зарегистрироваться.
 
 export const useSignupAction = () => {
 	const navigate = useNavigate();
-	const setCurrentUser = useSessionStore((state) => state.setCurrentUser);
+	const setCurrentUser = useSetCurrentUser();
 	const [status, setStatus] = useState<SignupStatus>('idle');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
