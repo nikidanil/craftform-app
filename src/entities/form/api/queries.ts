@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { http } from '@/shared/api';
 import { formListSchema, formSchema, type Form } from '../model';
@@ -15,6 +16,15 @@ export const useFormsByAuthor = (authorId: string | undefined) => {
 		enabled: Boolean(authorId),
 	});
 	return { ...query, data: query.data ?? [] };
+};
+
+export const useFormsByAuthor = (authorId: string | undefined) => {
+	const formsQuery = useFormsList();
+	const data = useMemo(() => {
+		if (!authorId || !formsQuery.data) return [] as Form[];
+		return formsQuery.data.filter((form) => form.authorId === authorId);
+	}, [formsQuery.data, authorId]);
+	return { ...formsQuery, data };
 };
 
 export const useForm = (formId: string) =>
