@@ -12,6 +12,11 @@ describe('routes', () => {
 		);
 	});
 
+	it('строит публичный путь формы и путь откликов с кодированием', () => {
+		expect(routes.formFill('a/b 1')).toBe('/forms/a%2Fb%201');
+		expect(routes.formResponses('a/b 1')).toBe('/forms/a%2Fb%201/responses');
+	});
+
 	it('статические пути совпадают с шаблонами роутера', () => {
 		expect(routes.home).toBe(routePaths.home);
 		expect(routes.formNew).toBe(routePaths.formNew);
