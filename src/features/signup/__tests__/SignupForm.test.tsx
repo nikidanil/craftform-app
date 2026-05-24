@@ -29,10 +29,16 @@ describe('SignupForm', () => {
 		localStorage.clear();
 	});
 
-	it('кнопка «Зарегистрироваться» неактивна при пустых полях', async () => {
+	it('кнопка «Зарегистрироваться» заблокирована при пустых полях и активируется после заполнения', async () => {
 		renderWithProviders(<SignupForm />);
 		const submit = screen.getByRole('button', { name: 'Зарегистрироваться' });
+		const user = userEvent.setup();
+
 		await waitFor(() => expect(submit).toBeDisabled());
+
+		await fillValidFields(user);
+
+		await waitFor(() => expect(submit).not.toBeDisabled());
 	});
 
 	it('если пароли не совпадают — кнопка disabled и виден текст «Пароли не совпадают»', async () => {
