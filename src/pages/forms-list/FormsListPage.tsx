@@ -1,8 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router';
 
 import { useFormsList } from '@/entities/form';
 import { useResponsesCountByForm } from '@/entities/submission';
+import { useCurrentUser } from '@/entities/session';
 import { useSyncedSearchParam } from '@/shared/lib';
+import { Alert, AlertDescription } from '@/shared/ui';
 import {
 	DEFAULT_SORT,
 	FormsList,
@@ -15,6 +18,10 @@ import styles from './FormsListPage.module.css';
 export const FormsListPage = () => {
 	const formsQuery = useFormsList();
 	const countsQuery = useResponsesCountByForm();
+	const currentUser = useCurrentUser();
+	const location = useLocation();
+	const flashMessage = (location.state as { message?: string } | null)
+		?.message;
 
 	const [search, setSearch] = useSyncedSearchParam('q', '');
 	const [sortParam, setSortParam] = useSyncedSearchParam('sort', DEFAULT_SORT);
@@ -26,6 +33,12 @@ export const FormsListPage = () => {
 		}
 	}, [sortParam, setSortParam]);
 
+	const myForms = useMemo(() => {
+		const allForms = formsQuery.data ?? [];
+		if (!currentUser) return [];
+		return allForms.filter((form) => form.authorId === currentUser.id);
+	}, [formsQuery.data, currentUser]);
+
 	const isLoading = formsQuery.isLoading || countsQuery.isLoading;
 	const isError = formsQuery.isError || countsQuery.isError;
 
@@ -34,6 +47,12 @@ export const FormsListPage = () => {
 			<header className={styles.header}>
 				<h1 className={styles.title}>Мои формы</h1>
 			</header>
+
+			{flashMessage ? (
+				<Alert className={styles.flash}>
+					<AlertDescription>{flashMessage}</AlertDescription>
+				</Alert>
+			) : null}
 
 			{isLoading && <p className={styles.state}>Загружаем формы…</p>}
 
@@ -45,7 +64,7 @@ export const FormsListPage = () => {
 
 			{!isLoading && !isError && (
 				<FormsList
-					forms={formsQuery.data ?? []}
+					forms={myForms}
 					responsesCountByForm={countsQuery.data ?? {}}
 					search={search}
 					onSearchChange={setSearch}

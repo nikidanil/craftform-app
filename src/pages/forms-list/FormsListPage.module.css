@@ -25,3 +25,7 @@
 	color: var(--destructive);
 	font-size: 0.95rem;
 }
+
+.flash {
+	margin-bottom: 1.5rem;
+}

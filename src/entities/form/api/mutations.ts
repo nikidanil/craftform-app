@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { http } from '@/shared/api';
 import { submissionKeys } from '@/entities/submission';
+import { useCurrentUser } from '@/entities/session';
 import {
 	formSchema,
 	type Form,
@@ -12,15 +13,14 @@ type ResponseRef = { id: string };
 
 export const useCreateForm = () => {
 	const queryClient = useQueryClient();
+	const currentUser = useCurrentUser();
 	return useMutation({
 		mutationFn: async (input: FormInput): Promise<Form> => {
-			// authorId проставится из useCurrentUser в подзадаче #15.
-			// Формы, созданные до этого с authorId: '', осядут вне фильтра.
 			const payload: Form = {
 				...input,
 				id: crypto.randomUUID(),
 				createdAt: new Date().toISOString(),
-				authorId: '',
+				authorId: currentUser?.id ?? '',
 			};
 			const data = await http<unknown>('/api/forms', {
 				method: 'POST',
