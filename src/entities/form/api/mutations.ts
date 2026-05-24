@@ -14,10 +14,13 @@ export const useCreateForm = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: async (input: FormInput): Promise<Form> => {
+			// authorId проставится из useCurrentUser в подзадаче #15.
+			// Формы, созданные до этого с authorId: '', осядут вне фильтра.
 			const payload: Form = {
 				...input,
 				id: crypto.randomUUID(),
 				createdAt: new Date().toISOString(),
+				authorId: '',
 			};
 			const data = await http<unknown>('/api/forms', {
 				method: 'POST',
