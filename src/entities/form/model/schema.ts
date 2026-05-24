@@ -33,10 +33,15 @@ export const formSchema = z.object({
 	description: z.string(),
 	questions: z.array(questionSchema),
 	createdAt: z.string(),
+	authorId: z.string(),
 });
 export type Form = z.infer<typeof formSchema>;
 
 export const formListSchema = z.array(formSchema);
 
-export const formInputSchema = formSchema.omit({ id: true, createdAt: true });
+export const formInputSchema = formSchema.omit({
+	id: true,
+	createdAt: true,
+	authorId: true,
+});
 export type FormInput = z.infer<typeof formInputSchema>;

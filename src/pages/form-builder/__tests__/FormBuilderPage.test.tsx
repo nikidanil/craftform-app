@@ -24,6 +24,7 @@ const mockForm: Form = {
 	title: 'Обратная связь по курсу',
 	description: 'Помогите нам стать лучше',
 	createdAt: '2026-04-15T10:00:00.000Z',
+	authorId: 'user-1',
 	questions: [
 		{
 			id: 'q-1',
