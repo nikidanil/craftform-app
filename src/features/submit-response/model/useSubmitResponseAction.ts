@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useSubmitResponse } from '@/entities/submission';
 import { HttpError } from '@/shared/api';
 import type { SubmissionInput } from '@/entities/submission';
@@ -23,25 +23,22 @@ export const useSubmitResponseAction = () => {
 	const [status, setStatus] = useState<SubmitStatus>('idle');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-	const submit = useCallback(
-		(input: SubmissionInput) => {
-			setStatus('pending');
-			setErrorMessage(null);
-			mutation.mutate(input, {
-				onSuccess: () => setStatus('success'),
-				onError: (err) => {
-					setErrorMessage(extractErrorMessage(err));
-					setStatus('error');
-				},
-			});
-		},
-		[mutation],
-	);
+	const submit = (input: SubmissionInput) => {
+		setStatus('pending');
+		setErrorMessage(null);
+		mutation.mutate(input, {
+			onSuccess: () => setStatus('success'),
+			onError: (error) => {
+				setErrorMessage(extractErrorMessage(error));
+				setStatus('error');
+			},
+		});
+	};
 
-	const reset = useCallback(() => {
+	const reset = () => {
 		setStatus('idle');
 		setErrorMessage(null);
-	}, []);
+	};
 
 	return { submit, status, errorMessage, reset };
 };

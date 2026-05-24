@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type InfiniteWindowResult = {
 	displayCount: number;
@@ -42,13 +42,16 @@ export const useInfiniteWindow = (
 		};
 	}, [sentinelNode, hasMore, pageSize]);
 
-	const sentinelRef = useCallback((node: HTMLElement | null) => {
+	// sentinelRef — стабильный ref-callback (иначе observer пересоздаётся на
+	// каждый рендер); reset уходит в useEffect-deps потребителя. Стабильность
+	// ссылок обеспечивает React Compiler.
+	const sentinelRef = (node: HTMLElement | null) => {
 		setSentinelNode(node);
-	}, []);
+	};
 
-	const reset = useCallback(() => {
+	const reset = () => {
 		setRawDisplayCount(pageSize);
-	}, [pageSize]);
+	};
 
 	return { displayCount, hasMore, sentinelRef, reset };
 };
