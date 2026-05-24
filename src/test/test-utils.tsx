@@ -1,5 +1,11 @@
 import type { ReactElement, ReactNode } from 'react';
-import { MemoryRouter, Routes, Route, useLocation } from 'react-router';
+import {
+	MemoryRouter,
+	Routes,
+	Route,
+	useLocation,
+	type InitialEntry,
+} from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, type RenderOptions } from '@testing-library/react';
 
@@ -20,15 +26,23 @@ const LocationSpy = ({ pathRef }: { pathRef: PathRef }) => {
 };
 
 type WrapperOptions = {
-	initialEntries?: string[];
+	initialEntries?: InitialEntry[];
 	queryClient?: QueryClient;
+};
+
+const initialPathOf = (entry: InitialEntry | undefined): string => {
+	if (typeof entry === 'string') return entry;
+	if (entry && typeof entry === 'object' && 'pathname' in entry) {
+		return entry.pathname ?? '/';
+	}
+	return '/';
 };
 
 export const createWrapper = ({
 	initialEntries = ['/'],
 	queryClient = makeTestQueryClient(),
 }: WrapperOptions = {}) => {
-	const pathRef: PathRef = { current: initialEntries[0] ?? '/' };
+	const pathRef: PathRef = { current: initialPathOf(initialEntries[0]) };
 
 	const Wrapper = ({ children }: { children: ReactNode }) => (
 		<QueryClientProvider client={queryClient}>
