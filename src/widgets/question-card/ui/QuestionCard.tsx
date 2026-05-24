@@ -41,7 +41,7 @@ export const QuestionCard = ({
 }: Props) => {
 	const { control, register, formState } = useFormContext<FormInput>();
 	const bodyId = useId();
-	const reqId = useId();
+	const requiredSwitchId = useId();
 	const {
 		attributes,
 		listeners,
@@ -129,11 +129,11 @@ export const QuestionCard = ({
 						render={({ field }) => (
 							<div className={styles.requiredRow}>
 								<Switch
-									id={reqId}
+									id={requiredSwitchId}
 									checked={Boolean(field.value)}
 									onCheckedChange={field.onChange}
 								/>
-								<Label htmlFor={reqId}>Обязательный вопрос</Label>
+								<Label htmlFor={requiredSwitchId}>Обязательный вопрос</Label>
 							</div>
 						)}
 					/>

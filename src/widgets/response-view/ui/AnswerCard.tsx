@@ -35,8 +35,8 @@ const renderValue = (
 			question.choiceVariant === 'multiple' ? 'square' : 'circle';
 		return (
 			<ul className={styles.choices}>
-				{labels.map((label, labelIndex) => (
-					<li key={`${labelIndex}-${label}`}>
+				{labels.map((label) => (
+					<li key={label}>
 						<span
 							className={styles.marker}
 							data-shape={markerShape}

@@ -29,6 +29,8 @@ vi.mock('@/entities/submission', async (importOriginal) => {
 	return { ...actual, useResponsesCountByForm: vi.fn() };
 });
 
+// мокаем хук по внутреннему пути: DeleteFormButton импортирует его именно
+// оттуда (мок barrel не перехватил бы его использование внутри компонента)
 vi.mock('@/features/delete-form/model/useDeleteFormAction', () => ({
 	useDeleteFormAction: vi.fn(),
 }));

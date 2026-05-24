@@ -5,11 +5,11 @@ export type FormFillValues = Record<string, string | string[]>;
 
 export const buildDefaults = (form: Form): FormFillValues => {
 	const values: FormFillValues = {};
-	for (const q of form.questions) {
-		if (q.type === 'choice' && q.choiceVariant === 'multiple') {
-			values[q.id] = [];
+	for (const question of form.questions) {
+		if (question.type === 'choice' && question.choiceVariant === 'multiple') {
+			values[question.id] = [];
 		} else {
-			values[q.id] = '';
+			values[question.id] = '';
 		}
 	}
 	return values;
@@ -21,7 +21,10 @@ export const toSubmissionInput = (
 ): SubmissionInput => ({
 	formId: form.id,
 	answers: form.questions
-		.map((q) => ({ questionId: q.id, value: values[q.id] ?? '' }))
+		.map((question) => ({
+			questionId: question.id,
+			value: values[question.id] ?? '',
+		}))
 		.filter(({ value }) => {
 			if (Array.isArray(value)) return value.length > 0;
 			return (value as string).trim().length > 0;
