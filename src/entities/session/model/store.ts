@@ -17,7 +17,10 @@ export const useSessionStore = create<SessionState>()(
 			setCurrentUser: (user) => set({ currentUser: user }),
 			clearSession: () => set({ currentUser: null }),
 		}),
-		{ name: SESSION_STORAGE_KEY },
+		{
+			name: SESSION_STORAGE_KEY,
+			partialize: (state) => ({ currentUser: state.currentUser }),
+		},
 	),
 );
 

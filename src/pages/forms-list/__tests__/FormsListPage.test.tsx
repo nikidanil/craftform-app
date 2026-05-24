@@ -297,37 +297,6 @@ describe('FormsListPage', () => {
 		).toBeNull();
 	});
 
-	it('показывает flash «Вы уже вошли в систему» из location.state', () => {
-		mockedUseFormsList.mockReturnValue(
-			mockQueryResult<Form[]>({
-				data: [],
-				isSuccess: true,
-				status: 'success',
-			}),
-		);
-		mockedUseResponsesCountByForm.mockReturnValue(
-			mockQueryResult<Record<string, number>>({
-				data: {},
-				isSuccess: true,
-				status: 'success',
-			}),
-		);
-		mockDeleteAction();
-
-		renderWithProviders(<FormsListPage />, {
-			initialEntries: [
-				{
-					pathname: '/',
-					state: { message: 'Вы уже вошли в систему' },
-				},
-			],
-		});
-
-		expect(
-			screen.getByText('Вы уже вошли в систему'),
-		).toBeInTheDocument();
-	});
-
 	it('невалидный sort в URL чистится до дефолта', async () => {
 		const forms = [
 			buildForm('form-1', 'Опрос про офис'),

@@ -483,14 +483,14 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
     `/login`) + ui `LogoutButton` + сценарный тест.
 11. `widgets/header`: заменить заглушку «Выход» на `LogoutButton` +
     сценарный тест клика.
-12. `app/router`: `ProtectedRoute` + `UnauthorizedOnlyRoute` (передача
-    flash-сообщения через `location.state`), перетряхнуть router-tree +
-    сценарные тесты редиректов.
-13. `pages/login`: подключить `LoginForm`, отображать alert из
-    `useLocation().state?.message` + сценарный тест.
+12. `app/router`: `ProtectedRoute` + `UnauthorizedOnlyRoute`,
+    перетряхнуть router-tree + сценарные тесты редиректов. Без
+    flash-сообщений: тексты «Для просмотра…» / «Вы уже вошли…» из ТЗ
+    оставлены на этап 12 («Финальная полировка»), редиректы тихие.
+13. `pages/login`: подключить `LoginForm` + сценарный тест.
 14. `pages/signup`: подключить `SignupForm` + сценарный тест.
-15. `pages/forms-list`: клиентский фильтр по `currentUser.id` + alert
-    «Вы уже вошли в систему» из `location.state` + сценарные тесты.
+15. `pages/forms-list`: клиентский фильтр по `currentUser.id` +
+    сценарные тесты.
 16. `pages/form-builder`: тихий редирект на `/`, если
     `form.authorId !== currentUser.id` + сценарный тест.
 

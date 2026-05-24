@@ -38,7 +38,7 @@ export const useSignupAction = () => {
 				});
 				setCurrentUser(created);
 				setStatus('success');
-				navigate('/');
+				navigate('/', { replace: true });
 			} catch {
 				setStatus('error');
 				setErrorMessage(GENERIC_ERROR);
