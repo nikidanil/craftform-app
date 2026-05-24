@@ -6,6 +6,7 @@ import {
 	type FormInput,
 } from '@/entities/form';
 import { useCurrentUser } from '@/entities/session';
+import { routes } from '@/shared/lib';
 
 type CreateOptions = { mode: 'create' };
 type EditOptions = { mode: 'edit'; formId: string };
@@ -37,7 +38,7 @@ export const useSaveForm = (options: Options) => {
 						authorId: currentUser.id,
 					});
 					setStatus('success');
-					navigate(`/forms/${created.id}/edit`);
+					navigate(routes.formEdit(created.id));
 					return created;
 				}
 				const updated = await updateForm.mutateAsync({

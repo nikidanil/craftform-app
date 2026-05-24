@@ -3,7 +3,7 @@ import { Calendar, ExternalLink, Pencil } from 'lucide-react';
 
 import type { Form } from '@/entities/form';
 import type { Submission } from '@/entities/submission';
-import { formatSubmittedAt } from '@/shared/lib';
+import { formatSubmittedAt, routes } from '@/shared/lib';
 
 import { findAnswerForQuestion } from '../model/findAnswerForQuestion';
 import { AnswerCard } from './AnswerCard';
@@ -15,17 +15,16 @@ type Props = {
 };
 
 export const ResponseView = ({ form, submission }: Props) => {
-	const formIdSegment = encodeURIComponent(form.id);
 	const heading = `Отклик №${submission.number}`;
 
 	return (
 		<section className={styles.page}>
 			<nav className={styles.breadcrumb} aria-label='Хлебные крошки'>
-				<Link to='/'>Главная</Link>
+				<Link to={routes.home}>Главная</Link>
 				<span className={styles.breadcrumbSep} aria-hidden>
 					›
 				</span>
-				<Link to={`/forms/${formIdSegment}/responses`}>Отклики</Link>
+				<Link to={routes.formResponses(form.id)}>Отклики</Link>
 				<span className={styles.breadcrumbSep} aria-hidden>
 					›
 				</span>
@@ -46,12 +45,12 @@ export const ResponseView = ({ form, submission }: Props) => {
 					</div>
 				</div>
 				<div className={styles.actions}>
-					<Link to={`/forms/${formIdSegment}`} className={styles.action}>
+					<Link to={routes.formFill(form.id)} className={styles.action}>
 						<ExternalLink size={13} strokeWidth={2.5} aria-hidden />
 						Перейти к форме
 					</Link>
 					<Link
-						to={`/forms/${formIdSegment}/edit`}
+						to={routes.formEdit(form.id)}
 						className={styles.actionPrimary}
 					>
 						<Pencil size={13} strokeWidth={2.5} aria-hidden />

@@ -10,6 +10,7 @@ import {
 	Input,
 	Label,
 } from '@/shared/ui';
+import { routes } from '@/shared/lib';
 import { loginSchema, type LoginValues, useLoginAction } from '../model';
 import styles from './LoginForm.module.css';
 
@@ -84,7 +85,7 @@ export const LoginForm = () => {
 				Войти
 			</Button>
 			<p className={styles.altLink}>
-				Нет аккаунта? <Link to='/signup'>Зарегистрироваться</Link>
+				Нет аккаунта? <Link to={routes.signup}>Зарегистрироваться</Link>
 			</p>
 		</form>
 	);

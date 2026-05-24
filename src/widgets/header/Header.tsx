@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router';
 import { LogoutButton } from '@/features/logout';
+import { routes } from '@/shared/lib';
 import styles from './Header.module.css';
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -10,20 +11,24 @@ const newFormClass = ({ isActive }: { isActive: boolean }) =>
 
 export const Header = () => (
 	<header className={styles.header}>
-		<Link to='/' className={styles.logo} aria-label='FormCraft — на главную'>
+		<Link
+			to={routes.home}
+			className={styles.logo}
+			aria-label='FormCraft — на главную'
+		>
 			<span className={styles.logoIcon} aria-hidden>
 				+
 			</span>
 			<span className={styles.logoName}>FormCraft</span>
 		</Link>
 		<nav className={styles.nav}>
-			<NavLink to='/' end className={linkClass}>
+			<NavLink to={routes.home} end className={linkClass}>
 				Главная
 			</NavLink>
-			<NavLink to='/forms/new' className={newFormClass}>
+			<NavLink to={routes.formNew} className={newFormClass}>
 				Новая форма
 			</NavLink>
-			<NavLink to='/me' className={linkClass}>
+			<NavLink to={routes.profile} className={linkClass}>
 				Профиль
 			</NavLink>
 		</nav>

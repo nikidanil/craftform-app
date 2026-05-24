@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useDeleteForm } from '@/entities/form';
+import { routes } from '@/shared/lib';
 
 export const useDeleteFormAction = () => {
 	const navigate = useNavigate();
@@ -14,7 +15,7 @@ export const useDeleteFormAction = () => {
 			setError(null);
 			try {
 				await deleteMutation.mutateAsync(formId);
-				navigate('/');
+				navigate(routes.home);
 			} catch (e) {
 				setError(e instanceof Error ? e : new Error(String(e)));
 			} finally {

@@ -22,7 +22,7 @@ import {
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
-import { cn } from '@/shared/lib';
+import { cn, routes } from '@/shared/lib';
 import { Input, Textarea, Label } from '@/shared/ui';
 import type { Form, FormInput, QuestionType } from '@/entities/form';
 import { QuestionTypePanel } from '@/widgets/question-type-panel';
@@ -273,7 +273,7 @@ export const FormBuilderForm = (props: Props) => {
 								<button
 									type='button'
 									className={styles.cancelLink}
-									onClick={() => navigate('/')}
+									onClick={() => navigate(routes.home)}
 								>
 									Назад к списку
 								</button>

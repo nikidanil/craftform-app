@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { useClearSession } from '@/entities/session';
+import { routes } from '@/shared/lib';
 
 export const useLogoutAction = () => {
 	const navigate = useNavigate();
@@ -8,6 +9,6 @@ export const useLogoutAction = () => {
 
 	return useCallback(() => {
 		clearSession();
-		navigate('/login', { replace: true });
+		navigate(routes.login, { replace: true });
 	}, [clearSession, navigate]);
 };

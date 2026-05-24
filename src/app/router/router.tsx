@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router';
+import { routePaths } from '@/shared/lib';
 import { AppShell } from '@/widgets/app-shell';
 import { FormsListPage } from '@/pages/forms-list';
 import { ProfilePage } from '@/pages/profile';
@@ -19,16 +20,16 @@ export const router = createBrowserRouter([
 			{
 				element: <AppShell />,
 				children: [
-					{ path: '/', element: <FormsListPage /> },
-					{ path: '/me', element: <ProfilePage /> },
-					{ path: '/forms/new', element: <NewFormPage /> },
-					{ path: '/forms/:formId/edit', element: <FormBuilderPage /> },
+					{ path: routePaths.home, element: <FormsListPage /> },
+					{ path: routePaths.profile, element: <ProfilePage /> },
+					{ path: routePaths.formNew, element: <NewFormPage /> },
+					{ path: routePaths.formEdit, element: <FormBuilderPage /> },
 					{
-						path: '/forms/:formId/responses',
+						path: routePaths.formResponses,
 						element: <ResponsesListPage />,
 					},
 					{
-						path: '/forms/:formId/responses/:responseId',
+						path: routePaths.responseView,
 						element: <ResponseViewPage />,
 					},
 				],
@@ -38,9 +39,9 @@ export const router = createBrowserRouter([
 	{
 		element: <UnauthorizedOnlyRoute />,
 		children: [
-			{ path: '/login', element: <LoginPage /> },
-			{ path: '/signup', element: <SignupPage /> },
+			{ path: routePaths.login, element: <LoginPage /> },
+			{ path: routePaths.signup, element: <SignupPage /> },
 		],
 	},
-	{ path: '/forms/:formId', element: <FormFillPage /> },
+	{ path: routePaths.formFill, element: <FormFillPage /> },
 ]);

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useForm as useFormQuery } from '@/entities/form';
 import { useCurrentUser } from '@/entities/session';
+import { routes } from '@/shared/lib';
 import { FormBuilderForm } from '@/widgets/form-builder';
 import styles from './FormBuilderPage.module.css';
 
@@ -17,7 +18,7 @@ export const FormBuilderPage = () => {
 
 	useEffect(() => {
 		if (isForeignForm) {
-			navigate('/', { replace: true });
+			navigate(routes.home, { replace: true });
 		}
 	}, [isForeignForm, navigate]);
 

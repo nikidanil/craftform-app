@@ -6,13 +6,14 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/shared/ui';
+import { routes } from '@/shared/lib';
 import { SignupForm } from '@/features/signup';
 import styles from './SignupPage.module.css';
 
 export const SignupPage = () => (
 	<div className={styles.page}>
 		<div className={styles.wrapper}>
-			<Link to='/' className={styles.brand}>
+			<Link to={routes.home} className={styles.brand}>
 				<span className={styles.brandIcon} aria-hidden>
 					✦
 				</span>

@@ -6,6 +6,7 @@ import {
 	type User,
 } from '@/entities/user';
 import { useSetCurrentUser } from '@/entities/session';
+import { routes } from '@/shared/lib';
 import type { SignupValues } from './schema';
 
 export type SignupStatus = 'idle' | 'pending' | 'success' | 'error';
@@ -38,7 +39,7 @@ export const useSignupAction = () => {
 				});
 				setCurrentUser(created);
 				setStatus('success');
-				navigate('/', { replace: true });
+				navigate(routes.home, { replace: true });
 			} catch {
 				setStatus('error');
 				setErrorMessage(GENERIC_ERROR);
