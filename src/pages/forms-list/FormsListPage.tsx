@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 
-import { useFormsList } from '@/entities/form';
+import { useFormsByAuthor } from '@/entities/form';
 import { useResponsesCountByForm } from '@/entities/submission';
+import { useCurrentUser } from '@/entities/session';
 import { useSyncedSearchParam } from '@/shared/lib';
 import {
 	DEFAULT_SORT,
@@ -13,7 +14,8 @@ import {
 import styles from './FormsListPage.module.css';
 
 export const FormsListPage = () => {
-	const formsQuery = useFormsList();
+	const currentUser = useCurrentUser();
+	const formsQuery = useFormsByAuthor(currentUser?.id);
 	const countsQuery = useResponsesCountByForm();
 
 	const [search, setSearch] = useSyncedSearchParam('q', '');
@@ -45,7 +47,7 @@ export const FormsListPage = () => {
 
 			{!isLoading && !isError && (
 				<FormsList
-					forms={formsQuery.data ?? []}
+					forms={formsQuery.data}
 					responsesCountByForm={countsQuery.data ?? {}}
 					search={search}
 					onSearchChange={setSearch}

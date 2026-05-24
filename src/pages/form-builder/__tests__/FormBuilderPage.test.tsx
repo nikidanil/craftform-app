@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http } from '@/shared/api';
 import { FormBuilderPage } from '../FormBuilderPage';
 import type { Form } from '@/entities/form';
+import { useSessionStore } from '@/entities/session';
 
 vi.mock('@/shared/api', () => ({ http: vi.fn() }));
 const mockedHttp = vi.mocked(http);
@@ -24,6 +25,7 @@ const mockForm: Form = {
 	title: 'Обратная связь по курсу',
 	description: 'Помогите нам стать лучше',
 	createdAt: '2026-04-15T10:00:00.000Z',
+	authorId: 'user-1',
 	questions: [
 		{
 			id: 'q-1',
@@ -166,5 +168,31 @@ describe('FormBuilderPage', () => {
 				`${window.location.origin}/forms/form-1`,
 			),
 		);
+	});
+
+	it('форма другого автора → молчаливый редирект на /', async () => {
+		useSessionStore.setState({
+			currentUser: {
+				id: 'user-2',
+				firstName: 'Мария',
+				lastName: 'Петрова',
+				email: 'maria@formcraft.dev',
+			},
+		});
+		mockedHttp.mockImplementation(async (url) => {
+			if (url === '/api/forms/form-1') return mockForm;
+			throw new Error(`unexpected ${url}`);
+		});
+
+		const Wrapper = buildWrapper();
+		const { render } = await import('@testing-library/react');
+		render(<FormBuilderPage />, { wrapper: Wrapper });
+
+		await waitFor(() => expect(pathRef.current).toBe('/'));
+		expect(
+			screen.queryByLabelText('Название формы'),
+		).not.toBeInTheDocument();
+
+		useSessionStore.setState({ currentUser: null });
 	});
 });

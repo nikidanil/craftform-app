@@ -3,16 +3,24 @@ import userEvent from '@testing-library/user-event';
 import { screen, waitFor } from '@testing-library/react';
 
 import type { Form } from '@/entities/form';
-import { useFormsList } from '@/entities/form';
+import { useFormsByAuthor } from '@/entities/form';
 import { useResponsesCountByForm } from '@/entities/submission';
+import { useSessionStore } from '@/entities/session';
 import { useDeleteFormAction } from '@/features/delete-form/model/useDeleteFormAction';
 import { renderWithProviders } from '@/test/test-utils';
 
 import { FormsListPage } from '../FormsListPage';
 
+const seedUser = {
+	id: 'user-1',
+	firstName: 'Иван',
+	lastName: 'Иванов',
+	email: 'ivan@formcraft.dev',
+};
+
 vi.mock('@/entities/form', async (importOriginal) => {
 	const actual = await importOriginal<typeof import('@/entities/form')>();
-	return { ...actual, useFormsList: vi.fn() };
+	return { ...actual, useFormsByAuthor: vi.fn() };
 });
 
 vi.mock('@/entities/submission', async (importOriginal) => {
@@ -25,11 +33,11 @@ vi.mock('@/features/delete-form/model/useDeleteFormAction', () => ({
 	useDeleteFormAction: vi.fn(),
 }));
 
-const mockedUseFormsList = vi.mocked(useFormsList);
+const mockedUseFormsList = vi.mocked(useFormsByAuthor);
 const mockedUseResponsesCountByForm = vi.mocked(useResponsesCountByForm);
 const mockedUseDeleteFormAction = vi.mocked(useDeleteFormAction);
 
-type UseFormsListResult = ReturnType<typeof useFormsList>;
+type UseFormsListResult = ReturnType<typeof useFormsByAuthor>;
 type UseCountResult = ReturnType<typeof useResponsesCountByForm>;
 type QueryResultShape<T> = Pick<
 	UseFormsListResult,
@@ -51,12 +59,17 @@ const mockQueryResult = <T,>(
 		...overrides,
 	}) as UseFormsListResult & UseCountResult;
 
-const buildForm = (id: string, title: string): Form => ({
+const buildForm = (
+	id: string,
+	title: string,
+	authorId = 'user-1',
+): Form => ({
 	id,
 	title,
 	description: '',
 	questions: [],
 	createdAt: '2026-04-15T10:00:00.000Z',
+	authorId,
 });
 
 const mockDeleteAction = (deleteForm = vi.fn().mockResolvedValue(undefined)) => {
@@ -73,6 +86,8 @@ describe('FormsListPage', () => {
 		mockedUseFormsList.mockReset();
 		mockedUseResponsesCountByForm.mockReset();
 		mockedUseDeleteFormAction.mockReset();
+		localStorage.clear();
+		useSessionStore.setState({ currentUser: seedUser });
 	});
 
 	it('пока список грузится — пользователь видит индикатор', () => {

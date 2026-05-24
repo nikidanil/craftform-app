@@ -1,4 +1,5 @@
 import { Link, NavLink } from 'react-router';
+import { LogoutButton } from '@/features/logout';
 import styles from './Header.module.css';
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -26,8 +27,6 @@ export const Header = () => (
 				Профиль
 			</NavLink>
 		</nav>
-		<button type='button' className={styles.logout}>
-			Выход
-		</button>
+		<LogoutButton className={styles.logout} />
 	</header>
 );

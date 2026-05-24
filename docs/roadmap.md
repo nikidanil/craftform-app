@@ -458,6 +458,42 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** L.
 
+**Подзадачи (коммиты).**
+1. `docs`: roadmap — подзадачи этапа 10.
+2. `chore`: mocks — добавить `users[]` (3 seed-юзера) и проставить `authorId`
+   на всех `forms[]`.
+3. `entities/form`: расширить `formSchema`/`formInputSchema` полем
+   `authorId`, обновить зависимые фабрики и тесты.
+4. `entities/user`: model — `User` (публичный) + `UserRecord`
+   (внутренний, с `password`) + unit-тест схемы.
+5. `entities/user`: api — `useFindUserByEmail`, `useCreateUser`,
+   `queryKeys` + сценарные тесты (`vi.mock` на http-клиенте).
+6. `entities/session`: Zustand persist-store (`localStorage`,
+   ключ `formcraft.session`), селекторы `useCurrentUser`/
+   `useIsAuthenticated`, экшены `setCurrentUser`/`clearSession` + тесты.
+7. `shared/ui`: shadcn `card` и `alert` (нужны для login/signup-карточек
+   и блока ошибки) + обновлённый barrel.
+8. `features/login`: `useLoginAction` (валидация + проверка через
+   `useFindUserByEmail` + `setCurrentUser`) + ui `LoginForm` + сценарный
+   тест.
+9. `features/signup`: `useSignupAction` (валидация + проверка уникальности
+   email + `useCreateUser` + авто-логин) + ui `SignupForm` + сценарный
+   тест.
+10. `features/logout`: `useLogoutAction` (`clearSession` + редирект на
+    `/login`) + ui `LogoutButton` + сценарный тест.
+11. `widgets/header`: заменить заглушку «Выход» на `LogoutButton` +
+    сценарный тест клика.
+12. `app/router`: `ProtectedRoute` + `UnauthorizedOnlyRoute`,
+    перетряхнуть router-tree + сценарные тесты редиректов. Без
+    flash-сообщений: тексты «Для просмотра…» / «Вы уже вошли…» из ТЗ
+    оставлены на этап 12 («Финальная полировка»), редиректы тихие.
+13. `pages/login`: подключить `LoginForm` + сценарный тест.
+14. `pages/signup`: подключить `SignupForm` + сценарный тест.
+15. `pages/forms-list`: клиентский фильтр по `currentUser.id` +
+    сценарные тесты.
+16. `pages/form-builder`: тихий редирект на `/`, если
+    `form.authorId !== currentUser.id` + сценарный тест.
+
 ---
 
 ## Этап 11. Профиль

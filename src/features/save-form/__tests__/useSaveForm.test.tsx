@@ -5,12 +5,20 @@ import { http } from '@/shared/api';
 import { createWrapper } from '@/test/test-utils';
 import { useSaveForm } from '../model/useSaveForm';
 import type { FormInput } from '@/entities/form';
+import { useSessionStore } from '@/entities/session';
 
 vi.mock('@/shared/api', () => ({
 	http: vi.fn(),
 }));
 
 const mockedHttp = vi.mocked(http);
+
+const seedUser = {
+	id: 'user-1',
+	firstName: 'Иван',
+	lastName: 'Иванов',
+	email: 'ivan@formcraft.dev',
+};
 
 const baseInput: FormInput = {
 	title: 'Новая форма',
@@ -29,13 +37,16 @@ const baseInput: FormInput = {
 describe('useSaveForm', () => {
 	beforeEach(() => {
 		mockedHttp.mockReset();
+		localStorage.clear();
+		useSessionStore.setState({ currentUser: seedUser });
 	});
 
-	it('создаёт форму POST → /api/forms и редиректит на /forms/:formId/edit', async () => {
+	it('создаёт форму POST → /api/forms с authorId текущего user и редиректит на /forms/:formId/edit', async () => {
 		mockedHttp.mockImplementation(async (url, init) => {
 			expect(url).toBe('/api/forms');
 			expect(init?.method).toBe('POST');
-			const payload = init?.body as { id: string };
+			const payload = init?.body as { id: string; authorId: string };
+			expect(payload.authorId).toBe('user-1');
 			return { ...(init?.body as object), id: payload.id };
 		});
 
@@ -66,6 +77,7 @@ describe('useSaveForm', () => {
 				description: '',
 				questions: baseInput.questions,
 				createdAt: '2026-01-01T00:00:00.000Z',
+				authorId: 'user-1',
 			};
 		});
 
@@ -81,6 +93,31 @@ describe('useSaveForm', () => {
 			await result.current.save({ ...baseInput, title: 'Обновлено' });
 		});
 
+		expect(pathRef.current).toBe('/forms/new');
+	});
+
+	it('без авторизованного пользователя create блокируется: error выставлен, запрос не уходит', async () => {
+		useSessionStore.setState({ currentUser: null });
+		mockedHttp.mockImplementation(async () => {
+			throw new Error('должен не вызваться');
+		});
+
+		const { Wrapper, pathRef } = createWrapper({
+			initialEntries: ['/forms/new'],
+		});
+		const { result } = renderHook(() => useSaveForm({ mode: 'create' }), {
+			wrapper: Wrapper,
+		});
+
+		await act(async () => {
+			await result.current.save(baseInput);
+		});
+
+		await waitFor(() => {
+			expect(result.current.error).not.toBeNull();
+		});
+		expect(result.current.error?.message).toMatch(/авторизованному/i);
+		expect(mockedHttp).not.toHaveBeenCalled();
 		expect(pathRef.current).toBe('/forms/new');
 	});
 
