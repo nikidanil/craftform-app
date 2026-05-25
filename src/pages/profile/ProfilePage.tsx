@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, Navigate } from 'react-router';
 
 import { useCurrentUser } from '@/entities/session';
 import { ProfileForm } from '@/features/edit-profile';
@@ -10,7 +10,7 @@ export const ProfilePage = () => {
 	const user = useCurrentUser();
 
 	if (!user) {
-		return null;
+		return <Navigate to={routes.login} replace />;
 	}
 
 	return (
