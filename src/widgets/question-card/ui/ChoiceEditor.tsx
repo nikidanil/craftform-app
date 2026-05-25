@@ -2,6 +2,7 @@ import {
 	Controller,
 	useFieldArray,
 	useFormContext,
+	useWatch,
 } from 'react-hook-form';
 
 import { Input, Button } from '@/shared/ui';
@@ -23,6 +24,11 @@ export const ChoiceEditor = ({ index }: Props) => {
 		control,
 		name: `questions.${index}.options` as 'questions.0.options',
 	});
+	const choiceVariant = useWatch({
+		control,
+		name: `questions.${index}.choiceVariant` as const,
+	});
+	const isMultiple = choiceVariant === 'multiple';
 
 	const questionErrors = formState.errors?.questions?.[index] as
 		| {
@@ -72,7 +78,11 @@ export const ChoiceEditor = ({ index }: Props) => {
 			<div className={styles.options}>
 				{optionsArray.fields.map((field, optIndex) => (
 					<div key={field.id} className={styles.option}>
-						<span className={styles.bullet} aria-hidden />
+						<span
+							className={styles.bullet}
+							data-multiple={isMultiple || undefined}
+							aria-hidden
+						/>
 						<Input
 							aria-label={`Вариант ответа ${optIndex + 1}`}
 							placeholder='Текст варианта'
