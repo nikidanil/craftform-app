@@ -126,7 +126,7 @@
 .fieldError {
 	margin: 0;
 	font-size: 0.8125rem;
-	color: oklch(0.58 0.22 25);
+	color: var(--destructive);
 }
 
 .fieldInput {
@@ -146,6 +146,11 @@
 	border-color: var(--primary);
 	background: white;
 	box-shadow: 0 0 0 3px oklch(0.6171 0.1375 39 / 0.12);
+}
+
+.fieldInput[aria-invalid='true'] {
+	border-color: var(--destructive);
+	background: oklch(0.97 0.02 25 / 0.5);
 }
 
 .fieldTextarea {
