@@ -152,6 +152,10 @@
 	flex-shrink: 0;
 }
 
+.bullet[data-multiple='true'] {
+	border-radius: 5px;
+}
+
 .addOptionBtn {
 	align-self: flex-start;
 	padding-inline: 0 !important;
