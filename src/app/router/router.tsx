@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, type RouteObject } from 'react-router';
 import { routePaths } from '@/shared/lib';
 import { AppShell } from '@/widgets/app-shell';
 import { FormsListPage } from '@/pages/forms-list';
@@ -13,7 +13,7 @@ import { ResponseViewPage } from '@/pages/response-view';
 import { ProtectedRoute } from './ProtectedRoute';
 import { UnauthorizedOnlyRoute } from './UnauthorizedOnlyRoute';
 
-export const router = createBrowserRouter([
+export const appRoutes: RouteObject[] = [
 	{
 		element: <ProtectedRoute />,
 		children: [
@@ -44,4 +44,6 @@ export const router = createBrowserRouter([
 		],
 	},
 	{ path: routePaths.formFill, element: <FormFillPage /> },
-]);
+];
+
+export const router = createBrowserRouter(appRoutes);
