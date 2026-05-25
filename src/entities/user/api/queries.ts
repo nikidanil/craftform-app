@@ -1,7 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
 import { http } from '@/shared/api';
 import { userRecordListSchema, type UserRecord } from '../model';
-import { userKeys } from './keys';
 
 export const findUserByEmail = async (
 	email: string,
@@ -12,10 +10,3 @@ export const findUserByEmail = async (
 	const records = userRecordListSchema.parse(data);
 	return records[0] ?? null;
 };
-
-export const useFindUserByEmail = (email: string) =>
-	useQuery({
-		queryKey: userKeys.byEmail(email),
-		queryFn: () => findUserByEmail(email),
-		enabled: Boolean(email),
-	});

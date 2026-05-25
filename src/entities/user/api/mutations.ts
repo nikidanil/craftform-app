@@ -1,4 +1,3 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { http } from '@/shared/api';
 import {
 	toPublicUser,
@@ -6,7 +5,6 @@ import {
 	type User,
 	type UserRecord,
 } from '../model';
-import { userKeys } from './keys';
 
 export type CreateUserInput = Omit<UserRecord, 'id'>;
 
@@ -23,11 +21,6 @@ export const createUser = async (input: CreateUserInput): Promise<User> => {
 	return toPublicUser(record);
 };
 
-export const useCreateUser = () =>
-	useMutation({
-		mutationFn: createUser,
-	});
-
 export type UpdateUserInput = {
 	id: string;
 	patch: Partial<Pick<UserRecord, 'firstName' | 'lastName' | 'email'>>;
@@ -43,14 +36,4 @@ export const updateUser = async ({
 	});
 	const record = userRecordSchema.parse(data);
 	return toPublicUser(record);
-};
-
-export const useUpdateUser = () => {
-	const queryClient = useQueryClient();
-	return useMutation({
-		mutationFn: updateUser,
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: userKeys.all });
-		},
-	});
 };
