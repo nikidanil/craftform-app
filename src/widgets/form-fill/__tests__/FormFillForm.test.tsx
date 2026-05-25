@@ -192,6 +192,72 @@ describe('FormFillForm', () => {
 		expect(screen.queryByRole('button', { name: /отправить/i })).not.toBeInTheDocument();
 	});
 
+	it('blur пустого обязательного поля помечает его aria-invalid и связывает сообщение', async () => {
+		makeAction();
+		renderWithProviders(<FormFillForm form={shortTextForm} />);
+
+		const field = screen.getByLabelText(/ваше имя/i);
+		await userEvent.click(field);
+		await userEvent.tab();
+
+		await waitFor(() => expect(field).toHaveAttribute('aria-invalid', 'true'));
+		const describedBy = field.getAttribute('aria-describedby');
+		expect(describedBy).toBeTruthy();
+		expect(document.getElementById(describedBy as string)).toHaveTextContent(
+			/заполните обязательное поле/i,
+		);
+	});
+
+	it('ввод значения в ранее невалидное поле убирает пометку aria-invalid', async () => {
+		makeAction();
+		renderWithProviders(<FormFillForm form={shortTextForm} />);
+
+		const field = screen.getByLabelText(/ваше имя/i);
+		await userEvent.click(field);
+		await userEvent.tab();
+		await waitFor(() => expect(field).toHaveAttribute('aria-invalid', 'true'));
+
+		await userEvent.type(field, 'Иван');
+
+		await waitFor(() => expect(field).not.toHaveAttribute('aria-invalid'));
+	});
+
+	it('обязательная группа чекбоксов помечается aria-invalid после снятия выбора и blur', async () => {
+		makeAction();
+		renderWithProviders(<FormFillForm form={checkboxForm} />);
+
+		const group = screen.getByRole('group', { name: /выберите интересы/i });
+		expect(group).not.toHaveAttribute('aria-invalid');
+
+		const checkbox = screen.getByRole('checkbox', { name: /спорт/i });
+		await userEvent.click(checkbox);
+		await userEvent.click(checkbox);
+		await userEvent.tab();
+
+		await waitFor(() => expect(group).toHaveAttribute('aria-invalid', 'true'));
+		const describedBy = group.getAttribute('aria-describedby');
+		expect(describedBy).toBeTruthy();
+		expect(document.getElementById(describedBy as string)).toHaveTextContent(
+			/заполните обязательное поле/i,
+		);
+	});
+
+	it('экран успешной отправки объявляется через role="status"', async () => {
+		makeReactiveAction((state) => {
+			state.status = 'success';
+		});
+		renderWithProviders(<FormFillForm form={shortTextForm} />);
+
+		await userEvent.type(screen.getByLabelText(/ваше имя/i), 'Иван');
+		await waitFor(() =>
+			expect(screen.getByRole('button', { name: /отправить/i })).not.toBeDisabled(),
+		);
+		await userEvent.click(screen.getByRole('button', { name: /отправить/i }));
+
+		const status = await screen.findByRole('status');
+		expect(status).toHaveTextContent(/спасибо за ответ/i);
+	});
+
 	it('после ошибки отправки показывает сообщение над кнопкой', async () => {
 		makeReactiveAction((state) => {
 			state.status = 'error';
