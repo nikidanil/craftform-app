@@ -12,6 +12,6 @@
 
 .toast {
 	background: #fff;
-	box-shadow: 0 4px 16px oklch(0 0 0 / 0.12);
+	box-shadow: var(--shadow-lg);
 	cursor: pointer;
 }
