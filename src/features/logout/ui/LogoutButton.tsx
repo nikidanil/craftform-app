@@ -1,3 +1,4 @@
+import { Button } from '@/shared/ui';
 import { useLogoutAction } from '../model';
 
 type Props = {
@@ -7,8 +8,13 @@ type Props = {
 export const LogoutButton = ({ className }: Props) => {
 	const logout = useLogoutAction();
 	return (
-		<button type='button' className={className} onClick={logout}>
+		<Button
+			type='button'
+			variant='ghost'
+			className={className}
+			onClick={logout}
+		>
 			Выход
-		</button>
+		</Button>
 	);
 };
