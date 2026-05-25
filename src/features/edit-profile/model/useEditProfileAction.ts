@@ -41,5 +41,10 @@ export const useEditProfileAction = () => {
 		}
 	};
 
-	return { save, status, errorMessage };
+	const reset = () => {
+		setStatus('idle');
+		setErrorMessage(null);
+	};
+
+	return { save, status, errorMessage, reset };
 };
