@@ -128,8 +128,8 @@ describe('FormBuilderForm — create mode', () => {
 		const downLast = screen.getByRole('button', {
 			name: 'Переместить вопрос 3 вниз',
 		});
-		expect(upFirst).toHaveAttribute('aria-disabled', 'true');
-		expect(downLast).toHaveAttribute('aria-disabled', 'true');
+		expect(upFirst).toBeDisabled();
+		expect(downLast).toBeDisabled();
 
 		await user.click(
 			screen.getByRole('button', { name: 'Переместить вопрос 1 вниз' }),
