@@ -172,7 +172,11 @@ export const ProfileForm = ({ user }: Props) => {
 
 			<div className={styles.actions}>
 				{mode === 'view' ? (
-					<Button type='button' onClick={startEditing}>
+					<Button
+						type='button'
+						className={styles.actionBtn}
+						onClick={startEditing}
+					>
 						Редактировать
 					</Button>
 				) : (
@@ -180,12 +184,17 @@ export const ProfileForm = ({ user }: Props) => {
 						<Button
 							type='button'
 							variant='outline'
+							className={styles.actionBtn}
 							onClick={cancelEditing}
 						>
 							Отменить
 						</Button>
 						{isDirty ? (
-							<Button type='submit' disabled={!isValid || isPending}>
+							<Button
+								type='submit'
+								className={styles.actionBtn}
+								disabled={!isValid || isPending}
+							>
 								Сохранить
 							</Button>
 						) : null}

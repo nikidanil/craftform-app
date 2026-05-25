@@ -62,3 +62,10 @@
 	border-top: 1px solid var(--border);
 	margin-top: 0.5rem;
 }
+
+.actionBtn {
+	height: auto;
+	padding: 0.6rem 1.25rem;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
