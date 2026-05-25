@@ -14,8 +14,8 @@ export const useEditProfileAction = () => {
 	const [status, setStatus] = useState<EditProfileStatus>('idle');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-	const save = async (values: ProfileValues) => {
-		if (!currentUser || status === 'pending') return;
+	const save = async (values: ProfileValues): Promise<boolean> => {
+		if (!currentUser || status === 'pending') return false;
 		setStatus('pending');
 		setErrorMessage(null);
 		try {
@@ -23,7 +23,7 @@ export const useEditProfileAction = () => {
 			if (existing && existing.id !== currentUser.id) {
 				setStatus('error');
 				setErrorMessage(EMAIL_TAKEN);
-				return;
+				return false;
 			}
 			const updated = await updateUser({
 				id: currentUser.id,
@@ -35,9 +35,11 @@ export const useEditProfileAction = () => {
 			});
 			setCurrentUser(updated);
 			setStatus('success');
+			return true;
 		} catch {
 			setStatus('error');
 			setErrorMessage(GENERIC_ERROR);
+			return false;
 		}
 	};
 

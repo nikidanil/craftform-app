@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -45,7 +45,6 @@ export const ProfileForm = ({ user }: Props) => {
 		control,
 		handleSubmit,
 		reset: resetForm,
-		getValues,
 		formState: { errors, isValid, isDirty },
 	} = useForm<ProfileValues>({
 		resolver: zodResolver(profileSchema),
@@ -56,12 +55,13 @@ export const ProfileForm = ({ user }: Props) => {
 	const isReadOnly = mode === 'view';
 	const isPending = status === 'pending';
 
-	useEffect(() => {
-		if (status === 'success') {
-			resetForm(getValues());
+	const onSubmit = async (values: ProfileValues) => {
+		const saved = await save(values);
+		if (saved) {
+			resetForm(values);
 			setMode('view');
 		}
-	}, [status, resetForm, getValues]);
+	};
 
 	const startEditing = () => {
 		resetAction();
@@ -75,7 +75,7 @@ export const ProfileForm = ({ user }: Props) => {
 	};
 
 	return (
-		<form className={styles.form} onSubmit={handleSubmit(save)} noValidate>
+		<form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
 			<p className={styles.sectionTitle}>Личные данные</p>
 
 			{errorMessage ? (
