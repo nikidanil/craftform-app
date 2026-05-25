@@ -1,5 +1,6 @@
 export { cn } from './utils';
 export { routes, routePaths } from './routes';
+export { getInitials } from './getInitials';
 export { responsesCountLabel } from './responsesCountLabel';
 export { formatSubmittedAt } from './formatSubmittedAt';
 export { useDebouncedValue } from './useDebouncedValue';
