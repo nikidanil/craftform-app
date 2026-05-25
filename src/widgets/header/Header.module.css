@@ -88,17 +88,4 @@
 
 .logout {
 	margin-left: auto;
-	padding: 0.4rem 0.875rem;
-	border: none;
-	background: transparent;
-	color: var(--foreground);
-	font: inherit;
-	font-weight: 500;
-	border-radius: var(--radius);
-	cursor: pointer;
-	transition: background 0.15s;
-}
-
-.logout:hover {
-	background: var(--secondary);
 }
