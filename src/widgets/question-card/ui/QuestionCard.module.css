@@ -91,7 +91,7 @@
 	color: var(--destructive);
 }
 
-.actions button[aria-disabled='true'] {
+.actions button:disabled {
 	opacity: 0.4;
 	cursor: not-allowed;
 }

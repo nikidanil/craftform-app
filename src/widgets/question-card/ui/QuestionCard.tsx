@@ -147,7 +147,7 @@ export const QuestionCard = ({
 					variant='ghost'
 					size='icon-sm'
 					aria-label={`Переместить вопрос ${index + 1} вверх`}
-					aria-disabled={!canMoveUp}
+					disabled={!canMoveUp}
 					onClick={onMoveUp}
 				>
 					<ArrowUp size={15} aria-hidden />
@@ -157,7 +157,7 @@ export const QuestionCard = ({
 					variant='ghost'
 					size='icon-sm'
 					aria-label={`Переместить вопрос ${index + 1} вниз`}
-					aria-disabled={!canMoveDown}
+					disabled={!canMoveDown}
 					onClick={onMoveDown}
 				>
 					<ArrowDown size={15} aria-hidden />
