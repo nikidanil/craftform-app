@@ -517,6 +517,23 @@ Vitest + RTL. Раскладываем FSD-light структуру: `app/`, `pa
 
 **Сложность.** S.
 
+**Подзадачи (коммиты).**
+1. `docs`: roadmap — подзадачи этапа 11.
+2. `entities/user`: api — `updateUser` + `useUpdateUser` (PATCH
+   `/api/users/:id`, `toPublicUser`) + unit-тест (`vi.mock` на
+   http-клиенте).
+3. `features/edit-profile`: model — `profileSchema` (`firstName`/
+   `lastName` непустые, `email` валидный) + `useEditProfileAction`
+   (проверка уникальности email с само-исключением → «Введенный Email
+   уже занят», `updateUser` + `setCurrentUser`, `status`/`errorMessage`)
+   + сценарные тесты.
+4. `features/edit-profile`: ui — `ProfileForm` (режимы просмотр/
+   редактирование, кнопки «Редактировать»/«Отменить»/«Сохранить»,
+   Alert ошибки) + barrel + сценарные тесты (три режима кнопок,
+   валидация, email-конфликт остаётся в edit, успех → просмотр).
+5. `pages/profile`: подключить `ProfileForm` (`useCurrentUser` →
+   шапка-карточка с инициалами + форма).
+
 ---
 
 ## Этап 12. Финальная полировка
