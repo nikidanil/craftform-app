@@ -35,3 +35,4 @@ export {
 	CardContent,
 } from './card';
 export { Alert, AlertTitle, AlertDescription, AlertAction } from './alert';
+export { ToastViewport, toast } from './toast';
