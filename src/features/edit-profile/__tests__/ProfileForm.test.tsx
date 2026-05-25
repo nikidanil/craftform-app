@@ -100,7 +100,7 @@ describe('ProfileForm', () => {
 	});
 
 	it('конфликт email: показывает сообщение и оставляет карточку в режиме редактирования', async () => {
-		mockedHttp.mockResolvedValue([
+		mockedHttp.mockResolvedValueOnce([
 			{
 				id: 'user-2',
 				firstName: 'Мария',
@@ -126,6 +126,8 @@ describe('ProfileForm', () => {
 		expect(
 			screen.getByRole('button', { name: 'Отменить' }),
 		).toBeInTheDocument();
+		// при конфликте PATCH не должен уходить — только запрос проверки email
+		expect(mockedHttp).toHaveBeenCalledTimes(1);
 	});
 
 	it('успешное сохранение возвращает в просмотр с обновлёнными данными', async () => {
