@@ -10,13 +10,16 @@ import { FormBuilderPage } from '@/pages/form-builder';
 import { FormFillPage } from '@/pages/form-fill';
 import { ResponsesListPage } from '@/pages/responses-list';
 import { ResponseViewPage } from '@/pages/response-view';
+import { NotFoundPage } from '@/pages/not-found';
 import { ProtectedRoute } from './ProtectedRoute';
 import { UnauthorizedOnlyRoute } from './UnauthorizedOnlyRoute';
 import { RootLayout } from './RootLayout';
+import { RouteError } from './RouteError';
 
 export const appRoutes: RouteObject[] = [
 	{
 		element: <RootLayout />,
+		errorElement: <RouteError />,
 		children: [
 			{
 				element: <ProtectedRoute />,
@@ -51,6 +54,7 @@ export const appRoutes: RouteObject[] = [
 				],
 			},
 			{ path: routePaths.formFill, element: <FormFillPage /> },
+			{ path: '*', element: <NotFoundPage /> },
 		],
 	},
 ];
