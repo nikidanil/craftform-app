@@ -35,5 +35,15 @@ export {
 	CardContent,
 } from './card';
 export { Alert, AlertTitle, AlertDescription, AlertAction } from './alert';
+export {
+	AlertDialog,
+	AlertDialogTrigger,
+	AlertDialogClose,
+	AlertDialogContent,
+	AlertDialogHeader,
+	AlertDialogFooter,
+	AlertDialogTitle,
+	AlertDialogDescription,
+} from './alert-dialog';
 export { ToastViewport, toast } from './toast';
 export { Logo } from './Logo';
