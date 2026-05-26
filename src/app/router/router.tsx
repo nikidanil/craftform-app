@@ -12,38 +12,47 @@ import { ResponsesListPage } from '@/pages/responses-list';
 import { ResponseViewPage } from '@/pages/response-view';
 import { ProtectedRoute } from './ProtectedRoute';
 import { UnauthorizedOnlyRoute } from './UnauthorizedOnlyRoute';
+import { RootLayout } from './RootLayout';
 
 export const appRoutes: RouteObject[] = [
 	{
-		element: <ProtectedRoute />,
+		element: <RootLayout />,
 		children: [
 			{
-				element: <AppShell />,
+				element: <ProtectedRoute />,
 				children: [
-					{ path: routePaths.home, element: <FormsListPage /> },
-					{ path: routePaths.profile, element: <ProfilePage /> },
-					{ path: routePaths.formNew, element: <NewFormPage /> },
-					{ path: routePaths.formEdit, element: <FormBuilderPage /> },
 					{
-						path: routePaths.formResponses,
-						element: <ResponsesListPage />,
-					},
-					{
-						path: routePaths.responseView,
-						element: <ResponseViewPage />,
+						element: <AppShell />,
+						children: [
+							{ path: routePaths.home, element: <FormsListPage /> },
+							{ path: routePaths.profile, element: <ProfilePage /> },
+							{ path: routePaths.formNew, element: <NewFormPage /> },
+							{
+								path: routePaths.formEdit,
+								element: <FormBuilderPage />,
+							},
+							{
+								path: routePaths.formResponses,
+								element: <ResponsesListPage />,
+							},
+							{
+								path: routePaths.responseView,
+								element: <ResponseViewPage />,
+							},
+						],
 					},
 				],
 			},
+			{
+				element: <UnauthorizedOnlyRoute />,
+				children: [
+					{ path: routePaths.login, element: <LoginPage /> },
+					{ path: routePaths.signup, element: <SignupPage /> },
+				],
+			},
+			{ path: routePaths.formFill, element: <FormFillPage /> },
 		],
 	},
-	{
-		element: <UnauthorizedOnlyRoute />,
-		children: [
-			{ path: routePaths.login, element: <LoginPage /> },
-			{ path: routePaths.signup, element: <SignupPage /> },
-		],
-	},
-	{ path: routePaths.formFill, element: <FormFillPage /> },
 ];
 
 export const router = createBrowserRouter(appRoutes);
