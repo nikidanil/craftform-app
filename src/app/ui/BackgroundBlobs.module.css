@@ -1,0 +1,83 @@
+.blobs {
+	position: fixed;
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+	z-index: -1;
+}
+
+.blob {
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(90px);
+}
+
+.blobOne {
+	width: 640px;
+	height: 640px;
+	background: oklch(0.84 0.07 39 / 0.38);
+	top: -200px;
+	right: -130px;
+	animation: blobFloatOne 16s ease-in-out infinite;
+}
+
+.blobTwo {
+	width: 540px;
+	height: 540px;
+	background: oklch(0.91 0.04 72 / 0.28);
+	bottom: -170px;
+	left: -90px;
+	animation: blobFloatTwo 20s ease-in-out infinite;
+}
+
+.blobThree {
+	width: 380px;
+	height: 380px;
+	background: oklch(0.88 0.03 190 / 0.18);
+	top: 45%;
+	left: 32%;
+	animation: blobFloatThree 14s ease-in-out infinite;
+}
+
+@keyframes blobFloatOne {
+	0%,
+	100% {
+		transform: translate(0, 0) scale(1);
+	}
+	33% {
+		transform: translate(-150px, 100px) scale(1.15);
+	}
+	66% {
+		transform: translate(110px, -130px) scale(0.88);
+	}
+}
+
+@keyframes blobFloatTwo {
+	0%,
+	100% {
+		transform: translate(0, 0) scale(1);
+	}
+	40% {
+		transform: translate(160px, -90px) scale(0.88);
+	}
+	80% {
+		transform: translate(-80px, 150px) scale(1.14);
+	}
+}
+
+@keyframes blobFloatThree {
+	0%,
+	100% {
+		transform: translate(0, 0) scale(1);
+	}
+	50% {
+		transform: translate(120px, -160px) scale(1.2);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.blob {
+		animation: none;
+		transform: translate(0, 0) scale(1);
+	}
+}
