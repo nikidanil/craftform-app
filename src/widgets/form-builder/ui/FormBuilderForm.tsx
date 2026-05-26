@@ -11,7 +11,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	DndContext,
 	DragOverlay,
-	useDroppable,
 	type Announcements,
 	type DragEndEvent,
 	type DragStartEvent,
@@ -22,7 +21,7 @@ import {
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
-import { cn, routes } from '@/shared/lib';
+import { routes } from '@/shared/lib';
 import { Input, Textarea, Label } from '@/shared/ui';
 import type { Form, FormInput, QuestionType } from '@/entities/form';
 import { QuestionTypePanel } from '@/widgets/question-type-panel';
@@ -39,16 +38,15 @@ import { DeleteFormButton } from '@/features/delete-form';
 
 import { emptyFormInput, makeEmptyQuestion } from '../model/defaults';
 import { formBuilderSchema, type FormBuilderValues } from '../model/schema';
-import {
-	SIDEBAR_DROPPABLE_ID,
-	WORKSPACE_DROPPABLE_ID,
-	isNewQuestionDragData,
-} from '../model/dndProtocol';
+import { isNewQuestionDragData } from '../model/dndProtocol';
 import {
 	applyDragInterpretation,
+	formBuilderCollisionDetection,
 	interpretDragEnd,
 	useFormBuilderDnd,
 } from '../model/useFormBuilderDnd';
+import { SidebarDroppable } from './SidebarDroppable';
+import { WorkspaceDroppable } from './WorkspaceDroppable';
 import styles from './FormBuilderForm.module.css';
 
 const QUESTION_TYPE_LABEL: Record<QuestionType, string> = {
@@ -114,18 +112,6 @@ export const FormBuilderForm = (props: Props) => {
 	});
 
 	const { sensors } = useFormBuilderDnd();
-	const {
-		setNodeRef: setWorkspaceDroppableRef,
-		isOver: isWorkspaceOver,
-	} = useDroppable({ id: WORKSPACE_DROPPABLE_ID });
-	const { setNodeRef: setSidebarDroppableRef } = useDroppable({
-		id: SIDEBAR_DROPPABLE_ID,
-	});
-
-	const assignWorkspaceRef = (node: HTMLElement | null) => {
-		workspaceRef.current = node;
-		setWorkspaceDroppableRef(node);
-	};
 
 	useEffect(() => {
 		const pending = pendingFocusRef.current;
@@ -230,11 +216,6 @@ export const FormBuilderForm = (props: Props) => {
 
 	const handleDragCancel = () => setActiveDrag(null);
 
-	const workspaceClass = cn(
-		styles.workspace,
-		isWorkspaceOver && styles.workspaceDropActive,
-	);
-
 	const overlayLabel =
 		activeDrag?.kind === 'new-question'
 			? `Новый вопрос: ${QUESTION_TYPE_LABEL[activeDrag.questionType]}`
@@ -246,6 +227,7 @@ export const FormBuilderForm = (props: Props) => {
 		<FormProvider {...methods}>
 			<DndContext
 				sensors={sensors}
+				collisionDetection={formBuilderCollisionDetection}
 				onDragStart={handleDragStart}
 				onDragEnd={handleDragEnd}
 				onDragCancel={handleDragCancel}
@@ -256,7 +238,7 @@ export const FormBuilderForm = (props: Props) => {
 					onSubmit={methods.handleSubmit(onSubmit)}
 					noValidate
 				>
-					<aside ref={setSidebarDroppableRef} className={styles.sidebar}>
+					<SidebarDroppable className={styles.sidebar}>
 						<QuestionTypePanel onAdd={onAddQuestion} />
 						<div className={styles.actions}>
 							<SaveFormButton
@@ -279,9 +261,9 @@ export const FormBuilderForm = (props: Props) => {
 								</button>
 							) : null}
 						</div>
-					</aside>
+					</SidebarDroppable>
 
-					<main ref={assignWorkspaceRef} className={workspaceClass}>
+					<WorkspaceDroppable workspaceRef={workspaceRef}>
 						<SaveFormStatus status={status} />
 
 						<div className={styles.metaCard}>
@@ -339,7 +321,7 @@ export const FormBuilderForm = (props: Props) => {
 								чтобы добавить
 							</div>
 						) : null}
-					</main>
+					</WorkspaceDroppable>
 				</form>
 				<DragOverlay>
 					{overlayLabel ? (
