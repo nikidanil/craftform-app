@@ -20,6 +20,9 @@
 	width: 100%;
 	max-width: 420px;
 	padding: 1.5rem 2rem 2rem;
+	background: var(--popover);
+	border-radius: 1.25rem;
+	box-shadow: var(--shadow-lg);
 }
 
 .title {

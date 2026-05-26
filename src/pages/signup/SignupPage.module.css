@@ -1,7 +1,7 @@
 .page {
 	min-height: 100vh;
 	display: flex;
-	align-items: flex-start;
+	align-items: center;
 	justify-content: center;
 	padding: 2rem 1rem;
 }
@@ -20,6 +20,9 @@
 	width: 100%;
 	max-width: 440px;
 	padding: 1.5rem 2rem 2rem;
+	background: var(--popover);
+	border-radius: 1.25rem;
+	box-shadow: var(--shadow-lg);
 }
 
 .title {
