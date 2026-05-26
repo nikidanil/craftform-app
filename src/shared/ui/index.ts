@@ -36,3 +36,4 @@ export {
 } from './card';
 export { Alert, AlertTitle, AlertDescription, AlertAction } from './alert';
 export { ToastViewport, toast } from './toast';
+export { Logo } from './Logo';

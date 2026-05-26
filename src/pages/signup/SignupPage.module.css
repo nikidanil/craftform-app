@@ -16,33 +16,6 @@
 	width: 100%;
 }
 
-.brand {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	text-decoration: none;
-	color: var(--foreground);
-}
-
-.brandIcon {
-	width: 36px;
-	height: 36px;
-	background: var(--primary);
-	color: white;
-	border-radius: 8px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 1.1rem;
-}
-
-.brandName {
-	font-size: 1.35rem;
-	font-weight: 700;
-	letter-spacing: -0.025em;
-	color: var(--foreground);
-}
-
 .card {
 	width: 100%;
 	max-width: 440px;
