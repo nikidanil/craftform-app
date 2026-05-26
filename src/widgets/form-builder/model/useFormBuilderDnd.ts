@@ -1,8 +1,11 @@
 import {
 	KeyboardSensor,
 	PointerSensor,
+	pointerWithin,
+	rectIntersection,
 	useSensor,
 	useSensors,
+	type CollisionDetection,
 	type DragEndEvent,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
@@ -23,6 +26,18 @@ export type DragApplyHelpers = {
 	move: (from: number, to: number) => void;
 	remove: (index: number) => void;
 	size: number;
+};
+
+/**
+ * Сначала ищем droppable под курсором (`pointerWithin`) — это надёжно
+ * находит пустую рабочую область, у которой почти нет содержимого. Если
+ * под курсором ничего нет, падаем на пересечение прямоугольников
+ * (`rectIntersection`) для сортировки уже существующих карточек.
+ */
+export const formBuilderCollisionDetection: CollisionDetection = (args) => {
+	const pointerCollisions = pointerWithin(args);
+	if (pointerCollisions.length > 0) return pointerCollisions;
+	return rectIntersection(args);
 };
 
 export const interpretDragEnd = (
