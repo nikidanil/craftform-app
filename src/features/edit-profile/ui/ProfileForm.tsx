@@ -86,7 +86,9 @@ export const ProfileForm = ({ user }: Props) => {
 
 			<div className={styles.fieldsGrid}>
 				<div className={styles.field}>
-					<Label htmlFor={firstNameId}>Имя</Label>
+					<Label htmlFor={firstNameId} className={styles.fieldLabel}>
+						Имя
+					</Label>
 					<Controller
 						control={control}
 						name='firstName'
@@ -112,7 +114,9 @@ export const ProfileForm = ({ user }: Props) => {
 				</div>
 
 				<div className={styles.field}>
-					<Label htmlFor={lastNameId}>Фамилия</Label>
+					<Label htmlFor={lastNameId} className={styles.fieldLabel}>
+						Фамилия
+					</Label>
 					<Controller
 						control={control}
 						name='lastName'
@@ -138,7 +142,9 @@ export const ProfileForm = ({ user }: Props) => {
 				</div>
 
 				<div className={styles.fieldFull}>
-					<Label htmlFor={emailId}>Email</Label>
+					<Label htmlFor={emailId} className={styles.fieldLabel}>
+						Email
+					</Label>
 					<Controller
 						control={control}
 						name='email'
@@ -166,7 +172,11 @@ export const ProfileForm = ({ user }: Props) => {
 
 			<div className={styles.actions}>
 				{mode === 'view' ? (
-					<Button type='button' onClick={startEditing}>
+					<Button
+						type='button'
+						className={styles.actionBtn}
+						onClick={startEditing}
+					>
 						Редактировать
 					</Button>
 				) : (
@@ -174,12 +184,17 @@ export const ProfileForm = ({ user }: Props) => {
 						<Button
 							type='button'
 							variant='outline'
+							className={styles.actionBtn}
 							onClick={cancelEditing}
 						>
 							Отменить
 						</Button>
 						{isDirty ? (
-							<Button type='submit' disabled={!isValid || isPending}>
+							<Button
+								type='submit'
+								className={styles.actionBtn}
+								disabled={!isValid || isPending}
+							>
 								Сохранить
 							</Button>
 						) : null}

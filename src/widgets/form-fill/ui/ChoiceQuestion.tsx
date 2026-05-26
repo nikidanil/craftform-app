@@ -1,12 +1,13 @@
 import { useFormContext } from 'react-hook-form';
 import type { Question } from '@/entities/form';
-import type { FormFillValues } from '../model';
+import { useQuestionFieldError, type FormFillValues } from '../model';
 import styles from './FormFillForm.module.css';
 
 type Props = { question: Question };
 
 export const ChoiceQuestion = ({ question }: Props) => {
 	const { register } = useFormContext<FormFillValues>();
+	const { showError, message, errorId } = useQuestionFieldError(question.id);
 	const isMultiple = question.choiceVariant === 'multiple';
 
 	return (
@@ -23,6 +24,8 @@ export const ChoiceQuestion = ({ question }: Props) => {
 				className={styles.optionsList}
 				role={isMultiple ? 'group' : 'radiogroup'}
 				aria-labelledby={`label-${question.id}`}
+				aria-invalid={showError || undefined}
+				aria-describedby={showError ? errorId : undefined}
 			>
 				{question.options?.map((option) => (
 					<label key={option.id} className={styles.optionItem}>
@@ -65,6 +68,11 @@ export const ChoiceQuestion = ({ question }: Props) => {
 					</label>
 				))}
 			</div>
+			{showError && (
+				<p id={errorId} role="alert" className={styles.fieldError}>
+					{message}
+				</p>
+			)}
 		</div>
 	);
 };

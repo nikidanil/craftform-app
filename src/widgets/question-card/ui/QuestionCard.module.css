@@ -91,7 +91,7 @@
 	color: var(--destructive);
 }
 
-.actions button[aria-disabled='true'] {
+.actions button:disabled {
 	opacity: 0.4;
 	cursor: not-allowed;
 }
@@ -150,6 +150,10 @@
 	border-radius: 50%;
 	border: 2px solid var(--border);
 	flex-shrink: 0;
+}
+
+.bullet[data-multiple='true'] {
+	border-radius: 5px;
 }
 
 .addOptionBtn {

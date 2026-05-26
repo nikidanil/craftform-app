@@ -1,19 +1,16 @@
-import { Link } from 'react-router';
+import { Link, Navigate } from 'react-router';
 
 import { useCurrentUser } from '@/entities/session';
 import { ProfileForm } from '@/features/edit-profile';
-import { routes } from '@/shared/lib';
+import { getInitials, routes } from '@/shared/lib';
 
 import styles from './ProfilePage.module.css';
-
-const getInitials = (firstName: string, lastName: string): string =>
-	`${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 
 export const ProfilePage = () => {
 	const user = useCurrentUser();
 
 	if (!user) {
-		return null;
+		return <Navigate to={routes.login} replace />;
 	}
 
 	return (
