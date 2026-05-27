@@ -1,11 +1,16 @@
 import { Outlet } from 'react-router';
 import { Header } from '@/widgets/header';
+import { cn } from '@/shared/lib/utils';
 import styles from './AppShell.module.css';
 
-export const AppShell = () => (
-	<div className={styles.shell}>
+type Props = {
+	fullBleed?: boolean;
+};
+
+export const AppShell = ({ fullBleed = false }: Props) => (
+	<div className={cn(styles.shell, fullBleed && styles.shellFixed)}>
 		<Header />
-		<main className={styles.content}>
+		<main className={cn(styles.content, fullBleed && styles.contentFull)}>
 			<Outlet />
 		</main>
 	</div>
