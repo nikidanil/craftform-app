@@ -45,5 +45,4 @@ export {
 	AlertDialogTitle,
 	AlertDialogDescription,
 } from './alert-dialog';
-export { ToastViewport, toast } from './toast';
 export { Logo } from './Logo';

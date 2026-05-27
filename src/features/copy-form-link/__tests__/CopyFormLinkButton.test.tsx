@@ -1,51 +1,28 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ToastViewport } from '@/shared/ui';
 import { CopyFormLinkButton } from '../ui/CopyFormLinkButton';
 
 describe('CopyFormLinkButton', () => {
-	const writeText = vi.fn<(text: string) => Promise<void>>();
-
-	beforeEach(() => {
-		writeText.mockReset();
-		Object.defineProperty(navigator, 'clipboard', {
-			configurable: true,
-			value: { writeText },
-		});
-	});
-
-	it('после клика показывает тост «Ссылка скопирована»', async () => {
-		writeText.mockResolvedValue(undefined);
-		render(
-			<>
-				<CopyFormLinkButton formId='form-42' />
-				<ToastViewport />
-			</>,
-		);
+	it('клик по активной кнопке вызывает onCopy', async () => {
+		const onCopy = vi.fn();
+		render(<CopyFormLinkButton onCopy={onCopy} />);
 
 		await userEvent.click(
 			screen.getByRole('button', { name: 'Скопировать ссылку' }),
 		);
 
-		expect(await screen.findByText('Ссылка скопирована')).toBeInTheDocument();
+		expect(onCopy).toHaveBeenCalledTimes(1);
 	});
 
-	it('при ошибке копирования показывает тост ошибки', async () => {
-		writeText.mockRejectedValue(new Error('clipboard denied'));
-		render(
-			<>
-				<CopyFormLinkButton formId='form-42' />
-				<ToastViewport />
-			</>,
-		);
+	it('в состоянии disabled клик не вызывает onCopy', async () => {
+		const onCopy = vi.fn();
+		render(<CopyFormLinkButton onCopy={onCopy} disabled />);
 
 		await userEvent.click(
 			screen.getByRole('button', { name: 'Скопировать ссылку' }),
 		);
 
-		expect(
-			await screen.findByText('Не удалось скопировать ссылку'),
-		).toBeInTheDocument();
+		expect(onCopy).not.toHaveBeenCalled();
 	});
 });
