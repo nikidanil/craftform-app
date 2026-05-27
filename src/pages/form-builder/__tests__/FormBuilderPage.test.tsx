@@ -107,6 +107,9 @@ describe('FormBuilderPage', () => {
 		const user = userEvent.setup();
 		await user.click(screen.getByRole('button', { name: 'Удалить форму' }));
 
+		await screen.findByRole('alertdialog');
+		await user.click(screen.getByRole('button', { name: 'Удалить' }));
+
 		await waitFor(() => expect(pathRef.current).toBe('/'));
 	});
 

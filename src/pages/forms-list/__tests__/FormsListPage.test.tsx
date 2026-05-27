@@ -172,6 +172,9 @@ describe('FormsListPage', () => {
 		});
 		await userEvent.click(deleteButtons[1]);
 
+		await screen.findByRole('alertdialog');
+		await userEvent.click(screen.getByRole('button', { name: 'Удалить' }));
+
 		expect(deleteForm).toHaveBeenCalledWith('form-2');
 	});
 

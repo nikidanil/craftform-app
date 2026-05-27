@@ -1,5 +1,15 @@
 import { Trash2 } from 'lucide-react';
-import { Button } from '@/shared/ui';
+import {
+	AlertDialog,
+	AlertDialogClose,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+	Button,
+} from '@/shared/ui';
 import { useDeleteFormAction } from '../model/useDeleteFormAction';
 import styles from './DeleteFormButton.module.css';
 
@@ -13,17 +23,52 @@ export const DeleteFormButton = ({ formId, iconOnly = false }: Props) => {
 	const disabled = !formId || pending;
 
 	return (
-		<Button
-			type='button'
-			variant='destructive'
-			size={iconOnly ? 'icon' : 'lg'}
-			disabled={disabled}
-			onClick={() => formId && deleteForm(formId)}
-			aria-label={iconOnly ? 'Удалить форму' : undefined}
-			className={iconOnly ? styles.iconBtn : styles.btn}
-		>
-			<Trash2 strokeWidth={2.5} aria-hidden />
-			{!iconOnly && 'Удалить форму'}
-		</Button>
+		<AlertDialog>
+			<AlertDialogTrigger
+				disabled={disabled}
+				render={
+					<Button
+						type='button'
+						variant='destructive'
+						size={iconOnly ? 'icon' : 'lg'}
+						disabled={disabled}
+						aria-label={iconOnly ? 'Удалить форму' : undefined}
+						className={iconOnly ? styles.iconBtn : styles.btn}
+					>
+						<Trash2 strokeWidth={2.5} aria-hidden />
+						{!iconOnly && 'Удалить форму'}
+					</Button>
+				}
+			/>
+			<AlertDialogContent>
+				<AlertDialogHeader>
+					<AlertDialogTitle>Удалить форму?</AlertDialogTitle>
+					<AlertDialogDescription>
+						Форма и все её отклики будут удалены безвозвратно. Это
+						действие нельзя отменить.
+					</AlertDialogDescription>
+				</AlertDialogHeader>
+				<AlertDialogFooter>
+					<AlertDialogClose
+						render={
+							<Button type='button' variant='outline'>
+								Отмена
+							</Button>
+						}
+					/>
+					<AlertDialogClose
+						render={
+							<Button
+								type='button'
+								variant='destructive'
+								onClick={() => formId && deleteForm(formId)}
+							>
+								Удалить
+							</Button>
+						}
+					/>
+				</AlertDialogFooter>
+			</AlertDialogContent>
+		</AlertDialog>
 	);
 };
