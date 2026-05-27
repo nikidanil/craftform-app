@@ -29,11 +29,6 @@ export const appRoutes: RouteObject[] = [
 						children: [
 							{ path: routePaths.home, element: <FormsListPage /> },
 							{ path: routePaths.profile, element: <ProfilePage /> },
-							{ path: routePaths.formNew, element: <NewFormPage /> },
-							{
-								path: routePaths.formEdit,
-								element: <FormBuilderPage />,
-							},
 							{
 								path: routePaths.formResponses,
 								element: <ResponsesListPage />,
@@ -41,6 +36,16 @@ export const appRoutes: RouteObject[] = [
 							{
 								path: routePaths.responseView,
 								element: <ResponseViewPage />,
+							},
+						],
+					},
+					{
+						element: <AppShell fullBleed />,
+						children: [
+							{ path: routePaths.formNew, element: <NewFormPage /> },
+							{
+								path: routePaths.formEdit,
+								element: <FormBuilderPage />,
 							},
 						],
 					},

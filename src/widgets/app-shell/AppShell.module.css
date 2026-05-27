@@ -4,7 +4,20 @@
 	flex-direction: column;
 }
 
+.shellFixed {
+	height: 100vh;
+	min-height: 0;
+	overflow: hidden;
+}
+
 .content {
 	flex: 1;
 	padding: 24px 32px;
+}
+
+.contentFull {
+	padding: 0;
+	min-height: 0;
+	display: flex;
+	overflow: hidden;
 }
