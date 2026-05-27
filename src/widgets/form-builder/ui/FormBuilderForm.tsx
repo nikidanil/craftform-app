@@ -26,14 +26,8 @@ import { Input, Textarea, Label } from '@/shared/ui';
 import type { Form, FormInput, QuestionType } from '@/entities/form';
 import { QuestionTypePanel } from '@/widgets/question-type-panel';
 import { QuestionCard } from '@/widgets/question-card';
-import {
-	SaveFormButton,
-	SaveFormStatus,
-	useSaveForm,
-} from '@/features/save-form';
-import {
-	CopyFormLinkButton,
-} from '@/features/copy-form-link';
+import { SaveFormButton, useSaveForm } from '@/features/save-form';
+import { CopyFormLinkButton, useCopyFormLink } from '@/features/copy-form-link';
 import { DeleteFormButton } from '@/features/delete-form';
 
 import { emptyFormInput, makeEmptyQuestion } from '../model/defaults';
@@ -45,6 +39,8 @@ import {
 	interpretDragEnd,
 	useFormBuilderDnd,
 } from '../model/useFormBuilderDnd';
+import { useBuilderNotice } from '../model/useBuilderNotice';
+import { BuilderNotice } from './BuilderNotice';
 import { SidebarDroppable } from './SidebarDroppable';
 import { WorkspaceDroppable } from './WorkspaceDroppable';
 import styles from './FormBuilderForm.module.css';
@@ -157,7 +153,16 @@ export const FormBuilderForm = (props: Props) => {
 		props.mode === 'edit'
 			? ({ mode: 'edit', formId: props.form.id } as const)
 			: ({ mode: 'create' } as const);
-	const { save, status, reset } = useSaveForm(saveOptions);
+	const { save, status } = useSaveForm(saveOptions);
+	const { copy } = useCopyFormLink();
+	const [hasSavedOnce, setHasSavedOnce] = useState(props.mode === 'edit');
+	const {
+		notice,
+		notifySaved,
+		notifySaveError,
+		notifyCopied,
+		notifyCopyError,
+	} = useBuilderNotice({ saveStatus: status, hasSavedOnce });
 
 	const formId = props.mode === 'edit' ? props.form.id : undefined;
 
@@ -168,8 +173,16 @@ export const FormBuilderForm = (props: Props) => {
 		status === 'pending';
 
 	const onAddQuestion = (type: QuestionType) => {
-		reset();
 		questionsArray.append(makeEmptyQuestion(type, questionsArray.fields.length));
+	};
+
+	const onCopyLink = async () => {
+		const copied = await copy(formId);
+		if (copied) {
+			notifyCopied();
+		} else {
+			notifyCopyError();
+		}
 	};
 
 	const onSubmit: SubmitHandler<FormBuilderValues> = async (values) => {
@@ -180,7 +193,13 @@ export const FormBuilderForm = (props: Props) => {
 				order: questionIndex,
 			})),
 		};
-		await save(normalized);
+		const result = await save(normalized);
+		if (result) {
+			setHasSavedOnce(true);
+			notifySaved();
+		} else {
+			notifySaveError();
+		}
 	};
 
 	const handleDragStart = (event: DragStartEvent) => {
@@ -240,32 +259,45 @@ export const FormBuilderForm = (props: Props) => {
 				>
 					<SidebarDroppable className={styles.sidebar}>
 						<QuestionTypePanel onAdd={onAddQuestion} />
-						<div className={styles.actions}>
-							<SaveFormButton
-								disabled={isSaveDisabled}
-								pending={status === 'pending'}
-							/>
-							<CopyFormLinkButton formId={formId} />
-							<DeleteFormButton
-								formId={
-									props.mode === 'edit' ? props.form.id : undefined
+						<div className={styles.footer}>
+							<BuilderNotice
+								key={
+									notice
+										? `${notice.tone}-${notice.text}`
+										: 'empty'
 								}
+								notice={notice}
 							/>
-							{props.mode === 'edit' ? (
-								<button
-									type='button'
-									className={styles.cancelLink}
-									onClick={() => navigate(routes.home)}
-								>
-									Назад к списку
-								</button>
-							) : null}
+							<div className={styles.actions}>
+								<SaveFormButton
+									disabled={isSaveDisabled}
+									pending={status === 'pending'}
+								/>
+								<CopyFormLinkButton
+									onCopy={onCopyLink}
+									disabled={!formId}
+								/>
+								<DeleteFormButton
+									formId={
+										props.mode === 'edit'
+											? props.form.id
+											: undefined
+									}
+								/>
+								{props.mode === 'edit' ? (
+									<button
+										type='button'
+										className={styles.cancelLink}
+										onClick={() => navigate(routes.home)}
+									>
+										Назад к списку
+									</button>
+								) : null}
+							</div>
 						</div>
 					</SidebarDroppable>
 
 					<WorkspaceDroppable workspaceRef={workspaceRef}>
-						<SaveFormStatus status={status} />
-
 						<div className={styles.metaCard}>
 							<Label htmlFor={titleId} className={styles.metaLabel}>
 								Название формы
