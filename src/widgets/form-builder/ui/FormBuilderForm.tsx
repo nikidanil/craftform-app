@@ -355,7 +355,7 @@ export const FormBuilderForm = (props: Props) => {
 						) : null}
 					</WorkspaceDroppable>
 				</form>
-				<DragOverlay>
+				<DragOverlay dropAnimation={null}>
 					{overlayLabel ? (
 						<div className={styles.dragOverlay} role='presentation'>
 							{overlayLabel}
