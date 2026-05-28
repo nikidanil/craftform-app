@@ -14,7 +14,7 @@ export const NotFoundPage = () => (
 		</p>
 		<Link
 			to={routes.home}
-			className={cn(buttonVariants({ size: 'lg' }), 'h-11 px-6 text-base')}
+			className={cn(buttonVariants({ size: 'lg' }), styles.actionBtn)}
 		>
 			На главную
 		</Link>

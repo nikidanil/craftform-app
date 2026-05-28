@@ -26,7 +26,7 @@ export const RouteError = () => {
 				<Button
 					type='button'
 					size='lg'
-					className='h-11 px-6 text-base'
+					className={styles.actionBtn}
 					onClick={() => window.location.reload()}
 				>
 					Обновить страницу
@@ -35,7 +35,7 @@ export const RouteError = () => {
 					to={routes.home}
 					className={cn(
 						buttonVariants({ variant: 'secondary', size: 'lg' }),
-						'h-11 px-6 text-base',
+						styles.actionBtn,
 					)}
 				>
 					На главную

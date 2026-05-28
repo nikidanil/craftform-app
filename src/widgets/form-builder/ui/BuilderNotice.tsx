@@ -37,8 +37,7 @@ export const BuilderNotice = ({ notice }: Props) => {
 				aria-hidden
 				className={cn(
 					styles.icon,
-					notice.tone === 'pending' &&
-						'animate-spin motion-reduce:animate-none',
+					notice.tone === 'pending' && styles.spin,
 				)}
 			/>
 			{notice.text}
