@@ -9,18 +9,20 @@ export const useDeleteFormAction = () => {
 	const [error, setError] = useState<Error | null>(null);
 	const [pending, setPending] = useState(false);
 
-	const deleteForm = async (formId: string) => {
+	const deleteForm = async (formId: string): Promise<boolean> => {
 		setPending(true);
 		setError(null);
 		try {
 			await deleteMutation.mutateAsync(formId);
 			navigate(routes.home);
+			return true;
 		} catch (caughtError) {
 			setError(
 				caughtError instanceof Error
 					? caughtError
 					: new Error(String(caughtError)),
 			);
+			return false;
 		} finally {
 			setPending(false);
 		}
