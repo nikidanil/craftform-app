@@ -9,7 +9,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 } from '@/shared/ui';
-import { routes } from '@/shared/lib';
+import { getInitials, routes } from '@/shared/lib';
 import styles from './Header.module.css';
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -17,9 +17,6 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
 
 const newFormClass = ({ isActive }: { isActive: boolean }) =>
 	`${styles.link} ${styles.linkPrimary}${isActive ? ` ${styles.linkPrimaryActive}` : ''}`;
-
-const getInitials = (firstName: string, lastName: string) =>
-	`${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 
 export const Header = () => {
 	const currentUser = useCurrentUser();
