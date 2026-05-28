@@ -251,3 +251,34 @@
 	color: var(--foreground);
 }
 
+/* ── Brand footer ── */
+.brandFooter {
+	margin-top: 2.5rem;
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	font-size: 0.8rem;
+	color: var(--muted-foreground);
+}
+
+.brandFooterIcon {
+	width: 18px;
+	height: 18px;
+	background: var(--primary);
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	font-size: 0.65rem;
+}
+
+.brandFooterLink {
+	color: var(--muted-foreground);
+	text-decoration: none;
+}
+
+.brandFooterLink:hover {
+	color: var(--primary);
+}
+
