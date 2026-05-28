@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import {
 	AlertDialog,
@@ -19,11 +20,18 @@ type Props = {
 };
 
 export const DeleteFormButton = ({ formId, iconOnly = false }: Props) => {
-	const { deleteForm, pending } = useDeleteFormAction();
+	const { deleteForm, error, pending } = useDeleteFormAction();
+	const [open, setOpen] = useState(false);
 	const disabled = !formId || pending;
 
+	const handleDelete = async () => {
+		if (!formId) return;
+		const success = await deleteForm(formId);
+		if (success) setOpen(false);
+	};
+
 	return (
-		<AlertDialog>
+		<AlertDialog open={open} onOpenChange={setOpen}>
 			<AlertDialogTrigger
 				disabled={disabled}
 				render={
@@ -48,6 +56,11 @@ export const DeleteFormButton = ({ formId, iconOnly = false }: Props) => {
 						действие нельзя отменить.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
+				{error && (
+					<p role='alert' className={styles.error}>
+						{error.message}
+					</p>
+				)}
 				<AlertDialogFooter>
 					<AlertDialogClose
 						render={
@@ -56,17 +69,14 @@ export const DeleteFormButton = ({ formId, iconOnly = false }: Props) => {
 							</Button>
 						}
 					/>
-					<AlertDialogClose
-						render={
-							<Button
-								type='button'
-								variant='destructive'
-								onClick={() => formId && deleteForm(formId)}
-							>
-								Удалить
-							</Button>
-						}
-					/>
+					<Button
+						type='button'
+						variant='destructive'
+						disabled={pending}
+						onClick={() => void handleDelete()}
+					>
+						{pending ? 'Удаление…' : 'Удалить'}
+					</Button>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

@@ -55,6 +55,25 @@ describe('DeleteFormButton', () => {
 		expect(mockedHttp).not.toHaveBeenCalled();
 	});
 
+	it('при ошибке удаления диалог остаётся открытым и показывает сообщение', async () => {
+		mockedHttp.mockImplementation(async (url: string, init?: RequestInit) => {
+			if (url.startsWith('/api/responses?formId=')) return [];
+			if (init?.method === 'DELETE') throw new Error('Не удалось удалить форму');
+			return undefined;
+		});
+		renderWithProviders(<DeleteFormButton formId='form-err' />);
+
+		await userEvent.click(screen.getByRole('button', { name: /Удалить форму/ }));
+		await screen.findByRole('alertdialog');
+
+		await userEvent.click(screen.getByRole('button', { name: 'Удалить' }));
+
+		await waitFor(() =>
+			expect(screen.getByRole('alertdialog')).toBeInTheDocument(),
+		);
+		expect(screen.getByRole('alert')).toHaveTextContent('Не удалось удалить форму');
+	});
+
 	it('в режиме iconOnly триггер без текста открывает диалог по клику', async () => {
 		renderWithProviders(<DeleteFormButton formId='form-1' iconOnly />);
 

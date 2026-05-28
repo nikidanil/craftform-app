@@ -7,3 +7,9 @@
 .iconBtn {
 	flex-shrink: 0;
 }
+
+.error {
+	font-size: 0.875rem;
+	color: var(--destructive);
+	margin: 0;
+}
