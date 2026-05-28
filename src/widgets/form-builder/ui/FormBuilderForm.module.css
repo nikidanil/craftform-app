@@ -43,7 +43,7 @@
 .metaCard {
 	width: 100%;
 	max-width: 740px;
-	background: var(--background);
+	background: var(--card);
 	border: 1px solid var(--border);
 	border-radius: 1rem;
 	padding: 2rem;
@@ -118,7 +118,7 @@
 
 .dragOverlay {
 	padding: 0.75rem 1rem;
-	background: var(--background);
+	background: var(--card);
 	border: 1.5px solid var(--primary);
 	border-radius: var(--radius);
 	box-shadow: 0 10px 30px oklch(0 0 0 / 0.18);
