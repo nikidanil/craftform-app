@@ -1,4 +1,4 @@
-import type React from 'react';
+import type { ReactNode } from 'react';
 import { useParams } from 'react-router';
 import { useForm } from '@/entities/form';
 import { HttpError } from '@/shared/api';
@@ -9,7 +9,7 @@ export const FormFillPage = () => {
 	const { formId = '' } = useParams<{ formId: string }>();
 	const { data, isLoading, error } = useForm(formId);
 
-	let content: React.ReactNode;
+	let content: ReactNode;
 
 	if (isLoading) {
 		content = <p className={styles.state}>Загружаем форму…</p>;

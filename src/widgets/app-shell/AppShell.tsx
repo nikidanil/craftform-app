@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router';
 import { Header } from '@/widgets/header';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib';
 import styles from './AppShell.module.css';
 
 type Props = {

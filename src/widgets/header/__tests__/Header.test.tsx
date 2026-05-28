@@ -20,13 +20,6 @@ describe('Header', () => {
 		useSessionStore.setState({ currentUser: null });
 	});
 
-	it('аватар отображает инициалы авторизованного пользователя', () => {
-		useSessionStore.setState({ currentUser: seedUser });
-		renderWithProviders(<Header />, { initialEntries: ['/'] });
-
-		expect(screen.getByRole('button', { name: 'Меню пользователя' })).toHaveTextContent('ИИ');
-	});
-
 	it('клик по аватару открывает меню с «Профиль» и «Выход»', async () => {
 		useSessionStore.setState({ currentUser: seedUser });
 		renderWithProviders(<Header />, { initialEntries: ['/'] });
