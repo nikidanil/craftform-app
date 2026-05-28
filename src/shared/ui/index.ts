@@ -45,4 +45,11 @@ export {
 	AlertDialogTitle,
 	AlertDialogDescription,
 } from './alert-dialog';
+export {
+	DropdownMenu,
+	DropdownMenuTrigger,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+} from './dropdown-menu';
 export { Logo } from './Logo';
