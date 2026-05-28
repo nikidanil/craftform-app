@@ -92,7 +92,7 @@ describe('Сквозной сценарий: аутентификация', () =
 
 		await waitFor(() => {
 			expect(router.state.location.pathname).toBe('/');
-			expect(screen.getByRole('button', { name: 'Выход' })).toBeInTheDocument();
+			expect(screen.getByRole('button', { name: 'Меню пользователя' })).toBeInTheDocument();
 		});
 		expect(useSessionStore.getState().currentUser?.email).toBe(
 			'ivan@formcraft.dev',

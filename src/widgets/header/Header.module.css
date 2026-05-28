@@ -56,6 +56,36 @@
 		0 0 0 3px oklch(0.6171 0.1375 39 / 0.18);
 }
 
-.logout {
+.headerRight {
 	margin-left: auto;
+}
+
+.avatar {
+	width: 36px;
+	height: 36px;
+	padding: 2px 0 0 0;
+	border-radius: 50%;
+	background: var(--primary);
+	color: #fff;
+	font-size: 0.85rem;
+	font-weight: 700;
+	line-height: 1;
+	display: grid;
+	place-items: center;
+	cursor: pointer;
+	border: 2px solid #fff;
+	box-shadow: var(--shadow);
+	flex-shrink: 0;
+}
+
+.avatar:hover {
+	filter: brightness(1.08);
+}
+
+.menuLogout {
+	color: var(--primary);
+}
+
+.menuLogout:hover {
+	color: var(--primary);
 }

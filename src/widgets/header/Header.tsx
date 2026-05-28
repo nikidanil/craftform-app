@@ -1,6 +1,14 @@
-import { NavLink } from 'react-router';
-import { LogoutButton } from '@/features/logout';
-import { Logo } from '@/shared/ui';
+import { NavLink, useNavigate } from 'react-router';
+import { useCurrentUser } from '@/entities/session';
+import { useLogoutAction } from '@/features/logout';
+import {
+	Logo,
+	DropdownMenu,
+	DropdownMenuTrigger,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+} from '@/shared/ui';
 import { routes } from '@/shared/lib';
 import styles from './Header.module.css';
 
@@ -10,20 +18,53 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
 const newFormClass = ({ isActive }: { isActive: boolean }) =>
 	`${styles.link} ${styles.linkPrimary}${isActive ? ` ${styles.linkPrimaryActive}` : ''}`;
 
-export const Header = () => (
-	<header className={styles.header}>
-		<Logo />
-		<nav className={styles.nav}>
-			<NavLink to={routes.home} end className={linkClass}>
-				Главная
-			</NavLink>
-			<NavLink to={routes.formNew} className={newFormClass}>
-				Новая форма
-			</NavLink>
-			<NavLink to={routes.profile} className={linkClass}>
-				Профиль
-			</NavLink>
-		</nav>
-		<LogoutButton className={styles.logout} />
-	</header>
-);
+const getInitials = (firstName: string, lastName: string) =>
+	`${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+
+export const Header = () => {
+	const currentUser = useCurrentUser();
+	const navigate = useNavigate();
+	const logout = useLogoutAction();
+
+	const initials = currentUser
+		? getInitials(currentUser.firstName, currentUser.lastName)
+		: '?';
+
+	const handleProfileClick = () => navigate(routes.profile);
+
+	return (
+		<header className={styles.header}>
+			<Logo />
+			<nav className={styles.nav}>
+				<NavLink to={routes.home} end className={linkClass}>
+					Главная
+				</NavLink>
+				<NavLink to={routes.formNew} className={newFormClass}>
+					Новая форма
+				</NavLink>
+			</nav>
+			<div className={styles.headerRight}>
+				<DropdownMenu>
+					<DropdownMenuTrigger
+						aria-label="Меню пользователя"
+						className={styles.avatar}
+					>
+						{initials}
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuItem onClick={handleProfileClick}>
+							Профиль
+						</DropdownMenuItem>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem
+							className={styles.menuLogout}
+							onClick={logout}
+						>
+							Выход
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</div>
+		</header>
+	);
+};
