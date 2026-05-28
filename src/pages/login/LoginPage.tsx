@@ -4,9 +4,9 @@ import {
 	CardDescription,
 	CardHeader,
 	CardTitle,
-	Logo,
 } from '@/shared/ui';
 import { LoginForm } from '@/features/login';
+import { Logo } from '@/widgets/logo';
 import styles from './LoginPage.module.css';
 
 export const LoginPage = () => (

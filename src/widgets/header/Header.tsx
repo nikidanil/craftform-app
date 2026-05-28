@@ -2,13 +2,13 @@ import { NavLink, useNavigate } from 'react-router';
 import { useCurrentUser } from '@/entities/session';
 import { useLogoutAction } from '@/features/logout';
 import {
-	Logo,
 	DropdownMenu,
 	DropdownMenuTrigger,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 } from '@/shared/ui';
+import { Logo } from '@/widgets/logo';
 import { getInitials, routes } from '@/shared/lib';
 import styles from './Header.module.css';
 

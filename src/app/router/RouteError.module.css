@@ -26,3 +26,10 @@
 	flex-wrap: wrap;
 	justify-content: center;
 }
+
+.actionBtn {
+	height: 2.75rem;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+	font-size: 1rem;
+}

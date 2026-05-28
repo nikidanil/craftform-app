@@ -52,4 +52,3 @@ export {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 } from './dropdown-menu';
-export { Logo } from './Logo';
