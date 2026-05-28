@@ -25,6 +25,8 @@ export const FormFillForm = ({ form }: Props) => {
 	const { submit, status, errorMessage } = useSubmitResponseAction();
 
 	const methods = useForm<FormFillValues>({
+		// zodResolver не выводит тип из ZodEffects (superRefine) — каст безопасен,
+		// схема валидирует те же поля, что и FormFillValues
 		resolver: zodResolver(buildFormFillSchema(form)) as unknown as Resolver<FormFillValues>,
 		defaultValues: buildDefaults(form),
 		mode: 'onChange',

@@ -1,5 +1,5 @@
 .successCard {
-	background: white;
+	background: var(--card);
 	border: 1px solid var(--border);
 	border-radius: 1.25rem;
 	padding: 4rem 2.5rem;
