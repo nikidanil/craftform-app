@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { MessageSquare, Pencil } from 'lucide-react';
+import { MessageSquare, SquarePen } from 'lucide-react';
 
 import type { Form } from '@/entities/form';
 import { DeleteFormButton } from '@/features/delete-form';
@@ -29,7 +29,7 @@ export const FormCard = ({ form, responsesCount }: Props) => {
 					to={routes.formEdit(form.id)}
 					className={styles.actionPrimary}
 				>
-					<Pencil aria-hidden />
+					<SquarePen aria-hidden />
 					Редактировать
 				</Link>
 				<Link
