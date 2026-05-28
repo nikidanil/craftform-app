@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { TriangleAlert } from 'lucide-react';
+
 import {
 	Alert,
 	AlertDescription,
@@ -59,6 +61,7 @@ export const SignupForm = () => {
 		>
 			{errorMessage ? (
 				<Alert variant='destructive'>
+					<TriangleAlert aria-hidden="true" />
 					<AlertDescription>{errorMessage}</AlertDescription>
 				</Alert>
 			) : null}
