@@ -1,6 +1,15 @@
-import { Link, NavLink } from 'react-router';
-import { LogoutButton } from '@/features/logout';
-import { routes } from '@/shared/lib';
+import { NavLink, useNavigate } from 'react-router';
+import { useCurrentUser } from '@/entities/session';
+import { useLogoutAction } from '@/features/logout';
+import {
+	DropdownMenu,
+	DropdownMenuTrigger,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+} from '@/shared/ui';
+import { Logo } from '@/widgets/logo';
+import { getInitials, routes } from '@/shared/lib';
 import styles from './Header.module.css';
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -9,29 +18,50 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
 const newFormClass = ({ isActive }: { isActive: boolean }) =>
 	`${styles.link} ${styles.linkPrimary}${isActive ? ` ${styles.linkPrimaryActive}` : ''}`;
 
-export const Header = () => (
-	<header className={styles.header}>
-		<Link
-			to={routes.home}
-			className={styles.logo}
-			aria-label='FormCraft — на главную'
-		>
-			<span className={styles.logoIcon} aria-hidden>
-				+
-			</span>
-			<span className={styles.logoName}>FormCraft</span>
-		</Link>
-		<nav className={styles.nav}>
-			<NavLink to={routes.home} end className={linkClass}>
-				Главная
-			</NavLink>
-			<NavLink to={routes.formNew} className={newFormClass}>
-				Новая форма
-			</NavLink>
-			<NavLink to={routes.profile} className={linkClass}>
-				Профиль
-			</NavLink>
-		</nav>
-		<LogoutButton className={styles.logout} />
-	</header>
-);
+export const Header = () => {
+	const currentUser = useCurrentUser();
+	const navigate = useNavigate();
+	const logout = useLogoutAction();
+
+	const initials = currentUser
+		? getInitials(currentUser.firstName, currentUser.lastName)
+		: '?';
+
+	const handleProfileClick = () => navigate(routes.profile);
+
+	return (
+		<header className={styles.header}>
+			<Logo />
+			<nav className={styles.nav}>
+				<NavLink to={routes.home} end className={linkClass}>
+					Главная
+				</NavLink>
+				<NavLink to={routes.formNew} className={newFormClass}>
+					Новая форма
+				</NavLink>
+			</nav>
+			<div className={styles.headerRight}>
+				<DropdownMenu>
+					<DropdownMenuTrigger
+						aria-label="Меню пользователя"
+						className={styles.avatar}
+					>
+						{initials}
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuItem onClick={handleProfileClick}>
+							Профиль
+						</DropdownMenuItem>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem
+							className={styles.menuLogout}
+							onClick={logout}
+						>
+							Выход
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</div>
+		</header>
+	);
+};

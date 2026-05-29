@@ -11,7 +11,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	DndContext,
 	DragOverlay,
-	useDroppable,
 	type Announcements,
 	type DragEndEvent,
 	type DragStartEvent,
@@ -22,33 +21,28 @@ import {
 	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
-import { cn, routes } from '@/shared/lib';
+import { routes } from '@/shared/lib';
 import { Input, Textarea, Label } from '@/shared/ui';
 import type { Form, FormInput, QuestionType } from '@/entities/form';
 import { QuestionTypePanel } from '@/widgets/question-type-panel';
 import { QuestionCard } from '@/widgets/question-card';
-import {
-	SaveFormButton,
-	SaveFormStatus,
-	useSaveForm,
-} from '@/features/save-form';
-import {
-	CopyFormLinkButton,
-} from '@/features/copy-form-link';
+import { SaveFormButton, useSaveForm } from '@/features/save-form';
+import { CopyFormLinkButton, useCopyFormLink } from '@/features/copy-form-link';
 import { DeleteFormButton } from '@/features/delete-form';
 
 import { emptyFormInput, makeEmptyQuestion } from '../model/defaults';
 import { formBuilderSchema, type FormBuilderValues } from '../model/schema';
-import {
-	SIDEBAR_DROPPABLE_ID,
-	WORKSPACE_DROPPABLE_ID,
-	isNewQuestionDragData,
-} from '../model/dndProtocol';
+import { isNewQuestionDragData } from '../model/dndProtocol';
 import {
 	applyDragInterpretation,
+	formBuilderCollisionDetection,
 	interpretDragEnd,
 	useFormBuilderDnd,
 } from '../model/useFormBuilderDnd';
+import { useBuilderNotice } from '../model/useBuilderNotice';
+import { BuilderNotice } from './BuilderNotice';
+import { SidebarDroppable } from './SidebarDroppable';
+import { WorkspaceDroppable } from './WorkspaceDroppable';
 import styles from './FormBuilderForm.module.css';
 
 const QUESTION_TYPE_LABEL: Record<QuestionType, string> = {
@@ -114,18 +108,6 @@ export const FormBuilderForm = (props: Props) => {
 	});
 
 	const { sensors } = useFormBuilderDnd();
-	const {
-		setNodeRef: setWorkspaceDroppableRef,
-		isOver: isWorkspaceOver,
-	} = useDroppable({ id: WORKSPACE_DROPPABLE_ID });
-	const { setNodeRef: setSidebarDroppableRef } = useDroppable({
-		id: SIDEBAR_DROPPABLE_ID,
-	});
-
-	const assignWorkspaceRef = (node: HTMLElement | null) => {
-		workspaceRef.current = node;
-		setWorkspaceDroppableRef(node);
-	};
 
 	useEffect(() => {
 		const pending = pendingFocusRef.current;
@@ -171,7 +153,16 @@ export const FormBuilderForm = (props: Props) => {
 		props.mode === 'edit'
 			? ({ mode: 'edit', formId: props.form.id } as const)
 			: ({ mode: 'create' } as const);
-	const { save, status, reset } = useSaveForm(saveOptions);
+	const { save, status } = useSaveForm(saveOptions);
+	const { copy } = useCopyFormLink();
+	const [hasSavedOnce, setHasSavedOnce] = useState(props.mode === 'edit');
+	const {
+		notice,
+		notifySaved,
+		notifySaveError,
+		notifyCopied,
+		notifyCopyError,
+	} = useBuilderNotice({ saveStatus: status, hasSavedOnce });
 
 	const formId = props.mode === 'edit' ? props.form.id : undefined;
 
@@ -182,8 +173,16 @@ export const FormBuilderForm = (props: Props) => {
 		status === 'pending';
 
 	const onAddQuestion = (type: QuestionType) => {
-		reset();
 		questionsArray.append(makeEmptyQuestion(type, questionsArray.fields.length));
+	};
+
+	const onCopyLink = async () => {
+		const copied = await copy(formId);
+		if (copied) {
+			notifyCopied();
+		} else {
+			notifyCopyError();
+		}
 	};
 
 	const onSubmit: SubmitHandler<FormBuilderValues> = async (values) => {
@@ -194,7 +193,13 @@ export const FormBuilderForm = (props: Props) => {
 				order: questionIndex,
 			})),
 		};
-		await save(normalized);
+		const result = await save(normalized);
+		if (result) {
+			setHasSavedOnce(true);
+			notifySaved();
+		} else {
+			notifySaveError();
+		}
 	};
 
 	const handleDragStart = (event: DragStartEvent) => {
@@ -230,11 +235,6 @@ export const FormBuilderForm = (props: Props) => {
 
 	const handleDragCancel = () => setActiveDrag(null);
 
-	const workspaceClass = cn(
-		styles.workspace,
-		isWorkspaceOver && styles.workspaceDropActive,
-	);
-
 	const overlayLabel =
 		activeDrag?.kind === 'new-question'
 			? `Новый вопрос: ${QUESTION_TYPE_LABEL[activeDrag.questionType]}`
@@ -246,6 +246,7 @@ export const FormBuilderForm = (props: Props) => {
 		<FormProvider {...methods}>
 			<DndContext
 				sensors={sensors}
+				collisionDetection={formBuilderCollisionDetection}
 				onDragStart={handleDragStart}
 				onDragEnd={handleDragEnd}
 				onDragCancel={handleDragCancel}
@@ -256,34 +257,47 @@ export const FormBuilderForm = (props: Props) => {
 					onSubmit={methods.handleSubmit(onSubmit)}
 					noValidate
 				>
-					<aside ref={setSidebarDroppableRef} className={styles.sidebar}>
+					<SidebarDroppable className={styles.sidebar}>
 						<QuestionTypePanel onAdd={onAddQuestion} />
-						<div className={styles.actions}>
-							<SaveFormButton
-								disabled={isSaveDisabled}
-								pending={status === 'pending'}
-							/>
-							<CopyFormLinkButton formId={formId} />
-							<DeleteFormButton
-								formId={
-									props.mode === 'edit' ? props.form.id : undefined
+						<div className={styles.footer}>
+							<BuilderNotice
+								key={
+									notice
+										? `${notice.tone}-${notice.text}`
+										: 'empty'
 								}
+								notice={notice}
 							/>
-							{props.mode === 'edit' ? (
-								<button
-									type='button'
-									className={styles.cancelLink}
-									onClick={() => navigate(routes.home)}
-								>
-									Назад к списку
-								</button>
-							) : null}
+							<div className={styles.actions}>
+								<SaveFormButton
+									disabled={isSaveDisabled}
+									pending={status === 'pending'}
+								/>
+								<CopyFormLinkButton
+									onCopy={onCopyLink}
+									disabled={!formId}
+								/>
+								<DeleteFormButton
+									formId={
+										props.mode === 'edit'
+											? props.form.id
+											: undefined
+									}
+								/>
+								{props.mode === 'edit' ? (
+									<button
+										type='button'
+										className={styles.cancelLink}
+										onClick={() => navigate(routes.home)}
+									>
+										Назад к списку
+									</button>
+								) : null}
+							</div>
 						</div>
-					</aside>
+					</SidebarDroppable>
 
-					<main ref={assignWorkspaceRef} className={workspaceClass}>
-						<SaveFormStatus status={status} />
-
+					<WorkspaceDroppable workspaceRef={workspaceRef}>
 						<div className={styles.metaCard}>
 							<Label htmlFor={titleId} className={styles.metaLabel}>
 								Название формы
@@ -339,9 +353,9 @@ export const FormBuilderForm = (props: Props) => {
 								чтобы добавить
 							</div>
 						) : null}
-					</main>
+					</WorkspaceDroppable>
 				</form>
-				<DragOverlay>
+				<DragOverlay dropAnimation={null}>
 					{overlayLabel ? (
 						<div className={styles.dragOverlay} role='presentation'>
 							{overlayLabel}

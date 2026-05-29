@@ -57,9 +57,9 @@ const buildWrapper = () => {
 	);
 };
 
-// DndContext в FormBuilderForm монтирует live region с role="status".
-// Для проверки SaveFormStatus используем getByText, а не getByRole('status'),
-// иначе будут найдены два элемента и тест упадёт.
+// DndContext в FormBuilderForm монтирует live region с role="status", а
+// BuilderNotice добавляет свой role="status" — итого два элемента. Поэтому
+// проверяем по тексту через getByText/findByText, а не getByRole('status').
 describe('FormBuilderPage', () => {
 	beforeEach(() => {
 		mockedHttp.mockReset();
@@ -107,6 +107,9 @@ describe('FormBuilderPage', () => {
 		const user = userEvent.setup();
 		await user.click(screen.getByRole('button', { name: 'Удалить форму' }));
 
+		await screen.findByRole('alertdialog');
+		await user.click(screen.getByRole('button', { name: 'Удалить' }));
+
 		await waitFor(() => expect(pathRef.current).toBe('/'));
 	});
 
@@ -134,12 +137,27 @@ describe('FormBuilderPage', () => {
 		await user.type(titleInput, 'Изменено');
 		await user.click(screen.getByRole('button', { name: /сохранить форму/i }));
 
-		await waitFor(() => {
-			expect(screen.getByText(/успешно сохранена/i)).toBeInTheDocument();
-		});
+		expect(await screen.findByText('Сохранено')).toBeInTheDocument();
 	});
 
-	it('«Скопировать ссылку» копирует публичный URL формы', async () => {
+	it('в режиме редактирования сразу показывает «Изменения сохранены»', async () => {
+		mockedHttp.mockImplementation(async (url) => {
+			if (url === '/api/forms/form-1') return mockForm;
+			throw new Error(`unexpected ${url}`);
+		});
+
+		const Wrapper = buildWrapper();
+		const { render } = await import('@testing-library/react');
+		render(<FormBuilderPage />, { wrapper: Wrapper });
+
+		await waitFor(() => screen.getByLabelText('Название формы'));
+
+		expect(
+			await screen.findByText('Изменения сохранены'),
+		).toBeInTheDocument();
+	});
+
+	it('«Скопировать ссылку» копирует URL и показывает inline-уведомление', async () => {
 		const writeText = vi.fn().mockResolvedValue(undefined);
 		Object.defineProperty(navigator, 'clipboard', {
 			configurable: true,
@@ -152,6 +170,8 @@ describe('FormBuilderPage', () => {
 		});
 
 		const Wrapper = buildWrapper();
+		// fireEvent, а не userEvent: userEvent.setup() подменяет
+		// navigator.clipboard своим стабом, и мок writeText не вызывается.
 		const { render, fireEvent } = await import('@testing-library/react');
 		render(<FormBuilderPage />, { wrapper: Wrapper });
 
@@ -163,10 +183,9 @@ describe('FormBuilderPage', () => {
 		await waitFor(() => expect(button).not.toBeDisabled());
 		fireEvent.click(button);
 
-		await waitFor(() =>
-			expect(writeText).toHaveBeenCalledWith(
-				`${window.location.origin}/forms/form-1`,
-			),
+		expect(await screen.findByText('Ссылка скопирована')).toBeInTheDocument();
+		expect(writeText).toHaveBeenCalledWith(
+			`${window.location.origin}/forms/form-1`,
 		);
 	});
 

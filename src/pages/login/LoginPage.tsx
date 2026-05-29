@@ -1,4 +1,3 @@
-import { Link } from 'react-router';
 import {
 	Card,
 	CardContent,
@@ -6,19 +5,14 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/shared/ui';
-import { routes } from '@/shared/lib';
 import { LoginForm } from '@/features/login';
+import { Logo } from '@/widgets/logo';
 import styles from './LoginPage.module.css';
 
 export const LoginPage = () => (
 	<div className={styles.page}>
 		<div className={styles.wrapper}>
-			<Link to={routes.home} className={styles.brand}>
-				<span className={styles.brandIcon} aria-hidden>
-					✦
-				</span>
-				<span className={styles.brandName}>FormCraft</span>
-			</Link>
+			<Logo />
 
 			<Card className={styles.card}>
 				<CardHeader>
