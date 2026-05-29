@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { http } from '@/shared/api';
-import { submissionKeys } from '@/entities/submission';
 import {
 	formSchema,
 	type Form,
@@ -59,7 +58,11 @@ export const useUpdateForm = () => {
 	});
 };
 
-export const useDeleteForm = () => {
+type DeleteFormOptions = {
+	onSuccess?: (formId: string) => void;
+};
+
+export const useDeleteForm = (options?: DeleteFormOptions) => {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: async (formId: string): Promise<void> => {
@@ -76,7 +79,7 @@ export const useDeleteForm = () => {
 		onSuccess: (_data, formId) => {
 			queryClient.invalidateQueries({ queryKey: formKeys.lists() });
 			queryClient.removeQueries({ queryKey: formKeys.detail(formId) });
-			queryClient.invalidateQueries({ queryKey: submissionKeys.all });
+			options?.onSuccess?.(formId);
 		},
 	});
 };
