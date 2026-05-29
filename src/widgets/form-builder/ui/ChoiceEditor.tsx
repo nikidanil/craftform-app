@@ -4,11 +4,12 @@ import {
 	useFormContext,
 	useWatch,
 } from 'react-hook-form';
+import { X } from 'lucide-react';
 
 import { Input, Button } from '@/shared/ui';
 import type { ChoiceVariant, FormInput } from '@/entities/form';
-import { makeEmptyOption } from '@/widgets/form-builder';
 
+import { makeEmptyOption } from '../model/defaults';
 import styles from './QuestionCard.module.css';
 
 type Props = { index: number };
@@ -76,7 +77,7 @@ export const ChoiceEditor = ({ index }: Props) => {
 			/>
 
 			<div className={styles.options}>
-				{optionsArray.fields.map((field, optIndex) => (
+				{optionsArray.fields.map((field, optionIndex) => (
 					<div key={field.id} className={styles.option}>
 						<span
 							className={styles.bullet}
@@ -84,20 +85,20 @@ export const ChoiceEditor = ({ index }: Props) => {
 							aria-hidden
 						/>
 						<Input
-							aria-label={`Вариант ответа ${optIndex + 1}`}
+							aria-label={`Вариант ответа ${optionIndex + 1}`}
 							placeholder='Текст варианта'
 							{...register(
-								`questions.${index}.options.${optIndex}.label` as const,
+								`questions.${index}.options.${optionIndex}.label` as const,
 							)}
 						/>
 						<Button
 							type='button'
 							variant='ghost'
 							size='icon-sm'
-							aria-label={`Удалить вариант ${optIndex + 1}`}
-							onClick={() => optionsArray.remove(optIndex)}
+							aria-label={`Удалить вариант ${optionIndex + 1}`}
+							onClick={() => optionsArray.remove(optionIndex)}
 						>
-							×
+							<X size={12} aria-hidden />
 						</Button>
 					</div>
 				))}

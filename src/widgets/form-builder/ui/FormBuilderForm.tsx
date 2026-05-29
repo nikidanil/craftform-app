@@ -24,8 +24,8 @@ import {
 import { routes } from '@/shared/lib';
 import { Input, Textarea, Label } from '@/shared/ui';
 import type { Form, FormInput, QuestionType } from '@/entities/form';
-import { QuestionTypePanel } from '@/widgets/question-type-panel';
-import { QuestionCard } from '@/widgets/question-card';
+import { QuestionTypePanel } from './QuestionTypePanel';
+import { QuestionCard } from './QuestionCard';
 import { SaveFormButton, useSaveForm } from '@/features/save-form';
 import { CopyFormLinkButton, useCopyFormLink } from '@/features/copy-form-link';
 import { DeleteFormButton } from '@/features/delete-form';
