@@ -1,6 +1,6 @@
 import { createBrowserRouter, type RouteObject } from 'react-router';
 import { routePaths } from '@/shared/lib';
-import { AppShell } from '@/widgets/app-shell';
+import { AppShell } from '../ui/AppShell';
 import { FormsListPage } from '@/pages/forms-list';
 import { ProfilePage } from '@/pages/profile';
 import { LoginPage } from '@/pages/login';
