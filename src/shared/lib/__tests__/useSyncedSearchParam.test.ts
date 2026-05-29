@@ -6,39 +6,39 @@ import { createWrapper } from '@/test/test-utils';
 import { useSyncedSearchParam } from '../useSyncedSearchParam';
 
 describe('useSyncedSearchParam', () => {
-	it('читает текущее значение параметра из URL', () => {
-		const { Wrapper } = createWrapper({ initialEntries: ['/?q=Опрос'] });
-
-		const { result } = renderHook(() => useSyncedSearchParam('q', ''), {
-			wrapper: Wrapper,
-		});
-
-		expect(result.current[0]).toBe('Опрос');
-	});
-
-	it('при отсутствии параметра возвращает defaultValue', () => {
-		const { Wrapper } = createWrapper({ initialEntries: ['/'] });
-
-		const { result } = renderHook(
-			() => useSyncedSearchParam('sort', 'created-desc'),
-			{ wrapper: Wrapper },
-		);
-
-		expect(result.current[0]).toBe('created-desc');
-	});
-
-	it('сеттер записывает новое значение в URL', async () => {
+	it('сеттер обновляет URL и возвращает новое значение; при отсутствии параметра отдаёт defaultValue', async () => {
 		const { Wrapper, pathRef } = createWrapper({ initialEntries: ['/'] });
 
 		const { result } = renderHook(() => useSyncedSearchParam('q', ''), {
 			wrapper: Wrapper,
 		});
 
+		expect(result.current[0]).toBe('');
+
 		await act(async () => {
 			result.current[1]('Опрос');
 		});
 
 		expect(decodeURIComponent(pathRef.current)).toBe('/?q=Опрос');
+		expect(result.current[0]).toBe('Опрос');
+	});
+
+	it('читает начальное значение параметра из URL при маунте', async () => {
+		const { Wrapper, pathRef } = createWrapper({
+			initialEntries: ['/?q=Опрос'],
+		});
+
+		const { result } = renderHook(() => useSyncedSearchParam('q', ''), {
+			wrapper: Wrapper,
+		});
+
+		expect(result.current[0]).toBe('Опрос');
+
+		await act(async () => {
+			result.current[1]('Новый');
+		});
+
+		expect(decodeURIComponent(pathRef.current)).toBe('/?q=Новый');
 	});
 
 	it('запись значения, равного defaultValue, удаляет параметр из URL', async () => {

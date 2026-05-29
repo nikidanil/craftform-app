@@ -20,20 +20,16 @@ describe('FormBuilderForm — create mode', () => {
 		mockedHttp.mockReset();
 	});
 
-	it('рендерит пустую форму без вопросов и со скрытой/выключенной кнопкой ссылки', () => {
+	it('«Сохранить» disabled, пока title пуст или нет вопросов; кнопка ссылки выключена до сохранения', async () => {
+		const user = userEvent.setup();
 		renderCreate();
 
 		expect(screen.queryAllByTestId('question-card')).toHaveLength(0);
 		expect(
 			screen.getByRole('button', { name: /скопировать ссылку/i }),
 		).toBeDisabled();
-	});
 
-	it('«Сохранить» disabled, пока title пуст или нет вопросов', async () => {
-		const user = userEvent.setup();
-		renderCreate();
 		const saveBtn = screen.getByRole('button', { name: /сохранить форму/i });
-
 		expect(saveBtn).toBeDisabled();
 
 		await user.type(screen.getByLabelText('Название формы'), 'Опрос');
@@ -216,32 +212,30 @@ const fullForm: Form = {
 describe('FormBuilderForm — edit mode', () => {
 	beforeEach(() => mockedHttp.mockReset());
 
-	it('предзаполняется данными переданной формы', () => {
+	it('предзаполненные данные формы можно изменить; кнопка «Скопировать ссылку» активна в edit-режиме', async () => {
+		const user = userEvent.setup();
 		renderWithProviders(<FormBuilderForm mode='edit' form={fullForm} />, {
 			initialEntries: ['/forms/form-1/edit'],
 		});
 
-		expect(screen.getByLabelText('Название формы')).toHaveValue(
-			'Обратная связь',
-		);
-		expect(screen.getByLabelText('Описание формы')).toHaveValue(
-			'Помогите нам стать лучше',
-		);
+		const titleField = screen.getByLabelText('Название формы');
+		expect(titleField).toHaveValue('Обратная связь');
+		const descField = screen.getByLabelText('Описание формы');
+		expect(descField).toHaveValue('Помогите нам стать лучше');
+
 		const cards = screen.getAllByTestId('question-card');
 		expect(cards).toHaveLength(2);
 		expect(within(cards[0]!).getByLabelText('Текст вопроса')).toHaveValue(
 			'Как вас зовут?',
 		);
 		expect(cards[1]).toHaveAttribute('data-type', 'choice');
-	});
-
-	it('кнопка «Скопировать ссылку» активна в режиме редактирования', () => {
-		renderWithProviders(<FormBuilderForm mode='edit' form={fullForm} />, {
-			initialEntries: ['/forms/form-1/edit'],
-		});
 
 		expect(
 			screen.getByRole('button', { name: /скопировать ссылку/i }),
 		).not.toBeDisabled();
+
+		await user.clear(titleField);
+		await user.type(titleField, 'Новое название');
+		expect(titleField).toHaveValue('Новое название');
 	});
 });

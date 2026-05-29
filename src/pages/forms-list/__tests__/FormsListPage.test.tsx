@@ -94,7 +94,7 @@ describe('FormsListPage', () => {
 		useSessionStore.setState({ currentUser: seedUser });
 	});
 
-	it('пока список грузится — пользователь видит индикатор', () => {
+	it('пока список грузится — пользователь видит индикатор и карточки ещё не отображаются', async () => {
 		mockedUseFormsList.mockReturnValue(
 			mockQueryResult<Form[]>({ isLoading: true, status: 'pending' }),
 		);
@@ -105,7 +105,9 @@ describe('FormsListPage', () => {
 
 		renderWithProviders(<FormsListPage />);
 
-		expect(screen.getByText('Загружаем формы…')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.getByText('Загружаем формы…')).toBeInTheDocument(),
+		);
 		expect(screen.queryAllByRole('article')).toHaveLength(0);
 	});
 

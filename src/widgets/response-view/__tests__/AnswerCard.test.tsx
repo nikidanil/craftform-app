@@ -42,36 +42,16 @@ const buildAnswer = (value: Answer['value'], questionId: string): Answer => ({
 });
 
 describe('AnswerCard', () => {
-	it('для short-text показывает текст ответа и бейдж «Короткий текст»', () => {
+	it('если ответ отсутствует — показывает прочерк «—» вместо значения', () => {
 		render(
-			<AnswerCard
-				question={shortQuestion}
-				answer={buildAnswer('Иван', 'q-1')}
-				index={0}
-			/>,
+			<AnswerCard question={shortQuestion} answer={undefined} index={0} />,
 		);
 
-		expect(screen.getByText('Иван')).toBeInTheDocument();
-		expect(screen.getByText('Короткий текст')).toBeInTheDocument();
-		expect(screen.getByText('Как вас зовут?')).toBeInTheDocument();
+		expect(screen.getByText('—')).toBeInTheDocument();
+		expect(screen.queryByRole('list')).not.toBeInTheDocument();
 	});
 
-	it('для long-text показывает длинный текст и бейдж «Длинный текст»', () => {
-		const longText =
-			'Понравились примеры из реальных проектов и подача материала.';
-		render(
-			<AnswerCard
-				question={longQuestion}
-				answer={buildAnswer(longText, 'q-2')}
-				index={1}
-			/>,
-		);
-
-		expect(screen.getByText(longText)).toBeInTheDocument();
-		expect(screen.getByText('Длинный текст')).toBeInTheDocument();
-	});
-
-	it('для choice/single показывает один выбранный лейбл и бейдж «Переключатели»', () => {
+	it('для choice/single показывает только выбранный вариант, остальные скрыты', () => {
 		const singleChoiceQuestion: Question = {
 			...choiceQuestion,
 			choiceVariant: 'single',
@@ -85,13 +65,13 @@ describe('AnswerCard', () => {
 			/>,
 		);
 
-		expect(screen.getByText('Переключатели')).toBeInTheDocument();
 		const list = screen.getByRole('list');
 		expect(within(list).getByText('Текст')).toBeInTheDocument();
 		expect(within(list).queryAllByRole('listitem')).toHaveLength(1);
+		expect(within(list).queryByText('Видео')).not.toBeInTheDocument();
 	});
 
-	it('для choice/multiple показывает несколько выбранных лейблов и бейдж «Флажки»', () => {
+	it('для choice/multiple показывает все выбранные варианты и только их', () => {
 		render(
 			<AnswerCard
 				question={choiceQuestion}
@@ -100,20 +80,26 @@ describe('AnswerCard', () => {
 			/>,
 		);
 
-		expect(screen.getByText('Флажки')).toBeInTheDocument();
 		const list = screen.getByRole('list');
 		const items = within(list).getAllByRole('listitem');
 		expect(items.map((item) => item.textContent?.trim())).toEqual([
 			'Видео',
 			'Воркшопы',
 		]);
+		expect(within(list).queryByText('Текст')).not.toBeInTheDocument();
 	});
 
-	it('если ответ отсутствует — показывает плашку «—»', () => {
+	it('для long-text отображает полный текст ответа без усечения', () => {
+		const longText =
+			'Понравились примеры из реальных проектов и подача материала.';
 		render(
-			<AnswerCard question={shortQuestion} answer={undefined} index={0} />,
+			<AnswerCard
+				question={longQuestion}
+				answer={buildAnswer(longText, 'q-2')}
+				index={1}
+			/>,
 		);
 
-		expect(screen.getByText('—')).toBeInTheDocument();
+		expect(screen.getByText(longText)).toBeInTheDocument();
 	});
 });

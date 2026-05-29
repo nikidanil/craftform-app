@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 
 import type { Form } from '@/entities/form';
 import type { Submission } from '@/entities/submission';
@@ -93,7 +93,7 @@ describe('ResponseViewPage', () => {
 		mockedUseResponse.mockReset();
 	});
 
-	it('пока данные грузятся — пользователь видит индикатор', () => {
+	it('пока данные грузятся — пользователь видит индикатор', async () => {
 		mockedUseForm.mockReturnValue(
 			mockFormResult({ isLoading: true, status: 'pending' }),
 		);
@@ -103,7 +103,9 @@ describe('ResponseViewPage', () => {
 
 		renderPage();
 
-		expect(screen.getByText('Загружаем отклик…')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.getByText('Загружаем отклик…')).toBeInTheDocument(),
+		);
 	});
 
 	it('если отклик не найден (404) — пользователь видит сообщение «Отклик не найден»', () => {
