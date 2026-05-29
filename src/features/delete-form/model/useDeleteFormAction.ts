@@ -1,11 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useQueryClient } from '@tanstack/react-query';
 import { useDeleteForm } from '@/entities/form';
+import { submissionKeys } from '@/entities/submission';
 import { routes } from '@/shared/lib';
 
 export const useDeleteFormAction = () => {
 	const navigate = useNavigate();
-	const deleteMutation = useDeleteForm();
+	const queryClient = useQueryClient();
+	const deleteMutation = useDeleteForm({
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: submissionKeys.all });
+		},
+	});
 	const [error, setError] = useState<Error | null>(null);
 	const [pending, setPending] = useState(false);
 
