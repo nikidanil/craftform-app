@@ -3,16 +3,15 @@ export {
 	emptyFormInput,
 	makeEmptyOption,
 	makeEmptyQuestion,
-} from './model/defaults';
-export { formBuilderSchema } from './model/schema';
-export type { FormBuilderValues } from './model/schema';
-export {
+	formBuilderSchema,
 	NEW_QUESTION_PREFIX,
 	SIDEBAR_DROPPABLE_ID,
 	WORKSPACE_DROPPABLE_ID,
-} from './model/dndProtocol';
+	interpretDragEnd,
+	useFormBuilderDnd,
+} from './model';
 export type {
+	FormBuilderValues,
 	DragInterpretation,
 	NewQuestionDragData,
-} from './model/dndProtocol';
-export { interpretDragEnd, useFormBuilderDnd } from './model/useFormBuilderDnd';
+} from './model';

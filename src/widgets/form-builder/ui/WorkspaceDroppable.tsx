@@ -2,7 +2,7 @@ import type { ReactNode, RefObject } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 
 import { cn } from '@/shared/lib';
-import { WORKSPACE_DROPPABLE_ID } from '../model/dndProtocol';
+import { WORKSPACE_DROPPABLE_ID } from '../model';
 import styles from './FormBuilderForm.module.css';
 
 type Props = {

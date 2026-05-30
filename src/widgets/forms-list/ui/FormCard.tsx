@@ -5,7 +5,7 @@ import type { Form } from '@/entities/form';
 import { DeleteFormButton } from '@/features/delete-form';
 import { responsesCountLabel, routes } from '@/shared/lib';
 
-import { formatCreatedAt } from '../model/formatCreatedAt';
+import { formatCreatedAt } from '../model';
 import styles from './FormCard.module.css';
 
 type Props = {

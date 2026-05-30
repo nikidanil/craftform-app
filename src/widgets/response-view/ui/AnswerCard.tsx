@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import type { Question } from '@/entities/form';
 import type { Answer } from '@/entities/submission';
 
-import { getSelectedOptionLabels } from '../model/getSelectedOptionLabels';
+import { getSelectedOptionLabels } from '../model';
 import styles from './AnswerCard.module.css';
 
 type Props = {
