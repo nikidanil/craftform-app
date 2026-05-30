@@ -7,6 +7,30 @@ type InfiniteWindowResult = {
 	reset: () => void;
 };
 
+/**
+ * Прогрессивный показ длинного списка: держит «окно» из первых N элементов и
+ * расширяет его на `pageSize`, когда пользователь докручивает до элемента-
+ * сентинела (через IntersectionObserver). Список не виртуализирует — только
+ * ограничивает, сколько элементов рендерить.
+ *
+ * Зачем: `rawDisplayCount` намеренно НЕ сжимается при сужении набора (фильтр) —
+ * иначе при возврате к большому набору пришлось бы доскролливать заново.
+ * `sentinelRef`/`reset` стабилизированы через useCallback, т.к. уходят в
+ * ref-callback и useEffect-deps потребителя.
+ *
+ * @param totalCount — полное число элементов в наборе (после фильтрации)
+ * @param pageSize — сколько добавлять за один шаг (по умолчанию 30)
+ * @returns `{ displayCount, hasMore, sentinelRef, reset }` — сколько показывать,
+ *   есть ли ещё, ref на сентинел, сброс окна к первой странице
+ * @example
+ * const { displayCount, hasMore, sentinelRef } = useInfiniteWindow(forms.length);
+ * return (
+ *   <>
+ *     {forms.slice(0, displayCount).map(renderCard)}
+ *     {hasMore && <div ref={sentinelRef} />}
+ *   </>
+ * );
+ */
 export const useInfiniteWindow = (
 	totalCount: number,
 	pageSize = 30,
