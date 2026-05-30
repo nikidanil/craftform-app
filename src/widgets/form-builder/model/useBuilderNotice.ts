@@ -41,19 +41,10 @@ export const useBuilderNotice = ({ saveStatus, hasSavedOnce }: Params) => {
 		return clearTimer;
 	}, [clearTimer]);
 
-	const notifySaved = useCallback(() => show('success', 'Сохранено'), [show]);
-	const notifySaveError = useCallback(
-		() => show('error', 'Не удалось сохранить форму'),
-		[show],
-	);
-	const notifyCopied = useCallback(
-		() => show('success', 'Ссылка скопирована'),
-		[show],
-	);
-	const notifyCopyError = useCallback(
-		() => show('error', 'Не удалось скопировать ссылку'),
-		[show],
-	);
+	const notifySaved = () => show('success', 'Сохранено');
+	const notifySaveError = () => show('error', 'Не удалось сохранить форму');
+	const notifyCopied = () => show('success', 'Ссылка скопирована');
+	const notifyCopyError = () => show('error', 'Не удалось скопировать ссылку');
 
 	let notice: BuilderNotice = null;
 	if (saveStatus === 'pending') {
