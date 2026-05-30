@@ -91,6 +91,8 @@
 	font-size: 0.9rem;
 }
 
+/* Ошибка поля конструктора — намеренно мельче и без точки-маркера
+   глобального .fieldErrorMessage (тот для крупных auth-форм). */
 .fieldError {
 	font-size: 0.75rem;
 	color: var(--destructive);
