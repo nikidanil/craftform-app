@@ -16,3 +16,4 @@ export type {
 	QuestionType,
 	ChoiceVariant,
 } from './schema';
+export { QUESTION_TYPE_LABEL } from './labels';
