@@ -40,6 +40,23 @@ export const formBuilderCollisionDetection: CollisionDetection = (args) => {
 	return rectIntersection(args);
 };
 
+/**
+ * Превращает событие окончания перетаскивания в чистое описание операции, не
+ * трогая состояние (поэтому легко тестируется в изоляции).
+ *
+ * Зачем: тащить можно либо новый тип вопроса из сайдбара (`data` —
+ * `NewQuestionDragData`), либо существующую карточку. Возвращает
+ * дискриминированный результат:
+ * - `add` — добавить вопрос `questionType` в `insertIndex` (или в конец при `null`);
+ * - `reorder` — переставить с `from` на `to`;
+ * - `remove` — существующую карточку бросили мимо области (`over === null`) → удаление;
+ * - `noop` — без эффекта: бросок в сайдбар, на себя или на рабочую область без
+ *   целевой карточки; для НОВОГО вопроса бросок мимо (`over === null`) — тоже `noop`.
+ *
+ * @param event — событие `onDragEnd` от dnd-kit
+ * @param fieldIds — порядок id карточек-вопросов (перевод id ↔ индекс)
+ * @returns описание операции (`DragInterpretation`)
+ */
 export const interpretDragEnd = (
 	event: DragEndEvent,
 	fieldIds: readonly string[],
@@ -83,6 +100,13 @@ export const interpretDragEnd = (
 	return { kind: 'reorder', from: activeIndex, to: targetIndex };
 };
 
+/**
+ * Применяет результат {@link interpretDragEnd} к списку вопросов через переданные
+ * helpers (`append`/`insert`/`move`/`remove` от react-hook-form `useFieldArray`).
+ *
+ * @param interpretation — что сделать (из `interpretDragEnd`)
+ * @param helpers — операции над списком и его текущий `size`
+ */
 export const applyDragInterpretation = (
 	interpretation: DragInterpretation,
 	helpers: DragApplyHelpers,
@@ -111,6 +135,17 @@ export const applyDragInterpretation = (
 	}
 };
 
+/**
+ * Готовит сенсоры dnd-kit для конструктора форм.
+ *
+ * Зачем: PointerSensor с `activationConstraint.distance: 8` — перетаскивание
+ * стартует только после сдвига на 8px, чтобы обычные клики по карточке и кнопкам
+ * не воспринимались как drag. KeyboardSensor с `sortableKeyboardCoordinates` —
+ * доступность: сортировка с клавиатуры. Интерпретация дропа вынесена в чистые
+ * `interpretDragEnd` / `applyDragInterpretation` (этот хук отвечает только за сенсоры).
+ *
+ * @returns `{ sensors }` для `<DndContext sensors={sensors}>`
+ */
 export const useFormBuilderDnd = () => {
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
