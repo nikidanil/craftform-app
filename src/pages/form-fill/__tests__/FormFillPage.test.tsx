@@ -33,7 +33,7 @@ describe('FormFillPage', () => {
 		mockedUseForm.mockReset();
 	});
 
-	it('пока форма грузится — пользователь видит индикатор загрузки, после ответа API ошибку', async () => {
+	it('пока форма грузится — пользователь видит индикатор загрузки', async () => {
 		mockedUseForm.mockReturnValue(
 			mockQueryResult({ isLoading: true, status: 'pending' }),
 		);
@@ -45,14 +45,6 @@ describe('FormFillPage', () => {
 
 		await waitFor(() =>
 			expect(screen.getByText('Загружаем форму…')).toBeInTheDocument(),
-		);
-
-		mockedUseForm.mockReturnValue(
-			mockQueryResult({
-				error: new HttpError(500, 'Internal Server Error'),
-				isError: true,
-				status: 'error',
-			}),
 		);
 	});
 

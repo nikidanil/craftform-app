@@ -1,6 +1,6 @@
 import { AlignLeft, List, Type } from 'lucide-react';
 
-import type { QuestionType } from '@/entities/form';
+import { QUESTION_TYPE_LABEL, type QuestionType } from '@/entities/form';
 
 import { QuestionTypeTile, type Tile } from './QuestionTypeTile';
 import styles from './QuestionTypePanel.module.css';
@@ -12,21 +12,21 @@ type Props = {
 const TILES: Tile[] = [
 	{
 		type: 'short-text',
-		label: 'Короткий текст',
+		label: QUESTION_TYPE_LABEL['short-text'],
 		desc: 'Однострочный ввод',
 		tone: 'short',
 		icon: Type,
 	},
 	{
 		type: 'long-text',
-		label: 'Длинный текст',
+		label: QUESTION_TYPE_LABEL['long-text'],
 		desc: 'Многострочный ввод',
 		tone: 'long',
 		icon: AlignLeft,
 	},
 	{
 		type: 'choice',
-		label: 'Список выбора',
+		label: QUESTION_TYPE_LABEL.choice,
 		desc: 'Переключатели или флажки',
 		tone: 'choice',
 		icon: List,

@@ -18,6 +18,8 @@ export const useBuilderNotice = ({ saveStatus, hasSavedOnce }: Params) => {
 	const [transient, setTransient] = useState<Transient>(null);
 	const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+	// clearTimer и show намеренно в useCallback: clearTimer уходит в return-cleanup
+	// useEffect ниже (нужна стабильная ссылка), show зависит от clearTimer.
 	const clearTimer = useCallback(() => {
 		if (timerRef.current !== null) {
 			clearTimeout(timerRef.current);
