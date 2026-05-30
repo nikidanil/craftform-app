@@ -23,7 +23,12 @@ import {
 
 import { routes } from '@/shared/lib';
 import { Input, Textarea, Label } from '@/shared/ui';
-import type { Form, FormInput, QuestionType } from '@/entities/form';
+import {
+	QUESTION_TYPE_LABEL,
+	type Form,
+	type FormInput,
+	type QuestionType,
+} from '@/entities/form';
 import { QuestionTypePanel } from './QuestionTypePanel';
 import { QuestionCard } from './QuestionCard';
 import { SaveFormButton, useSaveForm } from '@/features/save-form';
@@ -44,12 +49,6 @@ import { BuilderNotice } from './BuilderNotice';
 import { SidebarDroppable } from './SidebarDroppable';
 import { WorkspaceDroppable } from './WorkspaceDroppable';
 import styles from './FormBuilderForm.module.css';
-
-const QUESTION_TYPE_LABEL: Record<QuestionType, string> = {
-	'short-text': 'Короткий текст',
-	'long-text': 'Длинный текст',
-	choice: 'Список выбора',
-};
 
 const screenReaderInstructions: ScreenReaderInstructions = {
 	draggable:

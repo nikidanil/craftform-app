@@ -9,7 +9,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 import { Input, Textarea, Switch, Label, Button } from '@/shared/ui';
-import type { QuestionType, FormInput } from '@/entities/form';
+import { QUESTION_TYPE_LABEL, type FormInput } from '@/entities/form';
 
 import { ChoiceEditor } from './ChoiceEditor';
 import styles from './QuestionCard.module.css';
@@ -22,12 +22,6 @@ type Props = {
 	canMoveDown: boolean;
 	onMoveUp: () => void;
 	onMoveDown: () => void;
-};
-
-const TYPE_LABEL: Record<QuestionType, string> = {
-	'short-text': 'Короткий текст',
-	'long-text': 'Длинный текст',
-	choice: 'Список выбора',
 };
 
 export const QuestionCard = ({
@@ -137,7 +131,7 @@ export const QuestionCard = ({
 							</div>
 						)}
 					/>
-					<span className={styles.typeBadge}>{TYPE_LABEL[type]}</span>
+					<span className={styles.typeBadge}>{QUESTION_TYPE_LABEL[type]}</span>
 				</div>
 			</div>
 
