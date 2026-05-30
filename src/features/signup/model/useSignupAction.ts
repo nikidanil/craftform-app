@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import {
-	createUser,
-	findUserByEmail,
-	type User,
-} from '@/entities/user';
+import { createUser, findUserByEmail } from '@/entities/user';
 import { useSetCurrentUser } from '@/entities/session';
 import { routes } from '@/shared/lib';
 import type { SignupValues } from './schema';
@@ -30,7 +26,7 @@ export const useSignupAction = () => {
 				setErrorMessage(EMAIL_TAKEN);
 				return;
 			}
-			const created: User = await createUser({
+			const created = await createUser({
 				firstName: input.firstName,
 				lastName: input.lastName,
 				email: input.email,

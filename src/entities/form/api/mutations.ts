@@ -9,7 +9,7 @@ import { formKeys } from './keys';
 
 type ResponseRef = { id: string };
 
-export type CreateFormVars = {
+type CreateFormVars = {
 	input: FormInput;
 	authorId: string;
 };
