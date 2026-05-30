@@ -26,6 +26,20 @@ const extractErrorMessage = (error: unknown): string => {
 	return 'Не удалось отправить отклик. Попробуйте ещё раз.';
 };
 
+/**
+ * Действие отправки отклика респондентом на публичной странице формы.
+ *
+ * Зачем: ошибку извлекает `extractErrorMessage` — пытается достать `message`/`error`
+ * из тела `HttpError` (JSON), иначе показывает общий текст; так пользователь видит
+ * осмысленную причину отказа. Асинхронность скрыта: `submit` ничего не возвращает,
+ * результат отражается в `status`/`errorMessage`.
+ *
+ * @returns `{ submit, status, errorMessage, reset }`; `submit(input)` → `void`
+ *   (`status`: idle | pending | success | error)
+ * @example
+ * const { submit, status, errorMessage } = useSubmitResponseAction();
+ * submit({ formId, answers });
+ */
 export const useSubmitResponseAction = () => {
 	const mutation = useSubmitResponse();
 	const [status, setStatus] = useState<SubmitStatus>('idle');
