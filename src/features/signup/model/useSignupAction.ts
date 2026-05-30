@@ -10,6 +10,21 @@ export type SignupStatus = 'idle' | 'pending' | 'success' | 'error';
 const EMAIL_TAKEN = 'Введенный Email уже занят';
 const GENERIC_ERROR = 'Не удалось зарегистрироваться. Попробуйте ещё раз.';
 
+/**
+ * Действие регистрации: проверяет, что email свободен, создаёт пользователя,
+ * кладёт его в сессию и уводит на главную.
+ *
+ * Зачем: перед созданием — `findUserByEmail` для проверки дубля; на занятый email
+ * отдельное сообщение (`EMAIL_TAKEN`), на прочие сбои — общее. Здесь раскрытие
+ * занятости email допустимо (это сам владелец регистрируется). `navigate(replace)`
+ * убирает форму регистрации из истории.
+ *
+ * @returns `{ signup, status, errorMessage }` — действие и состояние формы
+ *   (`status`: idle | pending | success | error)
+ * @example
+ * const { signup, status, errorMessage } = useSignupAction();
+ * await signup({ firstName, lastName, email, password, confirmPassword });
+ */
 export const useSignupAction = () => {
 	const navigate = useNavigate();
 	const setCurrentUser = useSetCurrentUser();
