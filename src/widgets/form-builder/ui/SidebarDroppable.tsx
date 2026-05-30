@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 
-import { SIDEBAR_DROPPABLE_ID } from '../model/dndProtocol';
+import { SIDEBAR_DROPPABLE_ID } from '../model';
 
 type Props = {
 	className?: string;

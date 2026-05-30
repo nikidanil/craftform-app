@@ -1,6 +1,6 @@
 import { Check, CircleAlert, Loader2 } from 'lucide-react';
 import { cn } from '@/shared/lib';
-import type { BuilderNotice as Notice, NoticeTone } from '../model/useBuilderNotice';
+import type { BuilderNotice as Notice, NoticeTone } from '../model';
 import styles from './BuilderNotice.module.css';
 
 type Props = {

@@ -9,7 +9,7 @@ import { X } from 'lucide-react';
 import { Input, Button } from '@/shared/ui';
 import type { ChoiceVariant, FormInput } from '@/entities/form';
 
-import { makeEmptyOption } from '../model/defaults';
+import { makeEmptyOption } from '../model';
 import styles from './QuestionCard.module.css';
 
 type Props = { index: number };

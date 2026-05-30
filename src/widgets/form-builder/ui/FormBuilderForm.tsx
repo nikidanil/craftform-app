@@ -35,16 +35,18 @@ import { SaveFormButton, useSaveForm } from '@/features/save-form';
 import { CopyFormLinkButton, copyFormLink } from '@/features/copy-form-link';
 import { DeleteFormButton } from '@/features/delete-form';
 
-import { emptyFormInput, makeEmptyQuestion } from '../model/defaults';
-import { formBuilderSchema, type FormBuilderValues } from '../model/schema';
-import { isNewQuestionDragData } from '../model/dndProtocol';
 import {
 	applyDragInterpretation,
+	emptyFormInput,
 	formBuilderCollisionDetection,
+	formBuilderSchema,
 	interpretDragEnd,
+	isNewQuestionDragData,
+	makeEmptyQuestion,
+	useBuilderNotice,
 	useFormBuilderDnd,
-} from '../model/useFormBuilderDnd';
-import { useBuilderNotice } from '../model/useBuilderNotice';
+	type FormBuilderValues,
+} from '../model';
 import { BuilderNotice } from './BuilderNotice';
 import { SidebarDroppable } from './SidebarDroppable';
 import { WorkspaceDroppable } from './WorkspaceDroppable';
