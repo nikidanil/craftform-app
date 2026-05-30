@@ -177,3 +177,20 @@
 		@apply font-sans;
 	}
 }
+
+/* Сообщение об ошибке поля формы с точкой-маркером (login/signup/profile). */
+.fieldErrorMessage {
+	font-size: 0.8rem;
+	color: var(--destructive);
+}
+
+.fieldErrorMessage::before {
+	content: '';
+	display: inline-block;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: currentColor;
+	margin-right: 0.35rem;
+	transform: translateY(-1px);
+}

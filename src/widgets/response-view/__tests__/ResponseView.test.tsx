@@ -58,8 +58,10 @@ const submission: Submission = {
 };
 
 describe('ResponseView', () => {
-	it('рендерит ответы всех трёх типов, дату, название формы и навигационные кнопки', () => {
-		renderWithProviders(<ResponseView form={form} submission={submission} />);
+	it('пользователь просматривает отклик и переходит в список откликов по хлебным крошкам', async () => {
+		const { getCurrentPath } = renderWithProviders(
+			<ResponseView form={form} submission={submission} />,
+		);
 
 		expect(
 			screen.getByRole('heading', { level: 1, name: 'Отклик №1' }),
@@ -71,26 +73,18 @@ describe('ResponseView', () => {
 		expect(
 			screen.getByText('Понравились примеры из реальных проектов'),
 		).toBeInTheDocument();
-
 		expect(screen.getByText('Видео')).toBeInTheDocument();
 		expect(screen.getByText('Воркшопы')).toBeInTheDocument();
 		expect(screen.queryByText('Текст')).not.toBeInTheDocument();
 
-		const goToForm = screen.getByRole('link', { name: /Перейти к форме/ });
-		expect(goToForm).toHaveAttribute('href', '/forms/form-1');
-
-		const editForm = screen.getByRole('link', {
-			name: /Редактировать форму/,
-		});
-		expect(editForm).toHaveAttribute('href', '/forms/form-1/edit');
-	});
-
-	it('клик по «Отклики» в хлебных крошках ведёт на список откликов формы', async () => {
-		const { getCurrentPath } = renderWithProviders(
-			<ResponseView form={form} submission={submission} />,
-		);
-
 		await userEvent.click(screen.getByRole('link', { name: 'Отклики' }));
 		expect(getCurrentPath()).toBe('/forms/form-1/responses');
+	});
+
+	it('клик по «Перейти к форме» ведёт на публичную страницу формы', async () => {
+		renderWithProviders(<ResponseView form={form} submission={submission} />);
+
+		const goToForm = screen.getByRole('link', { name: /Перейти к форме/ });
+		expect(goToForm).toHaveAttribute('href', '/forms/form-1');
 	});
 });

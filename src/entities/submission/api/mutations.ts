@@ -9,6 +9,19 @@ import { submissionKeys } from './keys';
 
 type ExistingSubmission = { id: string };
 
+/**
+ * Отправка нового отклика на форму (React Query mutation, POST). Ответ
+ * валидируется `submissionSchema`.
+ *
+ * Зачем: порядковый `number` вычисляется на клиенте как `existing.length + 1`
+ * (сначала GET откликов формы), `id`/`createdAt` тоже генерируются на клиенте.
+ * На успех инвалидирует список откликов именно этой формы (`submissionKeys.list`).
+ *
+ * @returns мутация с переменной `input: SubmissionInput`, результат — `Submission`
+ * @example
+ * const submit = useSubmitResponse();
+ * submit.mutate({ formId, answers });
+ */
 export const useSubmitResponse = () => {
 	const queryClient = useQueryClient();
 	return useMutation({

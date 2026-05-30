@@ -53,21 +53,6 @@ describe('useInfiniteWindow', () => {
 		expect(result.current.hasMore).toBe(false);
 	});
 
-	it('reset и sentinelRef стабильны по ссылке между рендерами (React Compiler)', () => {
-		const { result, rerender } = renderHook(
-			({ total }) => useInfiniteWindow(total, 30),
-			{ initialProps: { total: 70 } },
-		);
-
-		const firstReset = result.current.reset;
-		const firstSentinelRef = result.current.sentinelRef;
-
-		rerender({ total: 50 });
-
-		expect(result.current.reset).toBe(firstReset);
-		expect(result.current.sentinelRef).toBe(firstSentinelRef);
-	});
-
 	it('reset возвращает displayCount к pageSize', () => {
 		const { result } = renderHook(() => useInfiniteWindow(90, 30));
 

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 
 import { useForm } from '@/entities/form';
 import { HttpError } from '@/shared/api';
@@ -33,7 +33,7 @@ describe('FormFillPage', () => {
 		mockedUseForm.mockReset();
 	});
 
-	it('пока форма грузится — пользователь видит индикатор загрузки', () => {
+	it('пока форма грузится — пользователь видит индикатор загрузки', async () => {
 		mockedUseForm.mockReturnValue(
 			mockQueryResult({ isLoading: true, status: 'pending' }),
 		);
@@ -43,10 +43,12 @@ describe('FormFillPage', () => {
 			routePath: '/forms/:formId',
 		});
 
-		expect(screen.getByText('Загружаем форму…')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.getByText('Загружаем форму…')).toBeInTheDocument(),
+		);
 	});
 
-	it('если форма не найдена — пользователь видит сообщение «Форма не найдена»', () => {
+	it('если форма не найдена — пользователь видит сообщение «Форма не найдена»', async () => {
 		mockedUseForm.mockReturnValue(
 			mockQueryResult({
 				error: new HttpError(404, 'Not Found'),
@@ -60,10 +62,12 @@ describe('FormFillPage', () => {
 			routePath: '/forms/:formId',
 		});
 
-		expect(screen.getByRole('alert')).toHaveTextContent('Форма не найдена');
+		await waitFor(() =>
+			expect(screen.getByRole('alert')).toHaveTextContent('Форма не найдена'),
+		);
 	});
 
-	it('при сетевой или серверной ошибке — пользователь видит общее сообщение об ошибке', () => {
+	it('при сетевой или серверной ошибке — пользователь видит общее сообщение об ошибке', async () => {
 		mockedUseForm.mockReturnValue(
 			mockQueryResult({
 				error: new HttpError(500, 'Internal Server Error'),
@@ -77,8 +81,10 @@ describe('FormFillPage', () => {
 			routePath: '/forms/:formId',
 		});
 
-		expect(screen.getByRole('alert')).toHaveTextContent(
-			'Не удалось загрузить форму. Попробуйте обновить страницу.',
+		await waitFor(() =>
+			expect(screen.getByRole('alert')).toHaveTextContent(
+				'Не удалось загрузить форму. Попробуйте обновить страницу.',
+			),
 		);
 	});
 });

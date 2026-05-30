@@ -5,7 +5,7 @@ import type { Form } from '@/entities/form';
 import type { Submission } from '@/entities/submission';
 import { formatSubmittedAt, routes } from '@/shared/lib';
 
-import { findAnswerForQuestion } from '../model/findAnswerForQuestion';
+import { findAnswerForQuestion } from '../model';
 import { AnswerCard } from './AnswerCard';
 import styles from './ResponseView.module.css';
 

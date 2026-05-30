@@ -6,7 +6,7 @@ import {
 	CardTitle,
 } from '@/shared/ui';
 import { LoginForm } from '@/features/login';
-import { Logo } from '@/widgets/logo';
+import { Logo } from '@/shared/ui';
 import styles from './LoginPage.module.css';
 
 export const LoginPage = () => (

@@ -8,7 +8,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 } from '@/shared/ui';
-import { Logo } from '@/widgets/logo';
+import { Logo } from '@/shared/ui';
 import { getInitials, routes } from '@/shared/lib';
 import styles from './Header.module.css';
 

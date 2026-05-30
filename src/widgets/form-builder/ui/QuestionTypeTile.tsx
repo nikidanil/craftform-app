@@ -2,11 +2,8 @@ import { useDraggable } from '@dnd-kit/core';
 import type { LucideIcon } from 'lucide-react';
 
 import type { QuestionType } from '@/entities/form';
-import {
-	NEW_QUESTION_PREFIX,
-	type NewQuestionDragData,
-} from '@/widgets/form-builder';
 
+import { NEW_QUESTION_PREFIX, type NewQuestionDragData } from '../model';
 import styles from './QuestionTypePanel.module.css';
 
 export type Tone = 'short' | 'long' | 'choice';

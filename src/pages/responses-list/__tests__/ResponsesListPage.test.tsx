@@ -104,7 +104,7 @@ describe('ResponsesListPage', () => {
 		mockedUseResponsesList.mockReset();
 	});
 
-	it('пока данные грузятся — пользователь видит индикатор', () => {
+	it('пока данные грузятся — пользователь видит индикатор', async () => {
 		mockedUseForm.mockReturnValue(
 			mockFormResult({ isLoading: true, status: 'pending' }),
 		);
@@ -114,7 +114,9 @@ describe('ResponsesListPage', () => {
 
 		renderPage();
 
-		expect(screen.getByText('Загружаем отклики…')).toBeInTheDocument();
+		await waitFor(() =>
+			expect(screen.getByText('Загружаем отклики…')).toBeInTheDocument(),
+		);
 	});
 
 	it('если форма не найдена — пользователь видит сообщение «Форма не найдена»', () => {

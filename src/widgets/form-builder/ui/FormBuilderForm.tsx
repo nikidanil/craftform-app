@@ -23,33 +23,34 @@ import {
 
 import { routes } from '@/shared/lib';
 import { Input, Textarea, Label } from '@/shared/ui';
-import type { Form, FormInput, QuestionType } from '@/entities/form';
-import { QuestionTypePanel } from '@/widgets/question-type-panel';
-import { QuestionCard } from '@/widgets/question-card';
+import {
+	QUESTION_TYPE_LABEL,
+	type Form,
+	type FormInput,
+	type QuestionType,
+} from '@/entities/form';
+import { QuestionTypePanel } from './QuestionTypePanel';
+import { QuestionCard } from './QuestionCard';
 import { SaveFormButton, useSaveForm } from '@/features/save-form';
-import { CopyFormLinkButton, useCopyFormLink } from '@/features/copy-form-link';
+import { CopyFormLinkButton, copyFormLink } from '@/features/copy-form-link';
 import { DeleteFormButton } from '@/features/delete-form';
 
-import { emptyFormInput, makeEmptyQuestion } from '../model/defaults';
-import { formBuilderSchema, type FormBuilderValues } from '../model/schema';
-import { isNewQuestionDragData } from '../model/dndProtocol';
 import {
 	applyDragInterpretation,
+	emptyFormInput,
 	formBuilderCollisionDetection,
+	formBuilderSchema,
 	interpretDragEnd,
+	isNewQuestionDragData,
+	makeEmptyQuestion,
+	useBuilderNotice,
 	useFormBuilderDnd,
-} from '../model/useFormBuilderDnd';
-import { useBuilderNotice } from '../model/useBuilderNotice';
+	type FormBuilderValues,
+} from '../model';
 import { BuilderNotice } from './BuilderNotice';
 import { SidebarDroppable } from './SidebarDroppable';
 import { WorkspaceDroppable } from './WorkspaceDroppable';
 import styles from './FormBuilderForm.module.css';
-
-const QUESTION_TYPE_LABEL: Record<QuestionType, string> = {
-	'short-text': 'Короткий текст',
-	'long-text': 'Длинный текст',
-	choice: 'Список выбора',
-};
 
 const screenReaderInstructions: ScreenReaderInstructions = {
 	draggable:
@@ -154,7 +155,6 @@ export const FormBuilderForm = (props: Props) => {
 			? ({ mode: 'edit', formId: props.form.id } as const)
 			: ({ mode: 'create' } as const);
 	const { save, status } = useSaveForm(saveOptions);
-	const { copy } = useCopyFormLink();
 	const [hasSavedOnce, setHasSavedOnce] = useState(props.mode === 'edit');
 	const {
 		notice,
@@ -177,7 +177,7 @@ export const FormBuilderForm = (props: Props) => {
 	};
 
 	const onCopyLink = async () => {
-		const copied = await copy(formId);
+		const copied = await copyFormLink(formId);
 		if (copied) {
 			notifyCopied();
 		} else {
@@ -186,7 +186,7 @@ export const FormBuilderForm = (props: Props) => {
 	};
 
 	const onSubmit: SubmitHandler<FormBuilderValues> = async (values) => {
-		const normalized: FormInput = {
+		const normalized = {
 			...values,
 			questions: values.questions.map((question, questionIndex) => ({
 				...question,

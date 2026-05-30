@@ -14,6 +14,22 @@ type Options = CreateOptions | EditOptions;
 
 export type SaveStatus = 'idle' | 'pending' | 'success' | 'error';
 
+/**
+ * Сохранение формы в одном из двух режимов — создание или редактирование.
+ *
+ * Зачем: режим задаётся discriminated-union `options` (`{ mode: 'create' }` либо
+ * `{ mode: 'edit'; formId }`) — TS гарантирует наличие `formId` только в edit.
+ * В режиме create требуется авторизация (иначе бросает ошибку) и после успеха
+ * происходит переход на редактор созданной формы. `save` возвращает `Form` при
+ * успехе или `null` при ошибке (детали — в `error`).
+ *
+ * @param options — `{ mode: 'create' }` или `{ mode: 'edit'; formId: string }`
+ * @returns `{ save, status, error, reset }`; `save(input: FormInput)` →
+ *   `Promise<Form | null>` (`status`: idle | pending | success | error)
+ * @example
+ * const { save, status } = useSaveForm({ mode: 'edit', formId });
+ * const saved = await save(formInput);
+ */
 export const useSaveForm = (options: Options) => {
 	const navigate = useNavigate();
 	const createForm = useCreateForm();
