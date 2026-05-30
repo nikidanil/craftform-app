@@ -11,19 +11,7 @@
 }
 
 .fieldError {
-	font-size: 0.8rem;
-	color: var(--destructive);
-}
-
-.fieldError::before {
-	content: '';
-	display: inline-block;
-	width: 5px;
-	height: 5px;
-	border-radius: 50%;
-	background: currentColor;
-	margin-right: 0.35rem;
-	transform: translateY(-1px);
+	composes: fieldErrorMessage from global;
 }
 
 .altLink {
