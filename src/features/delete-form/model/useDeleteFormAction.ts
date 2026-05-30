@@ -5,6 +5,20 @@ import { useDeleteForm } from '@/entities/form';
 import { submissionKeys } from '@/entities/submission';
 import { routes } from '@/shared/lib';
 
+/**
+ * Действие удаления формы: оборачивает мутацию `useDeleteForm`, после успеха
+ * инвалидирует счётчики откликов и уводит на главную.
+ *
+ * Зачем: каскадное удаление формы и её откликов делает `useDeleteForm`; здесь
+ * через его `onSuccess` поднимается инвалидация `submissionKeys.all` (счётчики на
+ * списке форм) — entities/form не знает про submission. `finally` гасит `pending`
+ * даже при ошибке. `deleteForm` возвращает `boolean` (успех).
+ *
+ * @returns `{ deleteForm, error, pending }`; `deleteForm(formId)` → `Promise<boolean>`
+ * @example
+ * const { deleteForm, pending } = useDeleteFormAction();
+ * if (await deleteForm(form.id)) toast('Форма удалена');
+ */
 export const useDeleteFormAction = () => {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
