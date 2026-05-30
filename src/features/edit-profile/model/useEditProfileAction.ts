@@ -8,6 +8,23 @@ export type EditProfileStatus = 'idle' | 'pending' | 'success' | 'error';
 const EMAIL_TAKEN = 'Введенный Email уже занят';
 const GENERIC_ERROR = 'Не удалось сохранить изменения. Попробуйте ещё раз.';
 
+/**
+ * Действие редактирования профиля: проверяет уникальность нового email, обновляет
+ * пользователя и синхронизирует сессию.
+ *
+ * Зачем: дубль email игнорируется, если он принадлежит самому пользователю
+ * (`existing.id !== currentUser.id`) — иначе сохранение своего же email падало бы
+ * с «занят». Guard `status === 'pending'` гасит двойной сабмит; если сессия не
+ * инициализирована (`currentUser` отсутствует) — `save` сразу возвращает `false`,
+ * не меняя `status`. `save` возвращает `boolean` (успех) — потребителю удобно
+ * ветвиться без подписки на `status`.
+ *
+ * @returns `{ save, status, errorMessage, reset }`; `save` → `Promise<boolean>`,
+ *   `reset` сбрасывает статус и ошибку (`status`: idle | pending | success | error)
+ * @example
+ * const { save, status } = useEditProfileAction();
+ * const ok = await save({ firstName, lastName, email });
+ */
 export const useEditProfileAction = () => {
 	const currentUser = useCurrentUser();
 	const setCurrentUser = useSetCurrentUser();

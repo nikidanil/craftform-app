@@ -9,6 +9,21 @@ export type LoginStatus = 'idle' | 'pending' | 'success' | 'error';
 
 const GENERIC_LOGIN_ERROR = 'Неверный Email или пароль';
 
+/**
+ * Действие входа: ищет пользователя по email, сверяет пароль, кладёт публичную
+ * версию пользователя в сессию и уводит на главную.
+ *
+ * Зачем: при «не найден» и «неверный пароль» — ОДНА обобщённая ошибка
+ * (`Неверный Email или пароль`): не раскрываем, существует ли email (security).
+ * `navigate(replace: true)` — чтобы кнопка «назад» не вернула на форму входа.
+ * `toPublicUser` срезает пароль до попадания в стор.
+ *
+ * @returns `{ login, status, errorMessage }` — действие и состояние формы
+ *   (`status`: idle | pending | success | error)
+ * @example
+ * const { login, status, errorMessage } = useLoginAction();
+ * await login({ email, password });
+ */
 export const useLoginAction = () => {
 	const navigate = useNavigate();
 	const setCurrentUser = useSetCurrentUser();
