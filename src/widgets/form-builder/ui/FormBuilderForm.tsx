@@ -186,7 +186,7 @@ export const FormBuilderForm = (props: Props) => {
 	};
 
 	const onSubmit: SubmitHandler<FormBuilderValues> = async (values) => {
-		const normalized: FormInput = {
+		const normalized = {
 			...values,
 			questions: values.questions.map((question, questionIndex) => ({
 				...question,
