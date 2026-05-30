@@ -1,4 +1,4 @@
-import { Link, Navigate } from 'react-router';
+import { Link } from 'react-router';
 
 import { useCurrentUser } from '@/entities/session';
 import { ProfileForm } from '@/features/edit-profile';
@@ -9,8 +9,10 @@ import styles from './ProfilePage.module.css';
 export const ProfilePage = () => {
 	const user = useCurrentUser();
 
+	// Маршрут под ProtectedRoute: неавторизованный сюда не попадёт.
+	// Narrowing нужен только для типа (User | null).
 	if (!user) {
-		return <Navigate to={routes.login} replace />;
+		return null;
 	}
 
 	return (
