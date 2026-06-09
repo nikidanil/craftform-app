@@ -6,7 +6,6 @@ export {
 	questionOptionSchema,
 	questionTypeSchema,
 	choiceVariantSchema,
-	isChoiceQuestion,
 } from './schema';
 export type {
 	Form,

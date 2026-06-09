@@ -23,10 +23,6 @@ export const questionSchema = z.object({
 });
 export type Question = z.infer<typeof questionSchema>;
 
-export const isChoiceQuestion = (
-	question: Pick<Question, 'type'>,
-): boolean => question.type === 'choice';
-
 export const formSchema = z.object({
 	id: z.string(),
 	title: z.string(),
