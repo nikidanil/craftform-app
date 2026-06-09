@@ -29,8 +29,8 @@ import {
 	type FormInput,
 	type QuestionType,
 } from '@/entities/form';
-import { QuestionTypePanel } from './QuestionTypePanel';
-import { QuestionCard } from './QuestionCard';
+import { QuestionTypePanel } from './question/QuestionTypePanel';
+import { QuestionCard } from './question/QuestionCard';
 import { SaveFormButton, useSaveForm } from '@/features/save-form';
 import { CopyFormLinkButton, copyFormLink } from '@/features/copy-form-link';
 import { DeleteFormButton } from '@/features/delete-form';
@@ -48,8 +48,8 @@ import {
 	type FormBuilderValues,
 } from '../model';
 import { BuilderNotice } from './BuilderNotice';
-import { SidebarDroppable } from './SidebarDroppable';
-import { WorkspaceDroppable } from './WorkspaceDroppable';
+import { SidebarDroppable } from './dnd/SidebarDroppable';
+import { WorkspaceDroppable } from './dnd/WorkspaceDroppable';
 import styles from './FormBuilderForm.module.css';
 
 const screenReaderInstructions: ScreenReaderInstructions = {
