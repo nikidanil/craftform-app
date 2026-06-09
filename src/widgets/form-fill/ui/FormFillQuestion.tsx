@@ -1,13 +1,18 @@
-import type { Question } from '@/entities/form';
-import { ShortTextQuestion } from './ShortTextQuestion';
-import { LongTextQuestion } from './LongTextQuestion';
-import { ChoiceQuestion } from './ChoiceQuestion';
+import {
+	isChoiceQuestion,
+	isLongTextQuestion,
+	isShortTextQuestion,
+	type Question,
+} from '@/entities/form';
+import { ShortTextQuestion } from './questions/ShortTextQuestion';
+import { LongTextQuestion } from './questions/LongTextQuestion';
+import { ChoiceQuestion } from './questions/ChoiceQuestion';
 
 type Props = { question: Question };
 
 export const FormFillQuestion = ({ question }: Props) => {
-	if (question.type === 'short-text') return <ShortTextQuestion question={question} />;
-	if (question.type === 'long-text') return <LongTextQuestion question={question} />;
-	if (question.type === 'choice') return <ChoiceQuestion question={question} />;
+	if (isShortTextQuestion(question)) return <ShortTextQuestion question={question} />;
+	if (isLongTextQuestion(question)) return <LongTextQuestion question={question} />;
+	if (isChoiceQuestion(question)) return <ChoiceQuestion question={question} />;
 	return null;
 };

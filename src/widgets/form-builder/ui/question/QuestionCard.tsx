@@ -9,7 +9,12 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 import { Input, Textarea, Switch, Label, Button } from '@/shared/ui';
-import { QUESTION_TYPE_LABEL, type FormInput } from '@/entities/form';
+import {
+	QUESTION_TYPE_LABEL,
+	isChoiceQuestion,
+	isLongTextQuestion,
+	type FormInput,
+} from '@/entities/form';
 
 import { ChoiceEditor } from './ChoiceEditor';
 import styles from './QuestionCard.module.css';
@@ -56,6 +61,8 @@ export const QuestionCard = ({
 		control,
 		name: `questions.${index}.type` as const,
 	});
+	const isLongText = isLongTextQuestion({ type });
+	const isChoice = isChoiceQuestion({ type });
 
 	const errors = formState.errors?.questions?.[index] as
 		| { body?: { message?: string }; options?: { message?: string } }
@@ -105,7 +112,7 @@ export const QuestionCard = ({
 					<p className={styles.fieldError}>{errors.body.message}</p>
 				) : null}
 
-				{type === 'long-text' ? (
+				{isLongText ? (
 					<Textarea
 						aria-label='Образец многострочного ответа'
 						placeholder='Многострочное поле…'
@@ -114,7 +121,7 @@ export const QuestionCard = ({
 					/>
 				) : null}
 
-				{type === 'choice' ? <ChoiceEditor index={index} /> : null}
+				{isChoice ? <ChoiceEditor index={index} /> : null}
 
 				<div className={styles.footer}>
 					<Controller
