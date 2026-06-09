@@ -1,6 +1,10 @@
 import type { ReactNode } from 'react';
 
-import type { Question } from '@/entities/form';
+import {
+	isChoiceQuestion,
+	isLongTextQuestion,
+	type Question,
+} from '@/entities/form';
 import type { Answer } from '@/entities/submission';
 
 import { getSelectedOptionLabels } from '../model';
@@ -13,10 +17,10 @@ type Props = {
 };
 
 const getBadgeLabel = (question: Question): string => {
-	if (question.type === 'long-text') {
+	if (isLongTextQuestion(question)) {
 		return 'Длинный текст';
 	}
-	if (question.type === 'choice') {
+	if (isChoiceQuestion(question)) {
 		return question.choiceVariant === 'multiple' ? 'Флажки' : 'Переключатели';
 	}
 	return 'Короткий текст';
@@ -26,7 +30,7 @@ const renderValue = (
 	question: Question,
 	answer: Answer | undefined,
 ): ReactNode => {
-	if (question.type === 'choice') {
+	if (isChoiceQuestion(question)) {
 		const labels = getSelectedOptionLabels(question, answer?.value);
 		if (labels.length === 0) {
 			return <span className={styles.empty}>—</span>;
