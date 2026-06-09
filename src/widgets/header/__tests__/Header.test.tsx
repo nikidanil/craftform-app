@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test/test-utils';
 import { useSessionStore } from '@/entities/session';
 
-import { Header } from '../Header';
+import { Header } from '../ui/Header';
 
 const seedUser = {
 	id: 'user-1',
