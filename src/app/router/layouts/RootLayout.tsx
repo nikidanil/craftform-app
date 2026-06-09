@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router';
-import { ScrollToTop } from './ScrollToTop';
-import { BackgroundBlobs } from '../ui/BackgroundBlobs';
+import { BackgroundBlobs } from '../../ui/BackgroundBlobs';
+import { ScrollToTop } from '../lib/ScrollToTop';
 
 export const RootLayout = () => (
 	<>
