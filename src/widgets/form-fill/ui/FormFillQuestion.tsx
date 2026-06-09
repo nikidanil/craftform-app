@@ -4,9 +4,9 @@ import {
 	isShortTextQuestion,
 	type Question,
 } from '@/entities/form';
-import { ShortTextQuestion } from './ShortTextQuestion';
-import { LongTextQuestion } from './LongTextQuestion';
-import { ChoiceQuestion } from './ChoiceQuestion';
+import { ShortTextQuestion } from './questions/ShortTextQuestion';
+import { LongTextQuestion } from './questions/LongTextQuestion';
+import { ChoiceQuestion } from './questions/ChoiceQuestion';
 
 type Props = { question: Question };
 

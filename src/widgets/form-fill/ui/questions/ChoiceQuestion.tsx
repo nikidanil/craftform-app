@@ -1,7 +1,7 @@
 import { useFormContext } from 'react-hook-form';
 import type { Question } from '@/entities/form';
-import { useQuestionFieldError, type FormFillValues } from '../model';
-import styles from './FormFillForm.module.css';
+import { useQuestionFieldError, type FormFillValues } from '../../model';
+import styles from '../FormFillForm.module.css';
 
 type Props = { question: Question };
 
