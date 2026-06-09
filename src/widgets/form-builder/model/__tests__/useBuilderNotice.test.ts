@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useBuilderNotice } from '../useBuilderNotice';
+import type { SaveStatus } from '@/features/save-form';
 
 describe('useBuilderNotice', () => {
 	beforeEach(() => {
@@ -14,7 +15,7 @@ describe('useBuilderNotice', () => {
 	it('статус «Сохранение…» вытесняет временное уведомление', () => {
 		const { result, rerender } = renderHook(
 			(props) => useBuilderNotice(props),
-			{ initialProps: { saveStatus: 'idle' as const, hasSavedOnce: false } },
+			{ initialProps: { saveStatus: 'idle' as SaveStatus, hasSavedOnce: false } },
 		);
 
 		act(() => result.current.notifyCopied());
