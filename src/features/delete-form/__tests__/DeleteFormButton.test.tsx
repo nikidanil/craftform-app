@@ -56,7 +56,7 @@ describe('DeleteFormButton', () => {
 	});
 
 	it('при ошибке удаления диалог остаётся открытым и показывает сообщение', async () => {
-		mockedHttp.mockImplementation(async (url: string, init?: RequestInit) => {
+		mockedHttp.mockImplementation(async (url, init) => {
 			if (url.startsWith('/api/responses?formId=')) return [];
 			if (init?.method === 'DELETE') throw new Error('Не удалось удалить форму');
 			return undefined;
