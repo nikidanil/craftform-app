@@ -11,10 +11,10 @@ import { FormFillPage } from '@/pages/form-fill';
 import { ResponsesListPage } from '@/pages/responses-list';
 import { ResponseViewPage } from '@/pages/response-view';
 import { NotFoundPage } from '@/pages/not-found';
-import { ProtectedRoute } from './ProtectedRoute';
-import { UnauthorizedOnlyRoute } from './UnauthorizedOnlyRoute';
-import { RootLayout } from './RootLayout';
-import { RouteError } from './RouteError';
+import { ProtectedRoute } from './guards/ProtectedRoute';
+import { UnauthorizedOnlyRoute } from './guards/UnauthorizedOnlyRoute';
+import { RootLayout } from './layouts/RootLayout';
+import { RouteError } from './layouts/RouteError';
 
 export const appRoutes: RouteObject[] = [
 	{

@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 
 import { useSessionStore } from '@/entities/session';
-import { ProtectedRoute } from '../ProtectedRoute';
-import { UnauthorizedOnlyRoute } from '../UnauthorizedOnlyRoute';
+import { ProtectedRoute } from '../guards/ProtectedRoute';
+import { UnauthorizedOnlyRoute } from '../guards/UnauthorizedOnlyRoute';
 
 const seedUser = {
 	id: 'user-1',
